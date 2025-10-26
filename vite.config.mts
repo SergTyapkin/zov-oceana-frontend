@@ -29,22 +29,21 @@ export default defineConfig(({ mode }: { command: 'build' | 'serve'; mode: 'deve
         targets: [
           { src: 'static/favicon.svg', dest: 'static' },
           { src: 'static/open-graph-preview.png', dest: 'static' },
-        ],
-      }),
+        ],      }),
       pluginSitemap({
         hostname: `${/true/i.test(env.VITE_HTTPS) ? 'https' : 'http'}://${env.VITE_DEPLOY_HOSTNAME}`,
         dynamicRoutes: Object.keys(routes).filter(route => routes[route]),
         generateRobotsTxt: true,
       }),
-      pluginTsCompileServiceWorker(),
+      // pluginTsCompileServiceWorker(),
       pluginVitePWA({
-        strategies: 'injectManifest',
-        injectRegister: false,
-        injectManifest: {
-          injectionPoint: undefined,
-        },
-        srcDir: 'dist',
-        filename: 'sw.js',
+        // strategies: 'injectManifest',
+        // injectRegister: false,
+        // injectManifest: {
+        //   injectionPoint: undefined,
+        // },
+        // srcDir: 'dist',
+        // filename: 'sw.js',
 
 
         includeManifestIcons: true,
