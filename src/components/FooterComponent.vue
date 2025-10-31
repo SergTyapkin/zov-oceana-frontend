@@ -69,18 +69,11 @@
     <section class="top-row">
       <router-link :to="{ name: 'default' }" class="column">
         <img class="logo" src="/static/icons/telegram-logo.svg" alt="logo">
+        <div class="desc">Премиальное по доступным ценам</div>
       </router-link>
 
       <section class="column">
-        <header>Партнеры</header>
-        <a href="#" target="_blank">Партнер</a>
-        <a href="#" target="_blank">Партнер</a>
-        <a href="#" target="_blank">Партнер</a>
-        <a href="#" target="_blank">Партнер</a>
-      </section>
-
-      <section class="column">
-        <header>Меню</header>
+        <header>Навигация</header>
         <router-link :to="{ name: 'default' }">Раздел</router-link>
         <router-link :to="{ name: 'default' }">Раздел</router-link>
         <router-link :to="{ name: 'default' }">Раздел</router-link>
@@ -89,22 +82,25 @@
       </section>
 
       <section class="column">
-        <header>Списки</header>
+        <header>Категории</header>
         <router-link :to="{ name: 'default' }">Раздел</router-link>
         <router-link :to="{ name: 'default' }">Раздел</router-link>
         <router-link :to="{ name: 'default' }">Раздел</router-link>
         <router-link :to="{ name: 'default' }">Раздел</router-link>
+        <router-link :to="{ name: 'default' }">Раздел</router-link>
+      </section>
+
+      <section class="column">
+        <header>Контакты</header>
+        <a href="mailto:support@zov-oceana.ru" target="_blank">support@zov-oceana.ru</a>
+        <a href="tel:88001234567" target="_blank">8-800-123-4567</a>
+        <span>Пн-Пт 9:00-18:00 МСК</span>
       </section>
     </section>
 
     <section class="bottom-row">
-      <div class="bottom-row-inner">
-        <div class="languages">
-          <button>RU</button>
-          <button>ENG</button>
-          <button>AR</button>
-          <button>ZH</button>
-        </div>
+      <div class="info">© 2025 Зов океана. Все права защищены.</div>
+      <div class="bottom-row-bottom">
         <router-link :to="{ name: 'default' }">Политика конфиденциальности</router-link>
         <router-link :to="{ name: 'default' }">Настройка файлов cookie</router-link>
       </div>

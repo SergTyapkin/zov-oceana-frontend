@@ -28,9 +28,9 @@
     .center-group
       display flex
       flex 1
-      gap 0
       align-items center
-      justify-content space-between
+      justify-content center
+      gap 30px
       max-width 800px
 
       > *
@@ -45,10 +45,9 @@
 
     .right-group
       display flex
-      flex 1
+      flex 0
       gap 20px
       align-items center
-      justify-content space-between
       .search
         flex 1
       .profile
@@ -69,14 +68,16 @@
           src="/static/icons/telegram-logo.svg"
           alt="logo"
         >
+        Зов океана
       </router-link>
+
       <div class="center-group">
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
+        <router-link :to="{ name: 'default' }">Главная</router-link>
+        <router-link :to="{ name: 'default' }">Магазин</router-link>
       </div>
+
       <div class="right-group">
-        <InputSearch v-model="searchText" class="search" placeholder="Поиск по сайту" />
+        <router-link :to="{ name: 'profile' }" class="cart"><img src="/static/icons/profile-thin.svg" alt="cart"></router-link>
         <router-link :to="{ name: 'profile' }" class="profile"><img src="/static/icons/profile.svg" alt="profile"></router-link>
       </div>
     </div>

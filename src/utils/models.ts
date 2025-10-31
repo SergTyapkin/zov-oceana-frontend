@@ -6,3 +6,22 @@ export interface User {
 
   isSignedIn: boolean;
 }
+
+export interface Goods {
+  id: string;
+  title: string;
+  description?: string;
+  previewUrl?: string;
+  fromLocation?: string;
+  amountLeft?: number;
+  cost?: number;
+}
+
+export interface Category {
+  id: string;
+  title: string;
+  description?: string;
+  previewUrl?: string;
+  goodsCount?: number;
+}
+

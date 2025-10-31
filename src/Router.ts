@@ -2,7 +2,6 @@ import { createRouter, createWebHistory, Router, RouteLocationNormalized, Naviga
 import { type Store } from '~/types/store';
 
 // Components:
-import Page from '~/views/Page.vue';
 import Page404 from '~/views/Page404.vue';
 import PageRegistration from '~/views/User/PageRegistration.vue';
 import PageLogin from '~/views/User/PageLogin.vue';
@@ -11,6 +10,7 @@ import PageRestorePassword from '~/views/User/PageRestorePassword.vue';
 import PageConfirmEmail from '~/views/User/PageConfirmEmail.vue';
 import routes from '~/routes';
 import { RouteRecordRaw } from 'vue-router';
+import PageLanding from '~/views/PageLanding.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -22,7 +22,7 @@ type MyRoute = RouteRecordRaw & {
 
 export default function createVueRouter(Store: Store): Router {
   const routesList: MyRoute[] = [
-    { path: '/', name: 'default', component: Page },
+    { path: '/', name: 'default', component: PageLanding },
 
     { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
@@ -46,46 +46,46 @@ export default function createVueRouter(Store: Store): Router {
       router_got_user = true;
     }
 
-    const notLoginedRedirect = {
-      name: 'login',
-    };
-    const loginedRedirect = {
-      name: 'profile',
-    };
+    // const notLoginedRedirect = {
+    //   name: 'login',
+    // };
+    // const loginedRedirect = {
+    //   name: 'profile',
+    // };
 
-    if (to.path === '/' || to.path === '') {
-      if (Store.state.user.isSignedIn) {
-        next(loginedRedirect);
-        return;
-      }
-      next(notLoginedRedirect);
-      return;
-    }
+    // if (to.path === '/' || to.path === '') {
+    //   if (Store.state.user.isSignedIn) {
+    //     next(loginedRedirect);
+    //     return;
+    //   }
+    //   next(notLoginedRedirect);
+    //   return;
+    // }
 
     // Login required redirects
-    if (to.matched.some(record => record.meta.loginRequired === true || record.meta.adminRequired === true)) {
-      if (Store.state.user.isSignedIn) {
-        next();
-        return;
-      }
-      next(notLoginedRedirect);
-      return;
-    } else if (to.matched.some(record => record.meta.noLoginRequired === true)) {
-      if (!Store.state.user.isSignedIn) {
-        next();
-        return;
-      }
-      next(loginedRedirect);
-      return;
-    }
-    if (to.matched.some(record => record.meta.adminRequired === true)) {
-      if (Store.state.user.isAdmin) {
-        next();
-        return;
-      }
-      next(loginedRedirect);
-      return;
-    }
+    // if (to.matched.some(record => record.meta.loginRequired === true || record.meta.adminRequired === true)) {
+    //   if (Store.state.user.isSignedIn) {
+    //     next();
+    //     return;
+    //   }
+    //   next(notLoginedRedirect);
+    //   return;
+    // } else if (to.matched.some(record => record.meta.noLoginRequired === true)) {
+    //   if (!Store.state.user.isSignedIn) {
+    //     next();
+    //     return;
+    //   }
+    //   next(loginedRedirect);
+    //   return;
+    // }
+    // if (to.matched.some(record => record.meta.adminRequired === true)) {
+    //   if (Store.state.user.isAdmin) {
+    //     next();
+    //     return;
+    //   }
+    //   next(loginedRedirect);
+    //   return;
+    // }
     next();
   });
 
