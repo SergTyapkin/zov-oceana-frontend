@@ -1,7 +1,14 @@
 import REST_API from '@sergtyapkin/rest-api';
 import { validateModel, type Model } from '@sergtyapkin/models-validator';
-import {UserModel, UserModelMockData} from '~/utils/APIModels';
-import { User } from '~/utils/models';
+import {
+  CategoriesListModel,
+  CategoriesListModelMockData,
+  GoodsListModel,
+  GoodsListModelMockData,
+  UserModel,
+  UserModelMockData,
+} from '~/utils/APIModels';
+import { Category, Goods, User } from '~/utils/models';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -71,4 +78,12 @@ export default class API extends REST_API {
     this.#POST(`/auth/password/restore`) as MyResponse<unknown>;
   restorePasswordByCode = (code: string, newPassword: string): MyResponse<unknown> =>
     this.#PUT(`/auth/password/restore`, { code, new_password: newPassword }) as MyResponse<unknown>;
+
+  // Categories
+  getCategories = () =>
+    this.#GET(`/categories`, {}, CategoriesListModel, Response200(CategoriesListModelMockData)) as MyResponse<{categories: Category[]}>;
+
+  // Goods
+  getGoods = () =>
+    this.#GET(`/goods`, {}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
 }

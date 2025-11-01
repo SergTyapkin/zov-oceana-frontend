@@ -12,18 +12,21 @@
   cursor pointer
   width 100%
   height 100%
-  max-width 400px
+  max-width 800px
   max-height 300px
   min-width 300px
   min-height 300px
   position relative
   text-align left
+  color colorTextInvert1
+  overflow hidden
 
   .background
     img-size(100%)
     position absolute
     inset 0
     object-fit cover
+    trans()
 
   .overlay
     position absolute
@@ -46,12 +49,14 @@
       font-upper()
     .title
       font-large()
+      trans()
     .bottom-block
       display flex
       gap 10px
       align-items center
       justify-content space-between
       .cost
+        trans()
         .info
           svg-inside()
           font-small-extra()
@@ -64,6 +69,15 @@
         button-emp2()
         button-small()
         //svg-inside()
+
+  &:hover
+    .background
+      transform scale(1.1)
+    .overlay
+      .title
+        margin-bottom 10px
+      .cost
+        margin-bottom 5px
 </style>
 
 <template>

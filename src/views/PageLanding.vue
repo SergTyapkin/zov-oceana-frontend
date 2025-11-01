@@ -155,12 +155,12 @@
       </div>
       <div class="title-desc">Экологически чистые, отборные продукты с доставкой прямо к вашей двери</div>
       <div class="buttons">
-        <button class="button-market">в магазин</button>
-        <button class="button-info">узнать больше</button>
+        <router-link :to="{name: 'market'}"><button class="button-market">в магазин</button></router-link>
+        <a href="#about"><button class="button-info">узнать больше</button></a>
       </div>
     </section>
 
-    <section class="numbers">
+    <section class="numbers" id="about">
       <ul class="numbers-list">
         <li class="number-container">
           <div class="number">500+</div>
@@ -224,37 +224,8 @@
       <header class="header">Выбор по категориям</header>
       <div class="section-desc">Найдите именно то, что ищете</div>
       <ul class="categories-container">
-        <li class="category-card">
-          <CategoryCard
-            :category="{
-              id: '1233',
-              title: 'Свежая рыба',
-              goodsCount: 45,
-            }" />
-        </li>
-        <li class="category-card">
-          <CategoryCard
-            :category="{
-              id: '123',
-              title: 'Моллюски',
-              goodsCount: 32,
-            }" />
-        </li>
-        <li class="category-card">
-          <CategoryCard
-            :category="{
-              id: '12',
-              title: 'Премиум',
-              goodsCount: 18,
-            }" />
-        </li>
-        <li class="category-card">
-          <CategoryCard
-            :category="{
-              id: '125',
-              title: 'Замороженное',
-              goodsCount: 28,
-            }" />
+        <li v-for="category in categories" class="category-card">
+          <CategoryCard :category="category" />
         </li>
       </ul>
     </section>
@@ -298,11 +269,24 @@ export default {
   data() {
     return {
       categories: [] as Category[],
+
+      loading: false,
     };
   },
 
-  mounted() {},
+  mounted() {
+    this.updateCategories();
+  },
 
-  methods: {},
+  methods: {
+    async updateCategories() {
+      this.categories = ((await this.$request(
+        this,
+        this.$api.getCategories,
+        [],
+        `Не удалось получить список категори`,
+      )) as {categories: Category[]}).categories;
+    }
+  },
 };
 </script>

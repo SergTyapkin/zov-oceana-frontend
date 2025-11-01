@@ -14,8 +14,8 @@
   height 45px
   margin 0
   padding 0 15px
-  border 2px solid colorBorder
-  border-radius radiusM
+  border none
+  background colorBlockBg
   &:focus
     border-color colorEmp1
 
@@ -24,7 +24,7 @@
     font-small()
 
     width 100%
-    margin-right 8px
+    margin-left 8px
     color colorText1
     &::placeholder
       color colorText3
@@ -39,19 +39,20 @@
 
 <template>
   <div class="root-input-with-icon">
+    <label for="search">
+      <img class="icon" src="/static/icons/search.svg" alt="search">
+    </label>
     <input
       class="input"
       :type="type"
-      @input="updateModelValue(modelValue)"
+      @input="updateModelValue(undefined)"
       :placeholder="placeholder"
       id="search"
       @change="$emit('change')"
+      v-model="value"
     >
     <transition name="opacity" mode="out-in">
-      <label v-if="!modelValue" for="search">
-        <img class="icon" src="/static/icons/search.svg" alt="search">
-      </label>
-      <img v-else class="clear" @click="updateModelValue('')" src="/static/icons/cross.svg" alt="clear">
+      <img v-if="modelValue" class="clear" @click="updateModelValue('')" src="/static/icons/cross.svg" alt="clear">
     </transition>
   </div>
 </template>
@@ -76,10 +77,18 @@ export default {
     },
   },
 
+  data() {
+    return {
+      value: this.modelValue,
+    }
+  },
+
   methods: {
-    updateModelValue(value: string) {
+    updateModelValue(value?: string) {
+      value = value === undefined ? this.value : value;
       this.$emit('update:modelValue', value);
       this.$emit('input');
+      this.value = value;
     }
   }
 };

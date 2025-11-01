@@ -38,13 +38,43 @@
       justify-content space-between
       .input-group
         flex 1
+        display flex
+        .search
+          flex 1
+    .bottom-row
+      font-small-extra()
+      background #F0F9FF
+      padding 5px 10px
+      width min-content
+      white-space nowrap
+      margin-top 20px
 
   section.goods
     padding-block 50px
     display flex
     gap 15px
+    flex-wrap wrap
+    justify-content space-evenly
+    width 100%
+    .goods-card
+      flex 1
+      animation-float()
+</style>
 
-
+<style scoped lang="stylus">
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
 </style>
 
 <template>
@@ -60,23 +90,51 @@
     <section class="filters">
       <div class="top-row">
         <div class="input-group">
-          <InputSearch placeholder="Найти продукты..." />
-          <SelectList :list="[]" />
+          <InputSearch class="search" placeholder="Найти продукты..." v-model="filters.searchText" />
+          <SelectList
+            placeholder="Все категории"
+            can-be-null
+            :list="
+              categories.map(category => ({
+                name: category.title,
+                value: category.id,
+              }))
+            "
+            v-model="filters.categoryId" />
         </div>
 
         <SelectList
-          :list="categories.map(category => ({
-
-          }))"
-        />
+          v-model="filters.sorting"
+          :selected-idx="0"
+          :list="[
+            {
+              name: 'Название (А-Я)',
+              value: 'name',
+            },
+            {
+              name: 'Цена (сначала дешевые)',
+              value: 'cost-cheap',
+            },
+            {
+              name: 'Цена (сначала дорогие)',
+              value: 'cost-expensive',
+            },
+          ]" />
       </div>
-      <div class="bottom-row">
-        <div class="">Найдено {{ goodsFiltered.length }} товаров</div>
+      <div v-if="filters.searchText || filters.categoryId" class="bottom-row">
+        Найдено {{ goodsFiltered.length }} товаров
       </div>
     </section>
 
     <section class="goods">
-      <GoodsCard :goods="goods" v-for="goods in goodsFiltered" />
+      <transition-group name="list">
+        <GoodsCard
+          v-for="(goods, i) in goodsFiltered"
+          class="goods-card"
+          :goods="goods"
+          :style="`--animation-index: ${i}`"
+        />
+      </transition-group>
     </section>
   </div>
 </template>
@@ -94,21 +152,63 @@ export default {
   data() {
     return {
       goods: [] as Goods[],
-
       categories: [] as Category[],
+
+      filters: {
+        sorting: null as 'name' | 'cost-cheap' | 'cost-expensive' | null,
+        searchText: '',
+        categoryId: null as String | null,
+      },
+
+      loading: false,
     };
   },
 
   computed: {
     goodsFiltered() {
-      return this.goods.filter(goods => {
-        return true;
-      });
+      console.log(this.filters.categoryId, this.goods);
+      return this.goods
+        .filter(goods => {
+          return (
+            (!this.filters.searchText || new RegExp(this.filters.searchText, 'i').test(goods.title)) &&
+            (!this.filters.categoryId || goods.categoryId === this.filters.categoryId)
+          );
+        })
+        .sort((g1, g2) => {
+          if (this.filters.sorting === 'name') {
+            return g1.title.localeCompare(g2.title);
+          } else if (this.filters.sorting === 'cost-cheap') {
+            return Number(g1.cost) - Number(g2.cost);
+          } else if (this.filters.sorting === 'cost-expensive') {
+            return Number(g2.cost) - Number(g1.cost);
+          } else {
+            return 0;
+          }
+        });
     },
   },
 
-  mounted() {},
+  mounted() {
+    this.updateCategories();
+    this.updateGoods();
+  },
 
-  methods: {},
+  methods: {
+    async updateCategories() {
+      this.categories = (
+        (await this.$request(this, this.$api.getCategories, [], `Не удалось получить список категори`)) as {
+          categories: Category[];
+        }
+      ).categories;
+    },
+
+    async updateGoods() {
+      this.goods = (
+        (await this.$request(this, this.$api.getGoods, [], `Не удалось получить список товаров`)) as {
+          goods: Goods[];
+        }
+      ).goods;
+    },
+  },
 };
 </script>

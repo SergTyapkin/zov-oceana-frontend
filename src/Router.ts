@@ -12,6 +12,7 @@ import routes from '~/routes';
 import { RouteRecordRaw } from 'vue-router';
 import PageLanding from '~/views/PageLanding.vue';
 import PageMarket from '~/views/PageMarket.vue';
+import PageProfileHome from '~/views/User/PageProfileHome.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -26,7 +27,13 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/', name: 'default', component: PageLanding },
     { path: '/market', name: 'market', component: PageMarket },
 
-    { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
+    { path: '/profile', name: 'profileHome', component: PageProfileHome, meta: {loginRequired: true}, children: [
+        { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
+        { path: '/profile/orders', name: 'profileOrders', component: PageProfile, meta: {loginRequired: true} },
+        { path: '/profile/addresses', name: 'profileAddresses', component: PageProfile, meta: {loginRequired: true} },
+        { path: '/profile/settings', name: 'profileSettings', component: PageProfile, meta: {loginRequired: true} },
+      ],
+    },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
     { path: '/signup', name: 'signup', component: PageRegistration, meta: {loginRequired: true} },
     { path: '/password/restore', name: 'restorePassword', component: PageRestorePassword, meta: {loginRequired: true} },

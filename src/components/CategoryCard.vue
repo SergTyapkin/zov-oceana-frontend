@@ -17,12 +17,14 @@
   min-height 200px
   position relative
   text-align left
+  overflow hidden
 
   .background
     img-size(100%)
     position absolute
     inset 0
     object-fit cover
+    trans()
 
   .overlay
     position absolute
@@ -40,6 +42,7 @@
     .title
       font-medium()
       font-spaced()
+      trans()
     .description
       svg-inside()
       font-small-extra()
@@ -49,6 +52,16 @@
       font-upper()
       font-thin()
       color colorTextInvert4
+      trans()
+
+  &:hover
+    .background
+      transform scale(1.1)
+    .overlay
+      .title
+        margin-bottom 10px
+      .goods-count
+        margin-bottom 5px
 </style>
 
 <template>

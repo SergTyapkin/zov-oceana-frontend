@@ -15,6 +15,7 @@ export interface Goods {
   fromLocation?: string;
   amountLeft?: number;
   cost?: number;
+  categoryId?: string;
 }
 
 export interface Category {

@@ -7,9 +7,9 @@
 
 height = 45px
 bg-color = colorBlockBg
-bg-color-hover = mix(colorBlockBg, colorEmp1, 90%)
-bg-color-selected = mix(colorBlockBg, colorEmp1, 85%)
-bg-color-selected-hover = mix(colorBlockBg, colorEmp1, 90%)
+bg-color-hover = mix(colorBlockBg, colorEmp2, 90%)
+bg-color-selected = mix(colorBlockBg, colorEmp2, 85%)
+bg-color-selected-hover = mix(colorBlockBg, colorEmp2, 90%)
 
 item-height = 40px
 max-list-height = 200px
@@ -51,7 +51,6 @@ field()
     justify-content space-between
     width 100%
     height height
-    border 2px solid colorBorder
     color colorText1
     &.default
       color colorText2
@@ -65,7 +64,6 @@ field()
       transition transform 0.3s ease
 
   .list
-    block-shadow()
     scrollable()
 
     position absolute
@@ -77,7 +75,6 @@ field()
     margin 0
     padding 0
     border-top none
-    border-radius borderRadiusM
     list-style none
     transition all 0.2s ease
 
@@ -109,7 +106,6 @@ field()
       top -16px
 
     .selected-item
-      border-color colorEmp1
       background bg-color-selected
 
     img
