@@ -27,7 +27,7 @@ export default defineConfig(({ mode }: { command: 'build' | 'serve'; mode: 'deve
       pluginPrettier(),
       pluginViteStaticCopy({
         targets: [
-          { src: 'static/favicon.svg', dest: 'static' },
+          { src: 'static/favicon.png', dest: 'static' },
           { src: 'static/open-graph-preview.png', dest: 'static' },
         ],      }),
       pluginSitemap({
@@ -47,14 +47,14 @@ export default defineConfig(({ mode }: { command: 'build' | 'serve'; mode: 'deve
 
 
         includeManifestIcons: true,
-        includeAssets: ['/static/favicon.svg'],
+        includeAssets: ['/static/favicon.png'],
         manifest: {
           short_name: 'Frontend Template',
           name: 'Frontend template with all best-practice instruments',
           description: 'Some description of our service',
           icons: [
             {
-              src: '/static/favicon.svg',
+              src: '/static/favicon.png',
               sizes: '32x32',
               type: 'image/png',
               purpose: 'maskable',

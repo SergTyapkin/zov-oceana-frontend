@@ -5,7 +5,7 @@
 @import '../styles/animations.styl'
 @import '../styles/components.styl'
 
-range-empty-background = colorBg
+range-empty-background = colorBgLight
 range-fill-background = colorEmp1
 
 
@@ -34,7 +34,7 @@ thumb-width = 25px
     width 60px
     padding 5px 8px
     border-radius radiusMax
-    color colorBg
+    color colorBgLight
     text-align center
     -moz-appearance textfield
     -webkit-appearance textfield

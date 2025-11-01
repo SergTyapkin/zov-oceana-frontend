@@ -10,20 +10,23 @@
 
 .root-header
   .row-inner
+    scrollbars-hidden()
+    page-root()
+    font-small()
     overflow-x auto
     display flex
     gap 7%
     align-items center
     justify-content space-between
-    padding-top 10px
-    padding-bottom 10px
-    background colorBlockBgEmp1Gradient
-    scrollbars-hidden()
-    page-root()
-    font-small()
+    padding-block 15px
+    background colorBgLight
     .left-group
-      width 120px
       hover-effect()
+      white-space nowrap
+      font-upper()
+      svg-inside(45px)
+      font-medium()
+      font-bold-extra()
 
     .center-group
       display flex
@@ -31,17 +34,17 @@
       align-items center
       justify-content center
       gap 30px
-      max-width 800px
+      font-upper()
+      font-medium()
 
       > *
         padding 5px 5px
         white-space nowrap
-        background linear-gradient(colorText1, colorText1) 50% 100% / 0 1px no-repeat
         hover-effect()
         trans()
 
         &.router-link-active
-          background-size 100% 1px
+          color colorEmp2
 
     .right-group
       display flex
@@ -65,7 +68,7 @@
       >
         <img
           class="logo"
-          src="/static/icons/telegram-logo.svg"
+          src="/static/images/logo-small.png"
           alt="logo"
         >
         Зов океана
@@ -73,11 +76,11 @@
 
       <div class="center-group">
         <router-link :to="{ name: 'default' }">Главная</router-link>
-        <router-link :to="{ name: 'default' }">Магазин</router-link>
+        <router-link :to="{ name: 'market' }">Магазин</router-link>
       </div>
 
       <div class="right-group">
-        <router-link :to="{ name: 'profile' }" class="cart"><img src="/static/icons/profile-thin.svg" alt="cart"></router-link>
+        <router-link :to="{ name: 'profile' }" class="cart"><img src="/static/icons/cart-dark.svg" alt="cart"></router-link>
         <router-link :to="{ name: 'profile' }" class="profile"><img src="/static/icons/profile.svg" alt="profile"></router-link>
       </div>
     </div>

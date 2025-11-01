@@ -9,22 +9,24 @@
 
 
 .root-footer
-  margin-top 100px
-  color colorText1
-  background colorBlockBgEmp1Gradient
+  color colorTextInvert1
+  background colorBgDark
 
   .top-row
     page-root()
 
     display flex
-    gap 10px
+    gap 20px
     justify-content space-between
-    padding-top 40px
+    padding-top 60px
     padding-bottom 20px
 
     .column
+      color colorTextInvert3
       display flex
       flex-direction column
+      font-spaced()
+      font-upper()
 
       > *:not(header)
         font-small-extra()
@@ -33,17 +35,25 @@
 
         padding 4px 0
 
-      .logo
-        width 150px
-
-        @media ({mobile})
-          width 75px
+      .logo-container
+        font-medium()
+        font-upper()
+        display flex
+        align-items center
+        gap 10px
+        .logo
+          width 50px
 
       header
-        font-large()
+        font-medium()
+        margin-bottom 20px
 
   .bottom-row
-    border-top 1px solid colorEmp2
+    padding-block 50px
+    text-align center
+    font-upper()
+    font-small-extra()
+    color colorTextInvert5
     .bottom-row-inner
       page-root()
       font-small()
@@ -68,26 +78,26 @@
   <footer class="root-footer">
     <section class="top-row">
       <router-link :to="{ name: 'default' }" class="column">
-        <img class="logo" src="/static/icons/telegram-logo.svg" alt="logo">
+        <div class="logo-container">
+          <img class="logo" src="/static/images/logo-small.png" alt="logo">
+          Зов океана
+        </div>
         <div class="desc">Премиальное по доступным ценам</div>
       </router-link>
 
       <section class="column">
         <header>Навигация</header>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
+        <router-link :to="{ name: 'default' }">Главная</router-link>
+        <router-link :to="{ name: 'default' }">Магазин</router-link>
+        <router-link :to="{ name: 'default' }">Профиль</router-link>
       </section>
 
       <section class="column">
         <header>Категории</header>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
+        <router-link :to="{ name: 'default' }">Свежая рыба</router-link>
+        <router-link :to="{ name: 'default' }">Моллюски</router-link>
+        <router-link :to="{ name: 'default' }">Премиум</router-link>
+        <router-link :to="{ name: 'default' }">Замороженные</router-link>
       </section>
 
       <section class="column">
@@ -100,10 +110,10 @@
 
     <section class="bottom-row">
       <div class="info">© 2025 Зов океана. Все права защищены.</div>
-      <div class="bottom-row-bottom">
-        <router-link :to="{ name: 'default' }">Политика конфиденциальности</router-link>
-        <router-link :to="{ name: 'default' }">Настройка файлов cookie</router-link>
-      </div>
+<!--      <div class="bottom-row-bottom">-->
+<!--        <router-link :to="{ name: 'default' }">Политика конфиденциальности</router-link>-->
+<!--        <router-link :to="{ name: 'default' }">Настройка файлов cookie</router-link>-->
+<!--      </div>-->
     </section>
   </footer>
 </template>

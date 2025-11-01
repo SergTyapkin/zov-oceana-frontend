@@ -10,11 +10,11 @@ size = 25px
 checked-background = colorEmp1
 checked-border = 0px solid transparent
 
-disabled-background = mix(colorEmp1, colorBg)
+disabled-background = mix(colorEmp1, colorBgLight)
 disabled-border = 0px solid transparent
 
 
-no-checked-background = colorBg
+no-checked-background = colorBgLight
 no-checked-border = 0px solid transparent
 
 .checkbox-container

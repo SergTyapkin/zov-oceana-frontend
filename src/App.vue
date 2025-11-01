@@ -10,12 +10,13 @@
 .wrapper
   flex 1
   width 100%
-  min-height 100%
+  //height 100%
+  //min-height 100vh
 
-// > *
-//  position absolute
-//  width 100%
-//  min-height 100vh
+  //> *
+  //  position absolute
+  //  width 100%
+  //  min-height 100vh
 </style>
 
 <style lang="stylus">
@@ -53,10 +54,10 @@
 
 
 .opacity-enter-active
-  animation opacity 0.3s
+  animation opacity 0.2s
 
 .opacity-leave-active
-  animation opacity 0.3s reverse forwards
+  animation opacity 0.2s reverse forwards
 
 
 @keyframes opacity
@@ -72,7 +73,7 @@
 
   <div class="wrapper">
     <router-view #default="{ Component }">
-      <transition name="scale-in">
+      <transition name="opacity" mode="out-in">
         <component :is="Component" />
       </transition>
     </router-view>

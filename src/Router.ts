@@ -11,6 +11,7 @@ import PageConfirmEmail from '~/views/User/PageConfirmEmail.vue';
 import routes from '~/routes';
 import { RouteRecordRaw } from 'vue-router';
 import PageLanding from '~/views/PageLanding.vue';
+import PageMarket from '~/views/PageMarket.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -23,6 +24,7 @@ type MyRoute = RouteRecordRaw & {
 export default function createVueRouter(Store: Store): Router {
   const routesList: MyRoute[] = [
     { path: '/', name: 'default', component: PageLanding },
+    { path: '/market', name: 'market', component: PageMarket },
 
     { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
