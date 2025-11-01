@@ -148,9 +148,9 @@
 <template>
   <div class="root-page">
     <section class="title">
-      <img src="/static/images/logo-big.png" alt="logo" class="logo" />
+      <img src="/static/images/logo-big.png" alt="logo" class="logo">
       <div class="title-text">
-        <mark>Премиальное</mark> по <br />
+        <mark>Премиальное</mark> по <br>
         доступным ценам
       </div>
       <div class="title-desc">Экологически чистые, отборные продукты с доставкой прямо к вашей двери</div>
@@ -194,7 +194,8 @@
               fromLocation: 'Норвегия',
               cost: 2450,
               amountLeft: 10,
-            }" />
+            }"
+          />
         </li>
         <li class="goods-container">
           <GoodsCard
@@ -204,7 +205,8 @@
               fromLocation: 'Таиланд',
               cost: 2310,
               amountLeft: 10,
-            }" />
+            }"
+          />
         </li>
         <li class="goods-container">
           <GoodsCard
@@ -214,7 +216,8 @@
               fromLocation: 'МЭН. США',
               cost: 6320,
               amountLeft: 10,
-            }" />
+            }"
+          />
         </li>
       </ul>
     </section>
@@ -235,7 +238,7 @@
       <header class="header">Отечественные поставки</header>
       <div class="section-desc">Отслеживание происхождения наших премиальных морепродуктов</div>
       <div class="map-image-container">
-        <img class="map-image" src="/static/images/map.svg" alt="map"/>
+        <img class="map-image" src="/static/images/map.svg" alt="map">
       </div>
     </section>
 
@@ -245,16 +248,18 @@
       <ul class="links-container">
         <li class="link">
           <a href="https://vk.com/#" target="_blank">
-            <img src="/static/icons/vk-logo.svg" alt="vk" />
+            <img src="/static/icons/vk-logo.svg" alt="vk">
           </a>
         </li>
         <li class="link">
           <a href="https://t.me/#" target="_blank">
-            <img src="/static/icons/telegram-logo.svg" alt="tg" />
+            <img src="/static/icons/telegram-logo.svg" alt="tg">
           </a>
         </li>
       </ul>
     </section>
+
+    <CircleLoading v-if="loading" />
   </div>
 </template>
 
@@ -262,9 +267,10 @@
 import GoodsCard from '~/components/GoodsCard.vue';
 import { Category } from '~/utils/models';
 import CategoryCard from '~/components/CategoryCard.vue';
+import CircleLoading from '~/components/loaders/CircleLoading.vue';
 
 export default {
-  components: { CategoryCard, GoodsCard },
+  components: { CircleLoading, CategoryCard, GoodsCard },
 
   data() {
     return {

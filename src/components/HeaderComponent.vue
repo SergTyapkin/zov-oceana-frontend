@@ -88,14 +88,9 @@
 </template>
 
 <script lang="ts">
-import InputSearch from '~/components/InputSearch.vue';
-
 export default {
-  components: { InputSearch },
-
   data() {
     return {
-      searchText: '',
     };
   },
 

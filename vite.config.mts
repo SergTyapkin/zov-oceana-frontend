@@ -7,7 +7,7 @@ import { viteStaticCopy as pluginViteStaticCopy } from 'vite-plugin-static-copy'
 import pluginSitemap from 'vite-plugin-sitemap';
 import pluginAutoprefixer from 'autoprefixer';
 import routes from './src/routes';
-import pluginTsCompileServiceWorker from './src/serviceWorker/pluginTsCompileServiceWorker';
+// import pluginTsCompileServiceWorker from './src/serviceWorker/pluginTsCompileServiceWorker';
 import pluginAssetsInserter from './src/serviceWorker/pluginAssetsListGenerator';
 import pluginDynamicImport from 'vite-plugin-dynamic-import';
 import pluginOpenGraph from 'vite-plugin-open-graph';

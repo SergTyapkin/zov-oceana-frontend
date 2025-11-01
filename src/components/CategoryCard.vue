@@ -66,7 +66,7 @@
 
 <template>
   <div class="root-category-card">
-    <img class="background" :src="category.previewUrl || IMAGE_DEFAULT" alt="" />
+    <img class="background" :src="category.previewUrl || IMAGE_DEFAULT" alt="">
 
     <section class="overlay">
       <div class="title">{{ category.title }}</div>

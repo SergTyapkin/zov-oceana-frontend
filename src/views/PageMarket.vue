@@ -81,7 +81,7 @@
   <div class="root-page">
     <section class="title">
       <header class="header">
-        Магазин<br />
+        Магазин<br>
         Морепродуктов
       </header>
       <div class="title-desc">Просмотрите наш полный ассортимент премиальных морепродуктов</div>
@@ -100,7 +100,8 @@
                 value: category.id,
               }))
             "
-            v-model="filters.categoryId" />
+            v-model="filters.categoryId"
+          />
         </div>
 
         <SelectList
@@ -119,7 +120,8 @@
               name: 'Цена (сначала дорогие)',
               value: 'cost-expensive',
             },
-          ]" />
+          ]"
+        />
       </div>
       <div v-if="filters.searchText || filters.categoryId" class="bottom-row">
         Найдено {{ goodsFiltered.length }} товаров
@@ -130,24 +132,27 @@
       <transition-group name="list">
         <GoodsCard
           v-for="(goods, i) in goodsFiltered"
+          :key="goods.id"
           class="goods-card"
           :goods="goods"
           :style="`--animation-index: ${i}`"
         />
       </transition-group>
     </section>
+
+    <CircleLoading v-if="loading" />
   </div>
 </template>
 
 <script lang="ts">
 import GoodsCard from '~/components/GoodsCard.vue';
 import { Category, Goods } from '~/utils/models';
-import CategoryCard from '~/components/CategoryCard.vue';
 import InputSearch from '~/components/InputSearch.vue';
 import SelectList from '~/components/SelectList.vue';
+import CircleLoading from '~/components/loaders/CircleLoading.vue';
 
 export default {
-  components: { SelectList, InputSearch, CategoryCard, GoodsCard },
+  components: { CircleLoading, SelectList, InputSearch, GoodsCard },
 
   data() {
     return {
@@ -157,7 +162,7 @@ export default {
       filters: {
         sorting: null as 'name' | 'cost-cheap' | 'cost-expensive' | null,
         searchText: '',
-        categoryId: null as String | null,
+        categoryId: null as string | null,
       },
 
       loading: false,

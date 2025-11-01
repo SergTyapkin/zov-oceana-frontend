@@ -110,10 +110,10 @@
 
     <section class="bottom-row">
       <div class="info">© 2025 Зов океана. Все права защищены.</div>
-<!--      <div class="bottom-row-bottom">-->
-<!--        <router-link :to="{ name: 'default' }">Политика конфиденциальности</router-link>-->
-<!--        <router-link :to="{ name: 'default' }">Настройка файлов cookie</router-link>-->
-<!--      </div>-->
+      <!--      <div class="bottom-row-bottom">-->
+      <!--        <router-link :to="{ name: 'default' }">Политика конфиденциальности</router-link>-->
+      <!--        <router-link :to="{ name: 'default' }">Настройка файлов cookie</router-link>-->
+      <!--      </div>-->
     </section>
   </footer>
 </template>

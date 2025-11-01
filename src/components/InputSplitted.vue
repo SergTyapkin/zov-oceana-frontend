@@ -76,9 +76,9 @@
       @input="updateModelValue"
       placeholder=" "
       @click="(evt: MouseEvent) => onClick(evt, i)"
-    />
+    >
 
-    <CircleLoading v-if="loading" class="icon"/>
+    <CircleLoading v-if="loading" class="icon" />
     <img v-else-if="error" src="/static/icons/close-red.svg" class="icon" alt="error">
     <img v-else-if="success" src="/static/icons/done-green.svg" class="icon" alt="error">
   </section>
