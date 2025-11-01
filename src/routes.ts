@@ -11,6 +11,9 @@ export default {
   '/email/confirm': false,
   '/horse/:id': false,
 
+  // Market
+  '/market': false,
+
   // Page 404
   '/:pathMatch(.*)*': false,
 };

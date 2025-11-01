@@ -60,7 +60,7 @@
     <section class="filters">
       <div class="top-row">
         <div class="input-group">
-          <InputSearch />
+          <InputSearch placeholder="Найти продукты..." />
           <SelectList :list="[]" />
         </div>
 

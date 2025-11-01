@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, Router, RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
+import { createRouter, createWebHistory, Router, /* RouteLocationNormalized, */ NavigationGuardNext } from 'vue-router';
 import { type Store } from '~/types/store';
 
 // Components:
@@ -42,7 +42,8 @@ export default function createVueRouter(Store: Store): Router {
   });
 
   let router_got_user = false;
-  Router.beforeEach(async (to: RouteLocationNormalized, _, next: NavigationGuardNext) => {
+  // Router.beforeEach(async (to: RouteLocationNormalized, _, next: NavigationGuardNext) => {
+  Router.beforeEach(async (_, __, next: NavigationGuardNext) => {
     if (!router_got_user) {
       await Store.dispatch('GET_USER');
       router_got_user = true;
