@@ -1,8 +1,12 @@
 export interface User {
   id: string;
-  username: string;
+  givenName: string;
+  familyName: string;
+  middleName?: string;
   email: string;
-  role: 'admin' | 'user';
+  tel?: string;
+
+  isAdmin: boolean;
 
   isSignedIn: boolean;
 }

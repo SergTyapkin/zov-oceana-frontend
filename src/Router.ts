@@ -5,14 +5,14 @@ import { type Store } from '~/types/store';
 import Page404 from '~/views/Page404.vue';
 import PageRegistration from '~/views/User/PageRegistration.vue';
 import PageLogin from '~/views/User/PageLogin.vue';
-import PageProfile from '~/views/User/PageProfile.vue';
+import PageProfileInfo from '~/views/User/PageProfile/PageProfileInfo.vue';
 import PageRestorePassword from '~/views/User/PageRestorePassword.vue';
 import PageConfirmEmail from '~/views/User/PageConfirmEmail.vue';
 import routes from '~/routes';
 import { RouteRecordRaw } from 'vue-router';
 import PageLanding from '~/views/PageLanding.vue';
 import PageMarket from '~/views/PageMarket.vue';
-import PageProfileHome from '~/views/User/PageProfileHome.vue';
+import PageProfile from '~/views/User/PageProfile/PageProfile.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -27,11 +27,11 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/', name: 'default', component: PageLanding },
     { path: '/market', name: 'market', component: PageMarket },
 
-    { path: '/profile', name: 'profileHome', component: PageProfileHome, meta: {loginRequired: true}, children: [
-        { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
-        { path: '/profile/orders', name: 'profileOrders', component: PageProfile, meta: {loginRequired: true} },
-        { path: '/profile/addresses', name: 'profileAddresses', component: PageProfile, meta: {loginRequired: true} },
-        { path: '/profile/settings', name: 'profileSettings', component: PageProfile, meta: {loginRequired: true} },
+    { path: '/profile', component: PageProfile, meta: {loginRequired: true}, children: [
+        { path: '/profile', name: 'profile', component: PageProfileInfo, meta: {loginRequired: true} },
+        { path: '/profile/orders', name: 'profileOrders', component: PageProfileInfo, meta: {loginRequired: true} },
+        { path: '/profile/addresses', name: 'profileAddresses', component: PageProfileInfo, meta: {loginRequired: true} },
+        { path: '/profile/settings', name: 'profileSettings', component: PageProfileInfo, meta: {loginRequired: true} },
       ],
     },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },

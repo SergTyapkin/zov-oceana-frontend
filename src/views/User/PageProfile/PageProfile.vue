@@ -1,11 +1,11 @@
 <style lang="stylus" scoped>
-@import '../../styles/constants.styl'
-@import '../../styles/components.styl'
-@import '../../styles/buttons.styl'
-@import '../../styles/fonts.styl'
-@import '../../styles/utils.styl'
-@import '../../styles/animations.styl'
-@import '../../styles/scrollbars.styl'
+@import '../../../styles/constants.styl'
+@import '../../../styles/components.styl'
+@import '../../../styles/buttons.styl'
+@import '../../../styles/fonts.styl'
+@import '../../../styles/utils.styl'
+@import '../../../styles/animations.styl'
+@import '../../../styles/scrollbars.styl'
 
 .root-profile
   page-root()
@@ -50,17 +50,20 @@
       hover-effect()
       &.router-link-exact-active
         background colorEmp2
+
+  section.profile-main
+    margin-top 60px
 </style>
 
 <template>
   <div class="root-profile">
     <section class="title">
       <div class="avatar">
-        {{ $user.username.slice(0, 1) }}
+        {{ $user.givenName.slice(0, 1) }}{{ $user.familyName.slice(0, 1) }}
       </div>
 
       <div>
-        <header class="username">{{ $user.username }}</header>
+        <header class="username">{{ $user.givenName }} {{ $user.familyName }}</header>
         <div class="info-date">Участник с {{ $user.id }}</div>
       </div>
     </section>

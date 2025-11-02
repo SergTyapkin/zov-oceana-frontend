@@ -2,16 +2,21 @@ import { ArrayType, Type, validateModel } from '@sergtyapkin/models-validator';
 
 export const UserModel = {
   id: String,
-  username: String,
+  givenName: String,
+  familyName: String,
+  middleName: Type(String, true),
   email: String,
-  role: new Set(['admin', 'user']),
+  tel: Type(String, true),
+  isAdmin: Boolean,
 };
 
 export const UserModelMockData = validateModel(UserModel, {
   id: 'USER_ID',
-  username: 'SergTyapkin',
+  givenName: 'Сергей',
+  familyName: 'Тяпкин',
+  middleName: 'Сергеевич',
   email: 'Tyapkin2002@mail.ru',
-  role: 'user',
+  isAdmin: false,
 });
 
 export const CategoryModel = {

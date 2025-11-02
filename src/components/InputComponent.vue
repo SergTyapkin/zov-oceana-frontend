@@ -11,7 +11,7 @@
   .title
     font-small()
 
-    color colorText2
+    color colorText1
     trans()
 
   .description
@@ -27,14 +27,14 @@
     input
     textarea
       input-no-styles()
-      font-small()
+      font-small-extra()
       font-spaced()
 
       width 100%
       margin-bottom 3px
       padding 10px
       color colorText1
-      border-bottom 2px solid colorBorder
+      background colorBlockBg
       trans()
 
       &::placeholder
