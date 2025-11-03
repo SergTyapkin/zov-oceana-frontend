@@ -11,8 +11,12 @@
   page-root()
 
   section.title
-    padding 70px (pageMinHorizontalPadding + 50px)
-    margin-inline - pageMinHorizontalPadding
+  nav.navigation
+    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+    width 100vw
+
+  section.title
+    padding 70px pageMinHorizontalPadding
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     color colorTextInvert1
     display flex
@@ -36,7 +40,6 @@
       color colorTextInvert3
 
   nav.navigation
-    margin-inline - pageMinHorizontalPadding
     display flex
     color colorTextInvert1
     text-align center
@@ -85,7 +88,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
 
   data() {

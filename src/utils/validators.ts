@@ -40,7 +40,7 @@ const Validators = {
   },
   phone: {
     regExp: /^((\+7)|8)[-\s.]?((\(\d\d\d\))|(\d\d\d))[-\s.]?\d\d\d[-\s.]?\d\d[-\s.]?\d\d$/,
-    prettifyResult: (str: string): string => str.replace('+7', '8').replace('-', '').replace('(', '').replace(')', ''),
+    prettifyResult: (str: string): string => str.replace(/^8/, '+7').replace('-', '').replace('(', '').replace(')', ''),
   },
   password: {
     regExp: /^.{6,}$/i,

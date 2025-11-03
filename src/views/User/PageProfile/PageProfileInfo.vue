@@ -68,7 +68,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CircleLoading from '~/components/loaders/CircleLoading.vue';
 import Validators from '~/utils/validators';
 import InputComponent from '~/components/InputComponent.vue';
@@ -112,7 +112,7 @@ export default {
       this.errors.familyName = !Validators.name.validate(this.fields.familyName);
       this.errors.middleName = !Validators.nameOptional.validate(this.fields.middleName);
       this.errors.email = !Validators.email.validate(this.fields.email);
-      this.errors.tel = !Validators.tel.validate(this.fields.tel);
+      this.errors.tel = !Validators.phone.validate(this.fields.tel);
       if (
         this.errors.givenName ||
         this.errors.familyName ||
@@ -122,6 +122,11 @@ export default {
       ) {
         return;
       }
+      this.fields.givenName = Validators.name.prettifyResult(this.fields.givenName);
+      this.fields.familyName = Validators.name.prettifyResult(this.fields.familyName);
+      this.fields.middleName = Validators.nameOptional.prettifyResult(this.fields.middleName);
+      this.fields.email = Validators.email.prettifyResult(this.fields.email);
+      this.fields.tel = Validators.phone.prettifyResult(this.fields.tel);
 
       await this.$request(
         this,

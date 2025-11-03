@@ -13,8 +13,9 @@
 
   section.title
   section.filters
-    padding 100px pageMinHorizontalPadding
-    margin-inline - pageMinHorizontalPadding
+    page-root()
+    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+    width 100vw
 
   section.title
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
@@ -50,6 +51,7 @@
       margin-top 20px
 
   section.goods
+    margin-inline auto
     padding-block 50px
     display flex
     gap 15px

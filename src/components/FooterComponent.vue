@@ -9,11 +9,11 @@
 
 
 .root-footer
+  page-root()
   color colorTextInvert1
   background colorBgDark
 
   .top-row
-    margin-inline auto
     max-width pageMaxWidth
 
     display flex

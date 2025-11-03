@@ -98,7 +98,6 @@
 
   section.categories
     padding-inline 0
-    margin-inline auto
     max-width pageMaxWidth
     .section-header
       background colorBgDark

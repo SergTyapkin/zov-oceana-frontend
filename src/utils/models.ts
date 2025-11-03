@@ -30,3 +30,16 @@ export interface Category {
   goodsCount?: number;
 }
 
+export type OrderStatus = 'created' | 'paid' | 'prepared' | 'delivered' | 'cancelled';
+export interface Order {
+  id: string;
+  goods: Goods[];
+  createdDate: Date;
+  updatedDate: Date;
+  cost: number;
+  status: OrderStatus;
+  userId?: string;
+  userGivenName?: string;
+  userFamilyName?: string;
+}
+

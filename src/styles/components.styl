@@ -6,8 +6,7 @@
 page-root()
   // box-sizing content-box
   width 100%
-  max-width pageMaxWidth
-  padding-inline 'max(calc((100% - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPadding)
+  padding-inline 'max(calc((100vw - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPadding)
   padding-top 30px
   padding-bottom 70px
 
