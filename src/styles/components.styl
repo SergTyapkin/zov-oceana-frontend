@@ -7,9 +7,9 @@ page-root()
   // box-sizing content-box
   width 100%
   max-width pageMaxWidth
-  margin-right 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
-  margin-left 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
-  padding 30px pageMinHorizontalPadding 70px pageMinHorizontalPadding
+  padding-inline 'max(calc((100% - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPadding)
+  padding-top 30px
+  padding-bottom 70px
 
 
 block(colorBorder=colorBorder)

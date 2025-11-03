@@ -13,6 +13,7 @@
     scrollbars-hidden()
     page-root()
     font-small()
+    margin-inline auto
     overflow-x auto
     display flex
     gap 7%

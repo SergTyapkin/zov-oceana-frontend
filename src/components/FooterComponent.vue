@@ -13,7 +13,8 @@
   background colorBgDark
 
   .top-row
-    page-root()
+    margin-inline auto
+    max-width pageMaxWidth
 
     display flex
     gap 20px

@@ -12,7 +12,8 @@
   padding-block 0
   section
     padding 100px pageMinHorizontalPadding
-    margin-inline - pageMinHorizontalPadding
+    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+    width 100vw
     display flex
     flex-direction column
     align-items center
@@ -62,6 +63,8 @@
 
   section.numbers
     display block
+    margin-inline auto
+    max-width pageMaxWidth
     .numbers-list
       list-no-styles()
       display flex
@@ -91,10 +94,12 @@
       gap 20px
       width 100%
       align-items center
-      justify-content space-between
+      justify-content space-evenly
 
   section.categories
     padding-inline 0
+    margin-inline auto
+    max-width pageMaxWidth
     .section-header
       background colorBgDark
       color colorTextInvert1
