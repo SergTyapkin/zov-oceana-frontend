@@ -44,7 +44,7 @@
       </ul>
     </main>
 
-    <CircleLoading v-if="loading" />
+    <CircleLoading v-if="loading" centered />
   </div>
 </template>
 

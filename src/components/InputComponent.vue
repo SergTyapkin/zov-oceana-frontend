@@ -29,6 +29,7 @@
       input-no-styles()
       font-small-extra()
       font-spaced()
+      font-normal()
 
       width 100%
       margin-bottom 3px
@@ -40,16 +41,17 @@
       &::placeholder
         font-spaced()
         font-small-extra()
+        font-thin()
 
         font-style italic
-        color colorText2
+        color colorText5
 
     textarea
       resize none
 
     .images-container
       position absolute
-      right 0
+      right 10px
       top 0
       .image-hidden
         cursor pointer

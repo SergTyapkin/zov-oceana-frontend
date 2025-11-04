@@ -142,7 +142,7 @@
       </transition-group>
     </section>
 
-    <CircleLoading v-if="loading" />
+    <CircleLoading v-if="loading" centered />
   </div>
 </template>
 

@@ -7,7 +7,7 @@
 @import '../../../styles/animations.styl'
 @import '../../../styles/scrollbars.styl'
 
-.root-profile-info
+.root-profile-addresses
   .header
     color colorText1
     .header-title
@@ -44,7 +44,7 @@
 </style>
 
 <template>
-  <div class="root-profile-info">
+  <div class="root-profile-addresses">
     <header class="header">
       <header class="header-title">Сохраненные адреса</header>
       <div class="header-desc">Управляйте адресами доставки</div>
@@ -67,7 +67,7 @@
       </ul>
     </main>
 
-    <CircleLoading v-if="loading" />
+    <CircleLoading v-if="loading" centered />
   </div>
 </template>
 

@@ -64,7 +64,7 @@
       </div>
     </main>
 
-    <CircleLoading v-if="loading" />
+    <CircleLoading v-if="loading" centered />
   </div>
 </template>
 
@@ -83,9 +83,9 @@ export default {
       fields: {
         givenName: this.$user.givenName,
         familyName: this.$user.familyName,
-        middleName: this.$user.middleName,
+        middleName: this.$user.middleName || '',
         email: this.$user.email,
-        tel: this.$user.tel,
+        tel: this.$user.tel || '',
       },
 
       errors: {

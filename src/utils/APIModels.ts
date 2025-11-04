@@ -7,6 +7,7 @@ export const UserModel = {
   familyName: String,
   middleName: Type(String, true),
   email: String,
+  emailNotifications: Boolean,
   tel: Type(String, true),
   isAdmin: Boolean,
 };
@@ -17,6 +18,7 @@ export const UserModelMockData = validateModel(UserModel, {
   familyName: 'Тяпкин',
   middleName: 'Сергеевич',
   email: 'Tyapkin2002@mail.ru',
+  emailNotifications: false,
   isAdmin: false,
 });
 

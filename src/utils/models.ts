@@ -5,6 +5,7 @@ export interface User {
   middleName?: string;
   email: string;
   tel?: string;
+  emailNotifications: boolean;
 
   isAdmin: boolean;
 
