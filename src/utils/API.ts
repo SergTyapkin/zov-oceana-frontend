@@ -11,6 +11,8 @@ import {
   UserModelMockData,
   AddressListModel,
   AddressListModelMockData,
+  GoodsModel,
+  GoodsModelMockData,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address } from '~/utils/models';
 
@@ -91,8 +93,10 @@ export default class API extends REST_API {
     this.#GET(`/categories`, {}, CategoriesListModel, Response200(CategoriesListModelMockData)) as MyResponse<{categories: Category[]}>;
 
   // Goods
-  getGoods = () =>
+  getGoodsList = () =>
     this.#GET(`/goods`, {}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
+  getGoods = (id: string) =>
+    this.#GET(`/goods/${id}`, {}, GoodsModel, Response200(GoodsModelMockData)) as MyResponse<Goods>;
 
   // Orders
   getMyOrders = () =>

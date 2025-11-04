@@ -9,10 +9,11 @@ export default {
   '/password/restore': false,
   '/password/change': false,
   '/email/confirm': false,
-  '/horse/:id': false,
 
   // Market
-  '/market': false,
+  '/market': true,
+  '/goods/:id': true,
+  '/cart': true,
 
   // Page 404
   '/:pathMatch(.*)*': false,

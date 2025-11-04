@@ -81,7 +81,11 @@
 </style>
 
 <template>
-  <div class="root-goods-card" :class="{ small }">
+  <router-link
+    :to="{name: 'goods', params: {id: goods.id}}"
+    class="root-goods-card"
+    :class="{ small }"
+  >
     <img class="background" :src="goods.previewUrl || IMAGE_DEFAULT" alt="">
 
     <section class="overlay">
@@ -102,7 +106,7 @@
         </button>
       </div>
     </section>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">

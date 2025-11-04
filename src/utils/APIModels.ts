@@ -58,6 +58,7 @@ export const GoodsModel = {
   amountLeft: Type(Number, true),
   cost: Type(Number, true),
   categoryId: Type(String, true),
+  categoryName: Type(String, true),
 };
 export const GoodsListModel = {
   goods: ArrayType(GoodsModel),
@@ -71,6 +72,7 @@ export const GoodsModelMockData = validateModel(GoodsModel, {
   amountLeft: 32,
   cost: 2430,
   categoryId: 'CATEGORY_ID_2',
+  categoryName: 'Рыба',
 });
 export const GoodsListModelMockData = {
   goods: [

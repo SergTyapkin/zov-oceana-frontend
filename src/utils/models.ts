@@ -19,8 +19,11 @@ export interface Goods {
   previewUrl?: string;
   fromLocation?: string;
   amountLeft?: number;
-  cost?: number;
+  amount?: number;
+  cost: number;
   categoryId?: string;
+  categoryName?: string;
+  characters: Record<PropertyKey, string | number>;
 }
 
 export interface Category {
