@@ -112,7 +112,7 @@
             <transition name="opacity">
               <div v-if="passwordChangeBlockOpened" class="inputs-container">
                 <InputComponent v-model="fields.oldPassword" title="Текущий пароль" placeholder="Старый пароль" hideable hidden-by-default :error="errors.oldPassword"/>
-                <InputComponent v-model="fields.newPassword" title="Новый пароль" placeholder="Новый пароль" hideable hidden-by-default :error="errors.newPassword"/>
+                <InputComponent v-model="fields.newPassword" title="Новый пароль" placeholder="Новый пароль" hideable hidden-by-default :error="errors.newPassword" description="Более 6 символов"/>
                 <InputComponent
                   :error="errors.newPasswordConfirmation"
                   v-model="fields.newPasswordConfirmation"

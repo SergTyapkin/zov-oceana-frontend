@@ -35,7 +35,8 @@ export default class API extends REST_API {
     model?: Model,
     mockData?: MyResponse<object>,
   ): Promise<{ ok: boolean; data: object; status: number }> {
-    if (mockData && import.meta.env.MODE !== 'production') {
+    // if (mockData && import.meta.env.MODE !== 'production') {
+    if (mockData) {
       console.info(`Request mocked: ${requestFunc.name}, ${path},`, mockData);
       return mockData;
     }

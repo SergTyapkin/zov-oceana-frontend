@@ -40,7 +40,6 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
     { path: '/signup', name: 'signup', component: PageRegistration, meta: {loginRequired: true} },
     { path: '/password/restore', name: 'restorePassword', component: PageRestorePassword, meta: {loginRequired: true} },
-    { path: '/password/change', name: 'changePassword', component: PageRestorePassword, meta: {loginRequired: true} },
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
 
     { path: '/:pathMatch(.*)*', name: 'page404', component: Page404 },
