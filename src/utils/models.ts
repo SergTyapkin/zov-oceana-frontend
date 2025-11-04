@@ -30,6 +30,12 @@ export interface Category {
   goodsCount?: number;
 }
 
+export interface Address {
+  id: string;
+  title?: string;
+  address: string;
+}
+
 export type OrderStatus = 'created' | 'paid' | 'prepared' | 'delivered' | 'cancelled';
 export interface Order {
   id: string;

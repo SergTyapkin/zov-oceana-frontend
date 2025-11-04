@@ -14,6 +14,7 @@ import PageLanding from '~/views/PageLanding.vue';
 import PageMarket from '~/views/PageMarket.vue';
 import PageProfile from '~/views/User/PageProfile/PageProfile.vue';
 import PageProfileOrders from '~/views/User/PageProfile/PageProfileOrders.vue';
+import PageProfileAddresses from '~/views/User/PageProfile/PageProfileAddresses.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -31,7 +32,7 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/profile', component: PageProfile, meta: {loginRequired: true}, children: [
         { path: '/profile', name: 'profile', component: PageProfileInfo, meta: {loginRequired: true} },
         { path: '/profile/orders', name: 'profileOrders', component: PageProfileOrders, meta: {loginRequired: true} },
-        { path: '/profile/addresses', name: 'profileAddresses', component: PageProfileInfo, meta: {loginRequired: true} },
+        { path: '/profile/addresses', name: 'profileAddresses', component: PageProfileAddresses, meta: {loginRequired: true} },
         { path: '/profile/settings', name: 'profileSettings', component: PageProfileInfo, meta: {loginRequired: true} },
       ],
     },

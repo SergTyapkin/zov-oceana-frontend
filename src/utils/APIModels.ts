@@ -1,5 +1,5 @@
 import { ArrayType, Type, validateModel } from '@sergtyapkin/models-validator';
-import { Goods } from '~/utils/models';
+
 
 export const UserModel = {
   id: String,
@@ -79,7 +79,6 @@ export const GoodsListModelMockData = {
 };
 
 
-
 export const OrderModel = {
   id: String,
   goods: ArrayType(GoodsModel),
@@ -112,5 +111,25 @@ export const OrderListModelMockData = {
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', cost: 1250, status: 'paid'}),
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', cost: 3502, status: 'prepared'}),
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', cost: 2400, status: 'delivered'}),
+  ],
+};
+
+
+export const AddressModel = {
+  id: String,
+  title: Type(String, true),
+  address: String,
+};
+export const AddressListModel = {
+  addresses: ArrayType(AddressModel),
+};
+export const AddressModelMockData = validateModel(AddressModel, {
+  id: 'ADDRESS_ID',
+  address: 'Бизнес-центр, офис 200, Санкт-Петербург, 654321',
+});
+export const AddressListModelMockData = {
+  addresses: [
+    Object.assign({}, AddressModelMockData, {id: 'ADDRESS_ID_1', title: 'Дом',  address: 'ул. Морская, д. 123, Москва, 123456'}),
+    Object.assign({}, AddressModelMockData, {id: 'ADDRESS_ID_2', address: 'Бизнес-центр, офис 200, Санкт-Петербург, 654321'}),
   ],
 };

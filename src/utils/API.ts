@@ -9,8 +9,10 @@ import {
   OrderListModelMockData,
   UserModel,
   UserModelMockData,
+  AddressListModel,
+  AddressListModelMockData,
 } from '~/utils/APIModels';
-import { Category, Goods, Order, User } from '~/utils/models';
+import { Category, Goods, Order, User, Address } from '~/utils/models';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -89,7 +91,11 @@ export default class API extends REST_API {
   getGoods = () =>
     this.#GET(`/goods`, {}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
 
-  // Goods
+  // Orders
   getMyOrders = () =>
     this.#GET(`/orders/my`, {}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
+
+  // Addresses
+  getMyAddresses = () =>
+    this.#GET(`/addresses/my`, {}, AddressListModel, Response200(AddressListModelMockData)) as MyResponse<{addresses: Address[]}>;
 }
