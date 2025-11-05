@@ -54,10 +54,25 @@
       align-items center
       .search
         flex 1
+
+      .cart
       .profile
         hover-effect()
 
-
+      .cart
+        display block
+        position relative
+        .goods-number
+          centered-flex-container()
+          font-size 10px
+          position absolute
+          right -10px
+          top -10px
+          width 16px
+          height 16px
+          background colorEmp2
+          border-radius radiusMax
+          color colorTextInvert1
 </style>
 
 <template>
@@ -81,7 +96,10 @@
       </div>
 
       <div class="right-group">
-        <router-link :to="{ name: 'profile' }" class="cart"><img src="/static/icons/cart-dark.svg" alt="cart"></router-link>
+        <router-link :to="{ name: 'cart' }" class="cart">
+          <img src="/static/icons/cart-dark.svg" alt="cart">
+          <div class="goods-number" v-if="$cart.length">{{ $cart.length }}</div>
+        </router-link>
         <router-link :to="{ name: 'profile' }" class="profile"><img src="/static/icons/profile.svg" alt="profile"></router-link>
       </div>
     </div>
