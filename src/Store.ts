@@ -1,6 +1,30 @@
 import Vuex from 'vuex';
 import { type State, type Store } from '~/types/store';
 import { Goods, User } from '~/utils/models';
+import { validateModel } from '@sergtyapkin/models-validator';
+import { GoodsListModel } from '~/utils/APIModels';
+
+function saveCartToLocalStorage(cart: Goods[]) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function loadCartFromLocalStorage(): Goods[] {
+  const loaded = localStorage.getItem('cart');
+  if (!loaded) {
+    return [];
+  }
+  try {
+    const cart = JSON.parse(loaded) as Goods[];
+    return (validateModel(GoodsListModel, {goods: cart}) as {goods: Goods[]}).goods || [];
+  } catch {
+    return [];
+  }
+}
+
+function removeCartFromLocalStorage() {
+  localStorage.removeItem('cart');
+}
+
 
 export default new Vuex.Store({
   state: {
@@ -25,16 +49,24 @@ export default new Vuex.Store({
 
     ADD_TO_CART(state: State, goods: Goods) {
       state.cart.push(goods);
+      saveCartToLocalStorage(state.cart);
     },
-    DELETE_FROM_CART(state: State, goods: Goods) {
+    LOAD_CART(state: State) {
+      const cart = loadCartFromLocalStorage();
+      state.cart.length = 0;
+      state.cart.push(...cart);
+    },
+    REMOVE_FROM_CART(state: State, goods: Goods) {
       const idx = state.cart.findIndex(g => g.id === goods.id);
       if (idx === -1) {
         return;
       }
       state.cart.splice(idx, 1);
+      saveCartToLocalStorage(state.cart);
     },
     CLEAR_CART(state: State) {
       state.cart.length = 0;
+      removeCartFromLocalStorage();
     },
     SET_CART_GOODS_AMOUNT(state: State, data: {goodsId: string, amount: number}) {
       const idx = state.cart.findIndex(g => g.id === data.goodsId);
@@ -42,6 +74,7 @@ export default new Vuex.Store({
         return;
       }
       state.cart[idx].amount = data.amount;
+      saveCartToLocalStorage(state.cart);
     },
   },
   actions: {
@@ -57,11 +90,14 @@ export default new Vuex.Store({
       state.commit('DELETE_USER');
     },
 
+    LOAD_CART(state: State) {
+      state.commit('LOAD_CART');
+    },
     ADD_TO_CART(state: State, data: {goods: Goods, amount: number}) {
       state.commit('ADD_TO_CART', Object.assign({}, data.goods, {amount: data.amount}));
     },
-    DELETE_FROM_CART(state: State, goods: Goods) {
-      state.commit('DELETE_FROM_CART', goods);
+    REMOVE_FROM_CART(state: State, goods: Goods) {
+      state.commit('REMOVE_FROM_CART', goods);
     },
     CLEAR_CART(state: State) {
       state.commit('CLEAR_CART');

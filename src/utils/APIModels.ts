@@ -56,6 +56,7 @@ export const GoodsModel = {
   previewUrl: Type(String, true),
   fromLocation: Type(String, true),
   amountLeft: Type(Number, true),
+  amount: Type(Number, true),
   cost: Type(Number, true),
   categoryId: Type(String, true),
   categoryName: Type(String, true),

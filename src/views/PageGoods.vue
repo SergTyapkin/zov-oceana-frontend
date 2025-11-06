@@ -269,7 +269,7 @@ export default {
     },
 
     removeFromCart() {
-      this.$store.dispatch('DELETE_FROM_CART', this.goods);
+      this.$store.dispatch('REMOVE_FROM_CART', this.goods);
       this.$forceUpdate();
     }
   },

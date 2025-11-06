@@ -98,7 +98,7 @@
       <div class="right-group">
         <router-link :to="{ name: 'cart' }" class="cart">
           <img src="/static/icons/cart-dark.svg" alt="cart">
-          <div class="goods-number" v-if="$cart.length">{{ $cart.length }}</div>
+          <div class="goods-number" v-if="$store.state.cart.length">{{ $store.state.cart.length }}</div>
         </router-link>
         <router-link :to="{ name: 'profile' }" class="profile"><img src="/static/icons/profile.svg" alt="profile"></router-link>
       </div>
