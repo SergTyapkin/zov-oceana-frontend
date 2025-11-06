@@ -16,7 +16,9 @@
     width 100vw
 
   section.title
-    padding 70px pageMinHorizontalPadding
+    page-root()
+    width 100vw
+    padding-block 70px
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     color colorTextInvert1
     display flex
