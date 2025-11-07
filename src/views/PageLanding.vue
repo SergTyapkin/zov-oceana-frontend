@@ -63,8 +63,9 @@
 
   section.numbers
     display block
+    flex-direction row
     margin-inline auto
-    max-width pageMaxWidth
+    width unset
     .numbers-list
       list-no-styles()
       display flex
@@ -99,6 +100,7 @@
   section.categories
     padding-inline 0
     max-width pageMaxWidth
+    margin-inline auto
     .section-header
       background colorBgDark
       color colorTextInvert1

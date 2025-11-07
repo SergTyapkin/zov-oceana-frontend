@@ -10,6 +10,7 @@
 
 .root-footer
   page-root()
+  width 100vw
   color colorTextInvert1
   background colorBgDark
 
