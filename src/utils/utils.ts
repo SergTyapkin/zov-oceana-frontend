@@ -132,6 +132,8 @@ export function deepClone<T>(obj: T): T {
 }
 
 
+type DateTypeStyle = 'full' | 'long' | 'medium' | 'short';
+const currentYear = new Date().getFullYear();
 export function dateFormatter(d: Date | null, style: DateTypeStyle | any = 'medium') {
   if (!d) {
     return '';
@@ -189,10 +191,6 @@ export function moneyFormatter(val: number): string {
     postfix = 'тыс.';
   }
   return `${Math.floor(val * 10) / 10} ${postfix} ₽`;
-}
-
-export function sexFormatter(val: Sex): string {
-  return val === Sexs.male ? 'м.' : val === Sexs.female ? 'ж.' : 'неизв.';
 }
 
 export async function saveAllAssetsByServiceWorker(
