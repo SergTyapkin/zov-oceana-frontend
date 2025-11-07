@@ -64,7 +64,7 @@
   <div class="root-profile">
     <section class="title">
       <div class="avatar">
-        {{ $user.givenName.slice(0, 1) }}{{ $user.familyName.slice(0, 1) }}
+        {{ $user.givenName?.slice(0, 1) }}{{ $user.familyName?.slice(0, 1) }}
       </div>
 
       <div>

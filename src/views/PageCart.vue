@@ -259,7 +259,10 @@ export default {
   mounted() {},
 
   methods: {
-    removeFromCart(goods: Goods) {
+    async removeFromCart(goods: Goods) {
+      if (!(await this.$modals.confirm('Вы уверены?', `Удалить из корзины "${goods.title}"?`))) {
+        return;
+      }
       this.$store.dispatch('REMOVE_FROM_CART', goods);
       this.$forceUpdate();
     },

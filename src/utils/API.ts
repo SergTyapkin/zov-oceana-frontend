@@ -12,6 +12,7 @@ import {
   AddressListModelMockData,
   GoodsModel,
   GoodsModelMockData,
+  UserModelMockData,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address } from '~/utils/models';
 
@@ -69,8 +70,8 @@ export default class API extends REST_API {
   // Api configuration
   // User
   getUser = () =>
-    // this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
-    this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
+    this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
+    // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
   updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, password?: string, emailNotifications?: boolean }) =>
     this.#PUT(`/user/${id}`, profileData, UserModel) as MyResponse<User>;
   updateProfilePassword = (id: string, profileData: { oldPassword?: string, newPassword?: string }) =>
