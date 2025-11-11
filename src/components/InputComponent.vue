@@ -51,13 +51,13 @@
 
     .images-container
       position absolute
-      right 10px
       top 0
+      right 10px
       .image-hidden
         cursor pointer
-        padding-block calc(10px + 0.1em)
-        height 0.8em
         box-sizing content-box
+        height 0.8em
+        padding-block calc(10px + 0.1em)
         trans()
 
         &:hover

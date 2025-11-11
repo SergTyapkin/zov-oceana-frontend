@@ -9,41 +9,44 @@
 
 .root-page
   page-root()
+
   padding-block 0
 
   section.title
   section.filters
     page-root()
-    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+    page-root-disable()
+
     width 100vw
 
   section.title
-    background colorBgDark
-    color colorTextInvert1
+    cursor pointer
     padding-block 40px
+    color colorTextInvert1
+    background colorBgDark
     svg-inside(1lh)
     font-small()
-    cursor pointer
     img
       trans()
     &:hover
       img
-        margin-left 5px
         margin-right 15px
+        margin-left 5px
 
   section.goods
-    padding-top 50px
-    padding-bottom 100px
-    width 100%
     display flex
     flex-wrap wrap
     gap 30px
+    width 100%
+    padding-top 50px
+    padding-bottom 100px
     .images-container
-      max-width 400px
-      min-width 200px
       flex 1
+      min-width 200px
+      max-width 400px
       img
         img-size(100%)
+
         object-fit contain
         object-position top
 
@@ -51,56 +54,64 @@
       flex 1.2
       .categories-container
         list-no-styles()
+
         display flex
         flex-wrap wrap
         gap 5px
         margin-bottom 10px
         .category
-          background colorBgDark
-          color colorTextInvert1
-          font-small-extra()
           padding 2px 8px
+          color colorTextInvert1
+          background colorBgDark
+          font-small-extra()
       .header
         font-large-extra()
         font-upper()
-        line-height 1
+
         margin-bottom 10px
+        line-height 1
       .location
         svg-inside(1lh)
         font-upper()
         font-small()
         font-thin()
+
         margin-bottom 25px
       .info
         font-upper()
         font-small-extra()
         font-thin()
         font-spaced()
+
         color colorText3
       .cost
         font-large-extra()
         font-bold-extra()
         font-spaced()
+
         margin-bottom 25px
       .info-header
         font-medium()
         font-upper()
+
         margin-bottom 10px
       .characters
         list-no-styles()
+
         display flex
         flex-direction column
         margin-bottom 30px
         .character
-          border-bottom 1px solid colorBorder
-          padding-block 15px
           display flex
           justify-content space-between
+          padding-block 15px
+          border-bottom 1px solid colorBorder
           .title
             font-thin()
             font-upper()
             font-small-extra()
             font-spaced()
+
             color colorText3
           .value
             font-small-extra()
@@ -110,21 +121,22 @@
         display flex
         align-items center
         justify-content space-between
-        margin-top 5px
-        max-width 300px
         width 100%
+        max-width 300px
+        margin-top 5px
         margin-bottom 20px
         font-large()
         font-bold-extra()
         button
           button-no-fill()
+
           padding-block 5px
           color colorText1
           font-large()
 
     section.add-to-cart
-      background colorBlockBg
       padding 20px
+      background colorBlockBg
       .top-row
         display flex
         align-items center
@@ -139,23 +151,24 @@
           font-bold-extra()
       .button-add-to-cart
         button()
-        background colorBgDark
-        color colorTextInvert1
+
         width 100%
+        color colorTextInvert1
+        background colorBgDark
 </style>
 
 <template>
   <div class="root-page">
     <router-link :to="{ name: 'market' }">
       <section class="title">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
+        <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Назад к каталогу
       </section>
     </router-link>
 
     <section class="goods">
       <div class="images-container">
-        <img :src="goods.previewUrl || IMAGE_DEFAULT" alt="preview" />
+        <img :src="goods.previewUrl || IMAGE_DEFAULT" alt="preview">
       </div>
 
       <div class="info-container">
@@ -163,7 +176,7 @@
           <li v-if="goods.categoryName" class="category">{{ goods.categoryName }}</li>
         </ul>
         <header class="header">{{ goods.title }}</header>
-        <p class="location"><img src="/static/icons/location-dark.svg" alt="location" />{{ goods.fromLocation }}</p>
+        <p class="location"><img src="/static/icons/location-dark.svg" alt="location">{{ goods.fromLocation }}</p>
 
         <p class="info">Цена за кг</p>
         <p class="cost">₽{{ goods.cost }}</p>
@@ -208,11 +221,11 @@
           </div>
 
           <button @click="addToCart" v-if="!$cart.find(g => g.id === goods.id)" class="button-add-to-cart">
-            <img src="/static/icons/cart.svg" alt="cart" />
+            <img src="/static/icons/cart.svg" alt="cart">
             Добавить в корзину
           </button>
           <button @click="removeFromCart" v-else class="button-add-to-cart">
-            <img src="/static/icons/remove.svg" alt="remove" />
+            <img src="/static/icons/remove.svg" alt="remove">
             Убрать из корзины
           </button>
         </section>

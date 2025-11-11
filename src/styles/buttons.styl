@@ -13,13 +13,6 @@ button()
   text-shadow none
   background colorBlockBg
   transition all 0.2s ease
-  font-small()
-  font-spaced()
-  font-normal()
-  font-upper()
-  svg-inside(1lh)
-  trans()
-  centered-flex-container()
 
   &:hover
     background mix(black, colorBlockBg, 20%)
@@ -29,6 +22,16 @@ button()
     color mix(white, colorText1, 70%)
     background mix(white, colorBlockBg, 50%)
     box-shadow none
+
+  @media ({mobile})
+    padding-inline 15px
+  font-small()
+  font-spaced()
+  font-normal()
+  font-upper()
+  svg-inside(1lh)
+  trans()
+  centered-flex-container()
 
 button-no-fill()
   button()
@@ -115,6 +118,7 @@ button-success()
 
 button-small()
   font-small-extra()
-  text-transform none
+
   padding 7px 10px
+  text-transform none
 

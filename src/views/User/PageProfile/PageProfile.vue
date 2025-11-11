@@ -10,42 +10,59 @@
 .root-profile
   page-root()
 
+  padding-top 0
+
   section.title
   nav.navigation
-    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+    page-root-disable()
+
     width 100vw
 
   section.title
     page-root()
-    width 100vw
-    padding-block 70px
-    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
-    color colorTextInvert1
+
     display flex
     gap 20px
+    width 100vw
+    padding-block 70px
+    color colorTextInvert1
+    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     .avatar
       centered-flex-container()
       font-large-extra()
-      width 100px
-      height 100px
-      border-radius radiusMax
+
       overflow hidden
+      width 100px
+      min-width 100px
+      height 100px
+      min-height 100px
+      border-radius radiusMax
       background colorEmp2
+
+      @media ({mobile})
+        width 80px
+        min-width 80px
+        height 80px
+        min-height 80px
     .username
       font-large-extra-extra()
       font-semibold()
       font-upper()
+
       margin-bottom 20px
     .info-date
       font-small()
       font-thin()
+
       color colorTextInvert3
 
   nav.navigation
+    overflow-x auto
     display flex
     color colorTextInvert1
     text-align center
     box-shadow 0 0 10px colorShadow
+    scrollable()
     > *
       display block
       flex 1

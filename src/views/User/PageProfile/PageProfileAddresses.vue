@@ -13,16 +13,19 @@
     .header-title
       font-large()
       font-upper()
+
       margin-bottom 5px
     .header-desc
       font-small()
       font-thin()
+
       color colorText3
 
   .main
     padding 30px 0
     .addresses-list
       list-no-styles()
+
       display flex
       flex-wrap wrap
       gap 20px
@@ -30,13 +33,15 @@
       > *
         flex 1
         min-width 300px
-      .add-address-buton
+      .add-address-button
         button-no-styles()
         centered-flex-container()
         font-small()
         svg-inside(20px)
-        background colorBlockBg
+
+        padding 20px
         color colorText1
+        background colorBlockBg
         trans()
         &:hover
           color colorEmp2
@@ -60,8 +65,8 @@
           @delete="deleteAddress(address)"
         />
 
-        <button @click="addAddress" class="add-address-buton">
-          <img src="/static/icons/plus-thin.svg" alt="plus" />
+        <button @click="addAddress" class="add-address-button">
+          <img src="/static/icons/plus-thin.svg" alt="plus">
           Добавить адрес
         </button>
       </ul>

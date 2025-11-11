@@ -10,17 +10,18 @@
 
 .root-category-card
   cursor pointer
-  width 100%
-  height 100%
-  max-height 300px
-  min-width 200px
-  min-height 200px
   position relative
-  text-align left
   overflow hidden
+  width 100%
+  min-width 200px
+  height 100%
+  min-height 200px
+  max-height 300px
+  text-align left
 
   .background
     img-size(100%)
+
     position absolute
     inset 0
     object-fit cover
@@ -28,16 +29,16 @@
 
   .overlay
     position absolute
-    left 0
     right 0
     bottom 0
-    background linear-gradient(to top, black, transparent)
-    padding 25px 20px
+    left 0
     display flex
     flex-direction column
     gap 10px
     justify-content space-between
+    padding 25px 20px
     color colorTextInvert1
+    background linear-gradient(to top, black, transparent)
 
     .title
       font-medium()
@@ -51,6 +52,7 @@
       font-small()
       font-upper()
       font-thin()
+
       color colorTextInvert4
       trans()
 

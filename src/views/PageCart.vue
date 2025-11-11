@@ -9,86 +9,101 @@
 
 .root-page
   page-root()
+
   padding-block 0
 
   section.title
     page-root()
-    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+    page-root-disable()
+
     width 100vw
-    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
-    color colorTextInvert1
     padding-block 70px
+    color colorTextInvert1
+    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     .title-button-back
       svg-inside(1lh)
       font-small()
-      margin-bottom 20px
+
       cursor pointer
+      margin-bottom 20px
       img
         trans()
       &:hover
         img
-          margin-left 5px
           margin-right 15px
+          margin-left 5px
     .header
       font-large-extra-extra()
       font-semibold()
       font-upper()
+
       margin-bottom 20px
     .title-desc
       font-small()
       font-thin()
 
   section.cart
-    padding-top 50px
-    padding-bottom 100px
-    width 100%
     display flex
     flex-wrap wrap
     gap 30px
+    width 100%
+    padding-top 50px
+    padding-bottom 100px
     .goods-list
-      flex 3
-      list-no-styles()
       display flex
+      flex 3
       flex-direction column
       gap 20px
-      min-width 400px
+      list-no-styles()
       .goods
-        background colorBlockBg
-        padding 20px
         display flex
         gap 20px
         justify-content space-between
+        padding 20px
+        background colorBlockBg
         .preview
           min-width 200px
-          height 100%
           max-width 250px
+          height 100%
           img
             img-size(100%)
+
             object-fit contain
             object-position top
+
+            @media ({mobile})
+              object-fit cover
+
+          @media ({mobile})
+            width 20%
+            min-width 50px
         .text-container
-          flex 1
           display flex
+          flex 1
           flex-direction column
           justify-content space-between
           .title
             font-large()
+
+            word-wrap anywhere
             .location
               font-small()
               font-upper()
               font-thin()
               svg-inside()
+
               margin-top 10px
           .amount-selector-container
             display flex
             align-items center
             justify-content space-between
-            max-width 300px
             width 100%
+            max-width 300px
             font-large()
             font-bold-extra()
             button
               button-no-fill()
+
               padding-block 5px
               color colorText1
               font-large()
@@ -96,22 +111,26 @@
         .right-container
           display flex
           flex-direction column
-          justify-content space-between
           align-items end
+          justify-content space-between
           .button-remove
             button-no-fill()
-            padding 5px
+
             width min-content
+            padding 5px
             img
               img-size(20px)
+
               margin 0
           .cost-total
             font-large()
             font-bold-extra()
+
             margin-bottom 5px
           .cost
             font-small-extra()
             font-upper()
+
             color colorText3
 
     .order-controls
@@ -119,8 +138,8 @@
       min-width 300px
       .total-info-container
         padding 20px
-        background colorBgDark
         color colorTextInvert1
+        background colorBgDark
         .header
           font-large()
           font-upper()
@@ -133,11 +152,12 @@
           border-bottom 1px solid colorTextInvert5
           .cost-container
             display flex
-            justify-content space-between
-            align-items center
             gap 10px
+            align-items center
+            justify-content space-between
             .title
               font-small-extra()
+
               color colorTextInvert3
             .cost
               font-medium()
@@ -145,9 +165,9 @@
 
         .cost-total-container
           display flex
-          justify-content space-between
-          align-items center
           gap 10px
+          align-items center
+          justify-content space-between
           margin-top 20px
           .title
             font-large()
@@ -157,6 +177,7 @@
 
       .button-confirm-order
         button-emp2()
+
         width 100%
         margin-top 20px
 </style>
@@ -165,7 +186,7 @@
   <div class="root-page">
     <section class="title">
       <router-link :to="{ name: 'market' }" class="title-button-back">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
+        <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Назад к каталогу
       </router-link>
       <header class="header">Корзина</header>
@@ -177,14 +198,14 @@
         <li class="goods" v-if="!$cart.length">В корзине пока что ничего нет</li>
         <li class="goods" v-for="goods in $cart">
           <div class="preview">
-            <img :src="goods.previewUrl || DEFAULT_IMAGE" alt="preview" />
+            <img :src="goods.previewUrl || DEFAULT_IMAGE" alt="preview">
           </div>
 
           <div class="text-container">
             <header class="title">
               {{ goods.title }}
               <div class="location">
-                <img src="/static/icons/location-dark.svg" alt="location" />
+                <img src="/static/icons/location-dark.svg" alt="location">
                 {{ goods.fromLocation }}
               </div>
             </header>
@@ -197,7 +218,7 @@
 
           <div class="right-container">
             <button class="button-remove" @click="removeFromCart(goods)">
-              <img src="/static/icons/trashbox.svg" alt="remove" />
+              <img src="/static/icons/trashbox.svg" alt="remove">
             </button>
 
             <div class="cost">

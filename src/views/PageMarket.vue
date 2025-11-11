@@ -9,23 +9,30 @@
 
 .root-page
   page-root()
+
   padding-block 0
 
   section.title
   section.filters
     page-root()
-    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+    page-root-disable()
+
     width 100vw
 
   section.title
-    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
-    color colorTextInvert1
     gap 50px
+    color colorTextInvert1
+    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     .header
       font-large-extra-extra()
       font-semibold()
       font-upper()
+
       margin-bottom 20px
+      word-wrap break-word
+
+      @media ({mobile})
+        font-large-extra()
     .title-desc
       font-small()
       font-thin()
@@ -35,48 +42,51 @@
     box-shadow 0 15px 15px #00000033
     .top-row
       display flex
+      flex-wrap wrap
       gap 10px
       justify-content space-between
       .input-group
-        flex 1
         display flex
+        flex 1
         .search
           flex 1
+          min-width 150px
     .bottom-row
       font-small-extra()
-      background #F0F9FF
-      padding 5px 10px
+
       width min-content
-      white-space nowrap
       margin-top 20px
+      padding 5px 10px
+      white-space nowrap
+      background #f0f9ff
 
   section.goods
-    margin-inline auto
-    padding-block 50px
     display flex
-    gap 15px
     flex-wrap wrap
+    gap 15px
     justify-content space-evenly
     width 100%
+    margin-inline auto
+    padding-block 50px
     .goods-card
       flex 1
       animation-float()
 </style>
 
 <style scoped lang="stylus">
-.list-item {
-  display: inline-block;
-  margin-right: 10px;
-}
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.3s ease;
-}
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: scale(0.8);
-}
+.list-item
+  display inline-block
+  margin-right 10px
+
+.list-enter-active
+.list-leave-active
+  transition all 0.3s ease
+
+.list-enter-from
+.list-leave-to
+  transform scale(0.8)
+  opacity 0
+
 </style>
 
 <template>
@@ -97,12 +107,15 @@
             placeholder="Все категории"
             can-be-null
             :list="
-              categories.map(category => ({
+              $categories.map(category => ({
+                id: category.id,
                 name: category.title,
                 value: category.id,
               }))
             "
+            :selected-id="filters.categoryId"
             v-model="filters.categoryId"
+            @input="saveFilters"
           />
         </div>
 
@@ -133,10 +146,10 @@
     <section class="goods">
       <transition-group name="list">
         <GoodsCard
-          v-for="(goods, i) in goodsFiltered"
-          :key="goods.id"
+          v-for="(goodsOne, i) in goodsFiltered"
+          :key="goodsOne.id"
           class="goods-card"
-          :goods="goods"
+          :goods="goodsOne"
           :style="`--animation-index: ${i}`"
         />
       </transition-group>
@@ -148,7 +161,7 @@
 
 <script lang="ts">
 import GoodsCard from '~/components/GoodsCard.vue';
-import { Category, Goods } from '~/utils/models';
+import { Goods } from '~/utils/models';
 import InputSearch from '~/components/InputSearch.vue';
 import SelectList from '~/components/SelectList.vue';
 import CircleLoading from '~/components/loaders/CircleLoading.vue';
@@ -159,12 +172,11 @@ export default {
   data() {
     return {
       goods: [] as Goods[],
-      categories: [] as Category[],
 
       filters: {
         sorting: null as 'name' | 'cost-cheap' | 'cost-expensive' | null,
         searchText: '',
-        categoryId: null as string | null,
+        categoryId: this.$route.query.categoryId as string | undefined,
       },
 
       loading: false,
@@ -196,25 +208,21 @@ export default {
   },
 
   mounted() {
-    this.updateCategories();
+    console.log(this.filters.categoryId);
     this.updateGoods();
   },
 
   methods: {
-    async updateCategories() {
-      this.categories = (
-        (await this.$request(this, this.$api.getCategories, [], `Не удалось получить список категори`)) as {
-          categories: Category[];
-        }
-      ).categories;
-    },
-
     async updateGoods() {
       this.goods = (
         (await this.$request(this, this.$api.getGoodsList, [], `Не удалось получить список товаров`)) as {
           goods: Goods[];
         }
       ).goods;
+    },
+
+    saveFilters() {
+      this.$router.replace({name: 'market', query: {categoryId: this.filters.categoryId}});
     },
   },
 };

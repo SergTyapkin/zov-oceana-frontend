@@ -10,22 +10,21 @@
 
 .root-order-card
   cursor pointer
-  width 100%
-  text-align left
   display flex
   gap 10px
   justify-content space-between
-  color colorText1
+  width 100%
   padding 15px 30px
-  trans()
+  color colorText1
+  text-align left
 
   &:hover
     background colorBlockBg
 
   .order-preview
-    background colorBgDark
-    padding 15px
     aspect-ratio 1/1
+    padding 15px
+    background colorBgDark
     img
       img-size(100%)
 
@@ -38,33 +37,51 @@
     .goods-count
       font-small()
       font-thin()
+
       color colorText4
 
   .status-container
-    text-align right
     display flex
-    flex-direction column
+    gap 20px
     justify-content space-between
-    .status
-      font-small-extra()
-      color colorTextInvert1
-      padding 5px 10px
-      background colorEmp1
-      &.red
-        background colorError
-      &.green
-        background colorSuccess
-      &.yellow
-        background colorEmp1
-      &.blue
-        background colorEmp2
+    .status-column
+      display flex
+      flex-direction column
+      gap 10px
+      justify-content space-between
+      text-align right
+      .status
+        font-small-extra()
 
-  .more-info
-    button-no-styles()
-    font-small-extra()
-    color colorText1
-    padding 0 10px
-    hover-effect()
+        padding 5px 10px
+        color colorTextInvert1
+        text-align center
+        background colorEmp1
+        &.red
+          background colorError
+        &.green
+          background colorSuccess
+        &.yellow
+          background colorEmp1
+        &.blue
+          background colorEmp2
+
+    .more-info
+      button-no-styles()
+      font-small-extra()
+      font-normal()
+
+      padding 0 10px
+      color colorText1
+      hover-effect()
+
+    @media ({mobile})
+      flex-direction column
+      gap 15px
+
+  @media ({mobile})
+    padding-inline 15px
+  trans()
 </style>
 
 <template>
@@ -75,29 +92,31 @@
 
     <div class="main-container">
       <div class="title">{{ order.id }}</div>
-      <div class="date">{{ order.createdDate }}</div>
+      <div class="date">{{ dateFormatter(order.createdDate) }}</div>
       <div class="goods-count">Товаров {{ order.goods.length }}</div>
     </div>
 
     <div class="status-container">
-      <div class="cost">₽{{ order.cost }}</div>
-      <div v-if="order.status === 'created'" class="status yellow">Не оплачен</div>
-      <div v-else-if="order.status === 'paid'" class="status green">Оплачен</div>
-      <div v-else-if="order.status === 'prepared'" class="status green">Собран</div>
-      <div v-else-if="order.status === 'delivered'" class="status blue">Доставлен</div>
-      <div v-else-if="order.status === 'cancelled'" class="status red">Отменен</div>
-    </div>
+      <div class="status-column">
+        <div class="cost">₽{{ order.cost }}</div>
+        <div v-if="order.status === 'created'" class="status yellow">Не оплачен</div>
+        <div v-else-if="order.status === 'paid'" class="status green">Оплачен</div>
+        <div v-else-if="order.status === 'prepared'" class="status green">Собран</div>
+        <div v-else-if="order.status === 'delivered'" class="status blue">Доставлен</div>
+        <div v-else-if="order.status === 'cancelled'" class="status red">Отменен</div>
+      </div>
 
-    <button class="more-info">
-      Подробнее
-    </button>
+      <button class="more-info">
+        Подробнее
+      </button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Order } from '~/utils/models';
 import { PropType } from 'vue';
-import IMAGE_DEFAULT from '#/images/ocean-bg.jpg';
+import { dateFormatter } from '~/utils/utils';
 
 export default {
   props: {
@@ -109,8 +128,11 @@ export default {
 
   data() {
     return {
-      IMAGE_DEFAULT,
     };
   },
+
+  methods: {
+    dateFormatter,
+  }
 };
 </script>

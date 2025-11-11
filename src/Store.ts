@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import { type State, type Store } from '~/types/store';
-import { Goods, User } from '~/utils/models';
+import { Category, Goods, User } from '~/utils/models';
 import { validateModel } from '@sergtyapkin/models-validator';
 import { GoodsListModel } from '~/utils/APIModels';
 
@@ -30,6 +30,7 @@ export default new Vuex.Store({
   state: {
     user: {} as User,
     cart: [] as Goods[],
+    categories: [] as Category[],
   },
   mutations: {
     SET_USER(state: State, userData: User) {
@@ -45,6 +46,14 @@ export default new Vuex.Store({
     },
     DELETE_USER(state: State) {
       state.user.isSignedIn = false;
+    },
+
+    SET_CATEGORIES(state: State, categories: Category[]) {
+      state.categories.length = 0;
+      state.categories.push(...categories);
+    },
+    CLEAR_CATEGORIES(state: State) {
+      state.categories.length = 0;
     },
 
     ADD_TO_CART(state: State, goods: Goods) {
@@ -85,6 +94,15 @@ export default new Vuex.Store({
         return;
       }
       state.commit('SET_USER', data);
+    },
+    async GET_CATEGORIES(this: Store, state: State) {
+      const { data, ok }: { data: any; ok: boolean } = await this.$app.$api.getCategories();
+      if (!ok) {
+        state.commit('CLEAR_CATEGORIES');
+        return;
+      }
+      state.commit('SET_CATEGORIES', data.categories);
+      this.$app.updateElements();
     },
     DELETE_USER(state: State) {
       state.commit('DELETE_USER');

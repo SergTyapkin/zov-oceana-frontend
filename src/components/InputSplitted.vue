@@ -16,15 +16,15 @@
     input-no-styles()
     font-large()
 
-    text-align center
     width 2em
     min-width 0
     padding 10px
-    color colorText1
     border 2px solid transparent
     border-bottom-color colorText3
-    caret-color transparent
     border-radius borderRadiusS
+    color colorText1
+    text-align center
+    caret-color transparent
     trans()
 
     &::placeholder
@@ -39,19 +39,19 @@
 
   &.error
     input
-      color colorError
       border-bottom-color colorError
+      color colorError
 
   &.success
     input
-      color colorSuccess
       border-bottom-color colorSuccess
+      color colorSuccess
 
   &.disabled
     input
+      border-bottom-color colorText4
       color colorText3
       background colorBlockBg
-      border-bottom-color colorText4
       &:focus
         cursor not-allowed
         border-color transparent
@@ -75,7 +75,7 @@
       @keydown="(evt: KeyboardEvent) => onKeyDown(evt, i)"
       @input="updateModelValue"
       placeholder=" "
-      @click="(evt: MouseEvent) => onClick(evt, i)"
+      @click="(evt: MouseEvent) => onClick(evt)"
     >
 
     <CircleLoading v-if="loading" class="icon" />
@@ -161,7 +161,7 @@ export default {
       }
     },
 
-    onClick(evt: MouseEvent, pos: number) {
+    onClick(evt: MouseEvent) {
       const inputsElements = this.$refs.inputs as HTMLInputElement[];
       if (inputsElements.findIndex(el => el.value !== '') === -1) {
         evt.preventDefault();

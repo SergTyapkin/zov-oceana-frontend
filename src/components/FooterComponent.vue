@@ -10,23 +10,23 @@
 
 .root-footer
   page-root()
+
   width 100vw
   color colorTextInvert1
   background colorBgDark
 
   .top-row
-    max-width pageMaxWidth
-
     display flex
     gap 20px
     justify-content space-between
+    max-width pageMaxWidth
     padding-top 60px
     padding-bottom 20px
 
     .column
-      color colorTextInvert3
       display flex
       flex-direction column
+      color colorTextInvert3
       font-spaced()
       font-upper()
 
@@ -40,22 +40,31 @@
       .logo-container
         font-medium()
         font-upper()
+
         display flex
-        align-items center
         gap 10px
+        align-items center
         .logo
           width 50px
 
       header
         font-medium()
+
         margin-bottom 20px
+
+    @media ({mobile})
+      flex-wrap wrap
+      padding-top 0
+      .logo-column
+        width 100%
+        padding-bottom 20px
 
   .bottom-row
     padding-block 50px
+    color colorTextInvert5
     text-align center
     font-upper()
     font-small-extra()
-    color colorTextInvert5
     .bottom-row-inner
       page-root()
       font-small()
@@ -79,7 +88,7 @@
 <template>
   <footer class="root-footer">
     <section class="top-row">
-      <router-link :to="{ name: 'default' }" class="column">
+      <router-link :to="{ name: 'default' }" class="column logo-column">
         <div class="logo-container">
           <img class="logo" src="/static/images/logo-small.png" alt="logo">
           Зов океана
@@ -90,16 +99,19 @@
       <section class="column">
         <header>Навигация</header>
         <router-link :to="{ name: 'default' }">Главная</router-link>
-        <router-link :to="{ name: 'default' }">Магазин</router-link>
-        <router-link :to="{ name: 'default' }">Профиль</router-link>
+        <router-link :to="{ name: 'market' }">Магазин</router-link>
+        <router-link :to="{ name: 'profile' }">Профиль</router-link>
       </section>
 
       <section class="column">
         <header>Категории</header>
-        <router-link :to="{ name: 'default' }">Свежая рыба</router-link>
-        <router-link :to="{ name: 'default' }">Моллюски</router-link>
-        <router-link :to="{ name: 'default' }">Премиум</router-link>
-        <router-link :to="{ name: 'default' }">Замороженные</router-link>
+        <router-link 
+          v-for="category in $categories"
+          :to="{ name: 'market', query: {categoryId: category.id} }"
+          :key="category.id"
+        >
+          {{ category.title }}
+        </router-link>
       </section>
 
       <section class="column">

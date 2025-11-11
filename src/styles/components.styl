@@ -6,10 +6,18 @@
 page-root()
   // box-sizing content-box
   width 100%
-  padding-inline 'max(calc((100vw - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPadding)
   padding-top 30px
   padding-bottom 70px
+  padding-inline 'max(calc((100vw - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPadding)
 
+  @media ({mobile})
+    padding-inline 'max(calc((100vw - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPaddingMobile)
+
+page-root-disable()
+  margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
+
+  @media ({mobile})
+    margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPaddingMobile)
 
 block(colorBorder=colorBorder)
   display block

@@ -10,10 +10,10 @@
 .wrapper
   flex 1
   width 100%
-  //height 100%
-  //min-height 100vh
+  // height 100%
+  // min-height 100vh
 
-  //> *
+  // > *
   //  position absolute
   //  width 100%
   //  min-height 100vh
@@ -69,7 +69,7 @@
 </style>
 
 <template>
-  <HeaderComponent class="header" />
+  <HeaderComponent ref="header" class="header" />
 
   <div class="wrapper">
     <router-view #default="{ Component }">
@@ -79,7 +79,7 @@
     </router-view>
   </div>
 
-  <FooterComponent class="footer" />
+  <FooterComponent ref="footer" class="footer" />
 
   <Popups ref="popups" />
   <Modals ref="modals" />
@@ -131,6 +131,7 @@ export default {
     this.global = getCurrentInstance()!.appContext.config.globalProperties;
 
     this.global.$user = this.$store.state.user;
+    this.global.$categories = this.$store.state.categories;
     this.global.$cart = this.$store.state.cart;
     this.global.$modals = this.$refs.modals;
     this.global.$popups = this.$refs.popups;
@@ -161,6 +162,11 @@ export default {
       }
       this.global!.$isMobile = false;
     },
+
+    updateElements() {
+      (this.$refs.footer as typeof FooterComponent).$forceUpdate();
+      (this.$refs.header as typeof HeaderComponent).$forceUpdate();
+    }
   },
 
   watch: {

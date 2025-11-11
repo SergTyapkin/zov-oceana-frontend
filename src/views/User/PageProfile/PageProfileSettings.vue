@@ -10,27 +10,30 @@
 .root-profile-settings
   box-shadow 0 0 10px colorShadow
   .header
-    background colorBgDark
-    color colorTextInvert1
     padding 30px
+    color colorTextInvert1
+    background colorBgDark
     .header-title
       font-large()
       font-upper()
+
       margin-bottom 5px
     .header-desc
       font-small()
       font-thin()
+
       color colorTextInvert3
 
   .main
-    padding-block 30px
     width 100%
+    padding-block 30px
     .settings-list
       list-no-styles()
-      width 100%
+
       display flex
       flex-direction column
       flex-wrap wrap
+      width 100%
       .setting
         display flex
         gap 15px
@@ -48,16 +51,18 @@
           flex 1
           .title
             font-medium()
+
             margin-bottom 5px
           .desc
             font-small()
             font-thin()
+
             color colorText3
           .inputs-container
-            width 100%
             display flex
             flex-direction column
             gap 10px
+            width 100%
             padding-top 30px
             .save-button
               button-emp2()
@@ -68,13 +73,14 @@
           .button-change-password
             button-no-styles()
             font-small()
-            color colorText1
-            padding 10px
-            trans()
+
             cursor pointer
+            padding 10px
+            color colorText1
+            trans()
             &:hover
-              background colorBgDark
               color colorTextInvert1
+              background colorBgDark
 </style>
 
 <template>
@@ -88,7 +94,7 @@
       <ul class="settings-list">
         <li class="setting">
           <div class="icon-container">
-            <img src="/static/icons/settings.svg" alt="setting" />
+            <img src="/static/icons/settings.svg" alt="setting">
           </div>
 
           <div class="text-container">
@@ -103,7 +109,7 @@
 
         <li class="setting" :class="{ selected: passwordChangeBlockOpened }">
           <div v-if="!passwordChangeBlockOpened" class="icon-container">
-            <img src="/static/icons/settings.svg" alt="setting" />
+            <img src="/static/icons/settings.svg" alt="setting">
           </div>
 
           <div class="text-container">
@@ -111,8 +117,23 @@
             <div class="desc">Обновить пароль учетной записи</div>
             <transition name="opacity">
               <div v-if="passwordChangeBlockOpened" class="inputs-container">
-                <InputComponent v-model="fields.oldPassword" title="Текущий пароль" placeholder="Старый пароль" hideable hidden-by-default :error="errors.oldPassword"/>
-                <InputComponent v-model="fields.newPassword" title="Новый пароль" placeholder="Новый пароль" hideable hidden-by-default :error="errors.newPassword" description="Более 6 символов"/>
+                <InputComponent
+                  v-model="fields.oldPassword"
+                  title="Текущий пароль"
+                  placeholder="Старый пароль"
+                  hideable
+                  hidden-by-default
+                  :error="errors.oldPassword"
+                />
+                <InputComponent
+                  v-model="fields.newPassword"
+                  title="Новый пароль"
+                  placeholder="Новый пароль"
+                  hideable
+                  hidden-by-default
+                  :error="errors.newPassword"
+                  description="Более 6 символов"
+                />
                 <InputComponent
                   :error="errors.newPasswordConfirmation"
                   v-model="fields.newPasswordConfirmation"
@@ -194,18 +215,13 @@ export default {
       this.errors.newPassword = !Validators.password.validate(this.fields.newPassword);
       this.errors.newPasswordConfirmation =
         !Validators.password.validate(this.fields.newPasswordConfirmation) ||
-        (this.fields.newPasswordConfirmation !== this.fields.newPassword);
-      if (
-        this.errors.oldPassword ||
-        this.errors.newPassword ||
-        this.errors.newPasswordConfirmation
-      ) {
+        this.fields.newPasswordConfirmation !== this.fields.newPassword;
+      if (this.errors.oldPassword || this.errors.newPassword || this.errors.newPasswordConfirmation) {
         return;
       }
       this.fields.oldPassword = Validators.password.prettifyResult(this.fields.oldPassword);
       this.fields.newPassword = Validators.password.prettifyResult(this.fields.newPassword);
       this.fields.newPasswordConfirmation = Validators.password.prettifyResult(this.fields.newPasswordConfirmation);
-
 
       await this.$request(
         this,
@@ -219,7 +235,7 @@ export default {
         ],
         `Не удалось обновить пароль`,
       );
-    }
+    },
   },
 };
 </script>

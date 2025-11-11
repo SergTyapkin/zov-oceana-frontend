@@ -257,3 +257,18 @@ export async function setDisableCachingUrlsByServiceWorker(paths: string[]) {
   console.log("Send to SW disable caching regexps:", regexps);
   return await swAPI.setDisableCachingRegexps(regexps)
 }
+
+/** Перехват переходов по якорным ссылкам и вместо этого прокрутка до нужного места на странице **/
+export function setSmoothScrollOnThisPage() {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      console.log('Click on anchor link captured. Start smooth scrolling...');
+      e.preventDefault();
+      const href = anchor.getAttribute('href');
+      if (href) {
+        const target = document.querySelector(href);
+        target?.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  });
+}

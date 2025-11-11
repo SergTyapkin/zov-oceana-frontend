@@ -10,19 +10,21 @@
 
 .root-goods-card
   cursor pointer
-  width 100%
-  height 100%
-  max-width 800px
-  max-height 300px
-  min-width 300px
-  min-height 300px
   position relative
-  text-align left
-  color colorTextInvert1
   overflow hidden
+  display block
+  width 100%
+  min-width 300px
+  max-width 800px
+  height 100%
+  min-height 300px
+  max-height 300px
+  color colorTextInvert1
+  text-align left
 
   .background
     img-size(100%)
+
     position absolute
     inset 0
     object-fit cover
@@ -30,15 +32,15 @@
 
   .overlay
     position absolute
-    left 0
     right 0
     bottom 0
-    background linear-gradient(to top, black, transparent)
-    padding 25px 20px
+    left 0
     display flex
     flex-direction column
     gap 5px
     justify-content space-between
+    padding 25px 20px
+    background linear-gradient(to top, black, transparent)
 
     .location
     .description
@@ -62,13 +64,14 @@
           font-small-extra()
           font-thin()
           font-upper()
+
           color colorTextInvert4
         .value
           font-large()
       .button-to-cart
         button-emp2()
         button-small()
-        //svg-inside()
+        // svg-inside()
 
   &:hover
     .background

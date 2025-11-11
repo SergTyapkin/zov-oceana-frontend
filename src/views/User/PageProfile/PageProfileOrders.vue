@@ -10,22 +10,25 @@
 .root-profile-info
   box-shadow 0 0 10px colorShadow
   .header
-    background colorBgDark
-    color colorTextInvert1
     padding 30px
+    color colorTextInvert1
+    background colorBgDark
     .header-title
       font-large()
       font-upper()
+
       margin-bottom 5px
     .header-desc
       font-small()
       font-thin()
+
       color colorTextInvert3
 
   .main
     padding 30px 0
     .orders-list
       list-no-styles()
+
       display flex
       flex-direction column
       width 100%

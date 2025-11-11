@@ -14,30 +14,32 @@
 
   .header
     font-medium()
-    background colorBgDark
+
     display flex
-    justify-content space-between
     align-items center
+    justify-content space-between
     padding 20px
     color colorTextInvert1
+    background colorBgDark
     img
       img-size(1lh)
     button.delete
-      button-attention()
-      button-small()
+      background none
       img
         margin 0
         img-size(20px)
-      background none
+      button-attention()
+      button-small()
   .main
+    display flex
+    justify-content space-between
     padding 20px
     font-small()
     font-thin()
-    display flex
-    justify-content space-between
     button.edit
       button-no-styles()
       hover-effect()
+
       padding 5px 10px
       img
         img-size(20px)
@@ -46,15 +48,15 @@
 <template>
   <div class="root-address-card">
     <header class="header">
-      <img src="/static/icons/location.svg" alt="location" />
+      <img src="/static/icons/location.svg" alt="location">
       {{ address.title || 'Адрес доставки' }}
-      <button @click="$emit('delete')" class="delete"><img src="/static/icons/trashbox.svg" alt="delete" /></button>
+      <button @click="$emit('delete')" class="delete"><img src="/static/icons/trashbox.svg" alt="delete"></button>
     </header>
 
     <main class="main">
       <div class="address">{{ address.address }}</div>
 
-      <button @click="$emit('edit')" class="edit"><img src="/static/icons/edit.svg" alt="edit" /></button>
+      <button @click="$emit('edit')" class="edit"><img src="/static/icons/edit.svg" alt="edit"></button>
     </main>
   </div>
 </template>
