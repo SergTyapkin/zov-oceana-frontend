@@ -30,6 +30,7 @@
     .avatar
       centered-flex-container()
       font-large-extra()
+      animation-float()
 
       overflow hidden
       width 100px
@@ -48,11 +49,13 @@
       font-large-extra-extra()
       font-semibold()
       font-upper()
+      animation-float(0.5s, -20px, 0, left)
 
       margin-bottom 20px
     .info-date
       font-small()
       font-thin()
+      animation-float()
 
       color colorTextInvert3
 
@@ -62,6 +65,7 @@
     color colorTextInvert1
     text-align center
     box-shadow 0 0 10px colorShadow
+    background colorBgDark
     scrollable()
     > *
       display block
@@ -70,6 +74,7 @@
       background colorBgDark
       trans()
       hover-effect()
+      animation-float()
       &.router-link-exact-active
         background colorEmp2
 
@@ -80,21 +85,21 @@
 <template>
   <div class="root-profile">
     <section class="title">
-      <div class="avatar">
+      <div class="avatar" style="--animation-index: 0">
         {{ $user.givenName?.slice(0, 1) }}{{ $user.familyName?.slice(0, 1) }}
       </div>
 
       <div>
-        <header class="username">{{ $user.givenName }} {{ $user.familyName }}</header>
-        <div class="info-date">Участник с {{ $user.id }}</div>
+        <header class="username" style="--animation-index: 1">{{ $user.givenName }} {{ $user.familyName }}</header>
+        <div class="info-date" style="--animation-index: 2">Участник с {{ $user.id }}</div>
       </div>
     </section>
 
     <nav class="navigation">
-      <router-link :to="{name: 'profile'}">Профиль</router-link>
-      <router-link :to="{name: 'profileOrders'}">Заказы</router-link>
-      <router-link :to="{name: 'profileAddresses'}">Адреса</router-link>
-      <router-link :to="{name: 'profileSettings'}">Настройки</router-link>
+      <router-link :to="{name: 'profile'}" style="--animation-index: 0">Профиль</router-link>
+      <router-link :to="{name: 'profileOrders'}" style="--animation-index: 1">Заказы</router-link>
+      <router-link :to="{name: 'profileAddresses'}" style="--animation-index: 2">Адреса</router-link>
+      <router-link :to="{name: 'profileSettings'}" style="--animation-index: 3">Настройки</router-link>
     </nav>
 
     <section class="profile-main">
