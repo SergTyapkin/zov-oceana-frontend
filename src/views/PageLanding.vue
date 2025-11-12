@@ -44,12 +44,12 @@
   section.title
     page-root-disable()
 
-    gap 50px
+    gap 20px
     width 100vw
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     .logo
-      img-size(90px)
+      img-size(200px)
     .title-text
       font-large-extra-extra()
       font-semibold()
