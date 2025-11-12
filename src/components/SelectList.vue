@@ -207,7 +207,7 @@ export default {
       default: undefined,
     },
     selectedId: {
-      type: Number,
+      type: String,
       default: undefined,
     },
     disabled: Boolean,

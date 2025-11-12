@@ -50,24 +50,29 @@
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     .logo
       img-size(200px)
+      animation-float(0.5s, 0, 20px, bottom)
     .title-text
       font-large-extra-extra()
       font-semibold()
       font-upper()
+      animation-float(0.5s, -20px, 0, left)
       mark
         color colorEmp1
         background none
     .title-desc
       font-medium()
+      animation-float(0.5s, -20px, 0, left)
     .buttons
       display flex
       gap 30px
+      animation-float()
       .button-market
         button-emp2()
       .button-info
         button-no-fill()
 
   section.numbers
+    animation-float()
     display block
     flex-direction row
     width unset
@@ -186,19 +191,21 @@
 <template>
   <div class="root-page">
     <section class="title">
-      <img src="/static/images/logo-big.png" alt="logo" class="logo">
-      <div class="title-text">
+      <img src="/static/images/logo-big.png" alt="logo" class="logo" style="--animation-index: 1">
+      <div class="title-text" style="--animation-index: 0">
         <mark>Премиальное</mark> по <br>
         доступным ценам
       </div>
-      <div class="title-desc">Экологически чистые, отборные продукты с доставкой прямо к вашей двери</div>
-      <div class="buttons">
+      <div class="title-desc" style="--animation-index: 1">
+        Экологически чистые, отборные продукты с доставкой прямо к вашей двери
+      </div>
+      <div class="buttons" style="--animation-index: 3">
         <router-link :to="{ name: 'market' }"><button class="button-market">в магазин</button></router-link>
         <a href="#about"><button class="button-info">узнать больше</button></a>
       </div>
     </section>
 
-    <section class="numbers" id="about">
+    <section class="numbers" id="about" style="--animation-index: 4">
       <ul class="numbers-list">
         <li class="number-container">
           <div class="number">500+</div>

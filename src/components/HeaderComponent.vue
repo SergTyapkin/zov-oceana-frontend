@@ -25,6 +25,7 @@
 
     .left-group
       hover-effect()
+      animation-float()
 
       white-space nowrap
       font-upper()
@@ -42,6 +43,7 @@
       justify-content center
       font-upper()
       font-medium()
+      animation-float()
       .button-home
         mobile-hidden()
 
@@ -59,6 +61,7 @@
       flex 0
       gap 20px
       align-items center
+      animation-float()
       .search
         flex 1
 
@@ -84,27 +87,28 @@
           background colorEmp2
 
       .menu
+        button-no-styles()
+        animation-float()
+        desktop-hidden()
         img
           img-size(20px)
-        button-no-styles()
 
   .overlay-menu
     position fixed
     z-index 999999
-    left 30vw
-    inset 0
+    inset 0 0 0 30vw
     padding 40px
     color colorTextInvert1
     background colorBgDark
     trans()
     .bg
+      trans()
       position fixed
       z-index -1
       inset 0
       opacity 0.7
       background colorBgDark
       transition-delay 0.15s
-      trans()
     &.hidden
       transform translateX(100%)
       opacity 0
@@ -146,17 +150,17 @@
 <template>
   <header class="root-header">
     <div class="row-inner">
-      <router-link :to="{ name: 'default' }" class="left-group">
+      <router-link :to="{ name: 'default' }" class="left-group" style="--animation-index: 0">
         <img class="logo" src="/static/images/logo-small.png" alt="logo">
         <span class="text">Зов океана</span>
       </router-link>
 
-      <div class="center-group">
+      <div class="center-group" style="--animation-index: 1">
         <router-link :to="{ name: 'default' }" @click="isOverlayMenuShown = false" class="button-home">Главная</router-link>
         <router-link :to="{ name: 'market' }" @click="isOverlayMenuShown = false">Магазин</router-link>
       </div>
 
-      <div class="right-group">
+      <div class="right-group" style="--animation-index: 3">
         <router-link :to="{ name: 'cart' }" class="cart" @click="isOverlayMenuShown = false">
           <img src="/static/icons/cart-dark.svg" alt="cart">
           <div class="goods-number" v-if="$store.state.cart.length">{{ $store.state.cart.length }}</div>
@@ -165,7 +169,7 @@
           <img src="/static/icons/profile.svg" alt="profile">
         </router-link>
 
-        <button class="menu" @click="isOverlayMenuShown = true">
+        <button class="menu" @click="isOverlayMenuShown = true" style="--animation-index: 4">
           <img src="/static/icons/menu.svg" alt="menu">
         </button>
       </div>

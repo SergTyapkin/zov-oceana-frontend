@@ -28,6 +28,7 @@
     position absolute
     inset 0
     object-fit cover
+    pointer-events none
     trans()
 
   .overlay

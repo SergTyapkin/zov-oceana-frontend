@@ -27,6 +27,7 @@
       font-large-extra-extra()
       font-semibold()
       font-upper()
+      animation-float(0.5s, -20px, 0, left)
 
       margin-bottom 20px
       word-wrap break-word
@@ -36,10 +37,12 @@
     .title-desc
       font-small()
       font-thin()
+      animation-float(0.5s, -20px, 0, left)
 
   section.filters
     padding-block 30px
     box-shadow 0 15px 15px #00000033
+    animation-float()
     .top-row
       display flex
       flex-wrap wrap
@@ -50,6 +53,8 @@
         flex 1
         .search
           flex 1
+          min-width 150px
+        .category-selector
           min-width 150px
     .bottom-row
       font-small-extra()
@@ -71,13 +76,12 @@
     .goods-card
       flex 1
       animation-float()
+      &.loaded
+        animation none
+        opacity 1
 </style>
 
 <style scoped lang="stylus">
-.list-item
-  display inline-block
-  margin-right 10px
-
 .list-enter-active
 .list-leave-active
   transition all 0.3s ease
@@ -85,25 +89,28 @@
 .list-enter-from
 .list-leave-to
   transform scale(0.8)
-  opacity 0
+  opacity 0 !important
 
 </style>
 
 <template>
   <div class="root-page">
     <section class="title">
-      <header class="header">
+      <header class="header" style="--animation-index: 0">
         Магазин<br>
         Морепродуктов
       </header>
-      <div class="title-desc">Просмотрите наш полный ассортимент премиальных морепродуктов</div>
+      <div class="title-desc" style="--animation-index: 1">
+        Просмотрите наш полный ассортимент премиальных морепродуктов
+      </div>
     </section>
 
-    <section class="filters">
+    <section class="filters" style="--animation-index: 0">
       <div class="top-row">
         <div class="input-group">
           <InputSearch class="search" placeholder="Найти продукты..." v-model="filters.searchText" />
           <SelectList
+            class="category-selector"
             placeholder="Все категории"
             can-be-null
             :list="
@@ -149,6 +156,7 @@
           v-for="(goodsOne, i) in goodsFiltered"
           :key="goodsOne.id"
           class="goods-card"
+          :class="{loaded: goodsAnimationLoaded}"
           :goods="goodsOne"
           :style="`--animation-index: ${i}`"
         />
@@ -180,6 +188,8 @@ export default {
       },
 
       loading: false,
+
+      goodsAnimationLoaded: false,
     };
   },
 
@@ -210,6 +220,8 @@ export default {
   mounted() {
     console.log(this.filters.categoryId);
     this.updateGoods();
+
+    setTimeout(() => {this.goodsAnimationLoaded = true}, 3000);
   },
 
   methods: {
