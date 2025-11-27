@@ -1,13 +1,22 @@
 export interface User {
   id: string;
+  tgUsername?: string;
+  tgId?: string;
   givenName: string;
   familyName: string;
   middleName?: string;
-  email: string;
+  avatarUrl?: string;
+  email?: string;
   tel?: string;
-  emailNotifications: boolean;
+  joinedDate: Date;
 
-  isAdmin: boolean;
+  isEmailNotificationsOn: boolean;
+
+  canEditOrders: boolean;
+  canEditUsers: boolean;
+  canEditGoods: boolean;
+  canExecuteSQL: boolean;
+  canEditGlobals: boolean;
 
   isSignedIn: boolean;
 }
@@ -16,14 +25,14 @@ export interface Goods {
   id: string;
   title: string;
   description?: string;
-  previewUrl?: string;
   fromLocation?: string;
   amountLeft?: number;
   amount?: number;
+  amountStep: number;
   cost: number;
-  categoryId?: string;
-  categoryName?: string;
-  characters: Record<PropertyKey, string | number>;
+  images: {id: string, path: string}[];
+  categories: {id: string, title: string}[];
+  characters?: Record<PropertyKey, string | number>;
 }
 
 export interface Category {

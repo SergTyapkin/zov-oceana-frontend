@@ -37,8 +37,8 @@ export default class API extends REST_API {
     model?: Model,
     mockData?: MyResponse<object>,
   ): Promise<{ ok: boolean; data: object; status: number }> {
-    // if (mockData && import.meta.env.MODE !== 'production') {
-    if (mockData) {
+    if (mockData && import.meta.env.MODE !== 'production') {
+    // if (mockData) {
       console.info(`Request mocked: ${requestFunc.name}, ${path},`, mockData);
       return mockData;
     }
@@ -72,7 +72,7 @@ export default class API extends REST_API {
   getUser = () =>
     this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
     // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
-  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, password?: string, emailNotifications?: boolean }) =>
+  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, password?: string, isisEmailNotificationsOnOn?: boolean }) =>
     this.#PUT(`/user/${id}`, profileData, UserModel) as MyResponse<User>;
   updateProfilePassword = (id: string, profileData: { oldPassword?: string, newPassword?: string }) =>
     this.#PUT(`/user/${id}/password`, profileData, UserModel) as MyResponse<User>;
@@ -95,15 +95,23 @@ export default class API extends REST_API {
 
   // Goods
   getGoodsList = () =>
-    this.#GET(`/goods`, {}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
+    this.#GET(`/goods/all`, {}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
   getGoods = (id: string) =>
-    this.#GET(`/goods/${id}`, {}, GoodsModel, Response200(GoodsModelMockData)) as MyResponse<Goods>;
+    this.#GET(`/goods?id=${id}`, {}, GoodsModel, Response200(GoodsModelMockData)) as MyResponse<Goods>;
 
   // Orders
-  getMyOrders = () =>
-    this.#GET(`/orders/my`, {}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
+  getUserOrders = (userId: string) =>
+    this.#GET(`/orders`, {userId}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
 
   // Addresses
   getMyAddresses = () =>
     this.#GET(`/addresses/my`, {}, AddressListModel, Response200(AddressListModelMockData)) as MyResponse<{addresses: Address[]}>;
+
+  // Cart
+  getUserCart = (userId: string) =>
+    this.#GET(`/cart`, {userId}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
+  addGoodsToCart = (userId: string, goodsId: string, amount: number) =>
+    this.#POST(`/cart/goods`, {userId, goodsId, amount}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
+  removeGoodsFromCart = (userId: string, goodsId: string) =>
+    this.#DELETE(`/cart/goods/many`, {userId, goodsIds: [goodsId]}, {}, Response200({})) as MyResponse<object>;
 }

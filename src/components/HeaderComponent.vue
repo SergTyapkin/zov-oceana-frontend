@@ -103,6 +103,7 @@
     trans()
     .bg
       trans()
+
       position fixed
       z-index -1
       inset 0

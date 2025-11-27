@@ -35,12 +35,15 @@ export default new Vuex.Store({
   mutations: {
     SET_USER(state: State, userData: User) {
       state.user.id = String(userData.id);
-      state.user.familyName = String(userData.familyName);
-      state.user.givenName = String(userData.givenName);
+      state.user.familyName = userData.familyName;
+      state.user.givenName = userData.givenName;
       state.user.middleName = userData.middleName;
       state.user.email = userData.email;
       state.user.tel = userData.tel;
-      state.user.isAdmin = Boolean(userData.isAdmin);
+      state.user.tgUsername = userData.tgUsername;
+      state.user.tgId = userData.tgId;
+      state.user.avatarUrl = userData.avatarUrl;
+      state.user.joinedDate = new Date(userData.joinedDate);
 
       state.user.isSignedIn = true;
     },
@@ -104,23 +107,25 @@ export default new Vuex.Store({
       state.commit('SET_CATEGORIES', data.categories);
       this.$app.updateElements();
     },
-    DELETE_USER(state: State) {
+    DELETE_USER(this: Store, state: State) {
       state.commit('DELETE_USER');
     },
 
-    LOAD_CART(state: State) {
+    LOAD_CART(this: Store, state: State) {
       state.commit('LOAD_CART');
     },
-    ADD_TO_CART(state: State, data: {goods: Goods, amount: number}) {
+    async ADD_TO_CART(this: Store, state: State, data: {goods: Goods, amount: number}) {
       state.commit('ADD_TO_CART', Object.assign({}, data.goods, {amount: data.amount}));
+      await this.$app.$api.addGoodsToCart(this.state.user.id, data.goods.id, data.amount);
     },
-    REMOVE_FROM_CART(state: State, goods: Goods) {
+    async REMOVE_FROM_CART(this: Store, state: State, goods: Goods) {
       state.commit('REMOVE_FROM_CART', goods);
+      await this.$app.$api.removeGoodsFromCart(this.state.user.id, goods.id);
     },
-    CLEAR_CART(state: State) {
+    CLEAR_CART(this: Store, state: State) {
       state.commit('CLEAR_CART');
     },
-    SET_CART_GOODS_AMOUNT(state: State, data: {goodsId: string, amount: number}) {
+    SET_CART_GOODS_AMOUNT(this: Store, state: State, data: {goodsId: string, amount: number}) {
       state.commit('SET_CART_GOODS_AMOUNT', data);
     },
   },

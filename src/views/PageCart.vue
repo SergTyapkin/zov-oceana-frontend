@@ -23,6 +23,7 @@
     .title-button-back
       svg-inside(1lh)
       font-small()
+      animation-float(0.5s, -20px, 0, left)
 
       cursor pointer
       margin-bottom 20px
@@ -36,11 +37,13 @@
       font-large-extra-extra()
       font-semibold()
       font-upper()
+      animation-float(0.5s, -20px, 0, left)
 
       margin-bottom 20px
     .title-desc
       font-small()
       font-thin()
+      animation-float(0.5s, -20px, 0, left)
 
   section.cart
     display flex
@@ -55,6 +58,7 @@
       flex-direction column
       gap 20px
       list-no-styles()
+      animation-float(0.5s, -20px, 0, left)
       .goods
         display flex
         gap 20px
@@ -134,6 +138,8 @@
             color colorText3
 
     .order-controls
+      animation-float(0.5s, 20px, 0, right)
+
       flex 1
       min-width 300px
       .total-info-container
@@ -185,16 +191,16 @@
 <template>
   <div class="root-page">
     <section class="title">
-      <router-link :to="{ name: 'market' }" class="title-button-back">
+      <router-link :to="{ name: 'market' }" class="title-button-back" style="--animation-index: 0">
         <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Назад к каталогу
       </router-link>
-      <header class="header">Корзина</header>
-      <div class="title-desc">{{ $cart.length }} товаров в вашей корзине</div>
+      <header class="header" style="--animation-index: 1">Корзина</header>
+      <div class="title-desc" style="--animation-index: 2">{{ $cart.length }} товаров в вашей корзине</div>
     </section>
 
     <section class="cart">
-      <ul class="goods-list">
+      <ul class="goods-list" style="--animation-index: 1">
         <li class="goods" v-if="!$cart.length">В корзине пока что ничего нет</li>
         <li class="goods" v-for="goods in $cart">
           <div class="preview">
@@ -229,7 +235,7 @@
         </li>
       </ul>
 
-      <section class="order-controls">
+      <section class="order-controls" style="--animation-index: 1">
         <article class="total-info-container">
           <header class="header">Итого</header>
 

@@ -73,6 +73,7 @@
 
   section.numbers
     animation-float()
+
     display block
     flex-direction row
     width unset
@@ -171,16 +172,11 @@
 
       display flex
       flex-wrap wrap
-      gap 15px
+      gap 40px
       .link
-        width 150px
-        height 150px
-        padding 60px 60px 20px 20px
-        background colorBgLight
+        hover-effect()
         img
-          width 100%
-          height 100%
-          filter invert(1)
+          img-size(100px)
 
         @media ({mobile})
           width 100px

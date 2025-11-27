@@ -1,15 +1,23 @@
 import { ArrayType, Type, validateModel } from '@sergtyapkin/models-validator';
-
+import { Goods, Order } from '~/utils/models';
 
 export const UserModel = {
   id: String,
   givenName: String,
   familyName: String,
   middleName: Type(String, true),
-  email: String,
-  emailNotifications: Boolean,
+  avatarUrl: Type(String, true),
+  tgUsername: Type(String, true),
+  tgId: Type(String, true),
+  email: Type(String, true),
   tel: Type(String, true),
-  isAdmin: Boolean,
+  joinedDate: Date,
+  isEmailNotificationsOn: Boolean,
+  canEditOrders: Boolean,
+  canEditUsers: Boolean,
+  canEditGoods: Boolean,
+  canExecuteSQL: Boolean,
+  canEditGlobals: Boolean,
 };
 
 export const UserModelMockData = validateModel(UserModel, {
@@ -18,8 +26,14 @@ export const UserModelMockData = validateModel(UserModel, {
   familyName: 'Тяпкин',
   middleName: 'Сергеевич',
   email: 'Tyapkin2002@mail.ru',
-  emailNotifications: false,
+  isEmailNotificationsOn: false,
+  canEditOrders: false,
+  canEditUsers: false,
+  canEditGoods: false,
+  canExecuteSQL: false,
+  canEditGlobals: false,
   isAdmin: false,
+  joinedDate: new Date('2023-04-04'),
 });
 
 export const CategoryModel = {
@@ -52,14 +66,50 @@ export const CategoriesListModelMockData = {
 export const GoodsModel = {
   id: String,
   title: String,
-  description: Type(String, true),
-  previewUrl: Type(String, true),
-  fromLocation: Type(String, true),
-  amountLeft: Type(Number, true),
-  amount: Type(Number, true),
-  cost: Type(Number, true),
-  categoryId: Type(String, true),
-  categoryName: Type(String, true),
+  description: {
+    type: String,
+    optional: true,
+  },
+  images: ArrayType({
+    id: String,
+    path: String,
+  }, true, []),
+  fromLocation: {
+    type: String,
+    optional: true,
+    from: 'fromlocation',
+  },
+  amountLeft: {
+    type: Number,
+    optional: true,
+    from: 'amountleft',
+  },
+  amount: {
+    type: Number,
+    optional: true,
+  },
+  amountStep: {
+    type: Number,
+    from: 'amountstep',
+  },
+  amountMin: {
+    type: Number,
+    from: 'amountmin',
+  },
+  isWeighed: {
+    type: Boolean,
+    from: 'isweighed',
+    default: false,
+  },
+  cost: {
+    type: Number,
+    optional: true,
+  },
+  categories: ArrayType({
+    id: String,
+    title: String,
+  }, true, []),
+  characters: Type(Object, true, {}),
 };
 export const GoodsListModel = {
   goods: ArrayType(GoodsModel),
@@ -67,13 +117,19 @@ export const GoodsListModel = {
 export const GoodsModelMockData = validateModel(GoodsModel, {
   id: 'GOODS_ID',
   title: 'Атлантический лосось',
-  // description: '',
-  // previewUrl: '',
-  fromLocation: 'Норвегия',
-  amountLeft: 32,
+  images: [],
+  fromlocation: 'Норвегия',
+  amountleft: 32,
+  amountstep: 0.25,
+  amountmin: 0.5,
+  isweighed: false,
   cost: 2430,
-  categoryId: 'CATEGORY_ID_2',
-  categoryName: 'Рыба',
+  categories: [
+    {
+      id: 'CATEGORY_ID_2',
+      title: 'Рыба',
+    }
+  ],
 });
 export const GoodsListModelMockData = {
   goods: [
@@ -100,7 +156,7 @@ export const OrderListModel = {
 };
 export const OrderModelMockData = validateModel(OrderModel, {
   id: 'ORDER_ID',
-  goods: GoodsListModelMockData.goods,
+  goods: [],
   createdDate: '2025-03-18',
   updatedDate: '2025-04-20',
   cost: 1250,
@@ -108,7 +164,9 @@ export const OrderModelMockData = validateModel(OrderModel, {
   userId: 'USER_ID_1',
   userGivenName: 'Петр',
   userFamilyName: 'Иванов',
-});
+}) as Order;
+OrderModelMockData.goods = GoodsListModelMockData.goods as Goods[];
+
 export const OrderListModelMockData = {
   orders: [
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', cost: 1400, status: 'created'}),

@@ -24,12 +24,13 @@
     img
       img-size(1lh)
     button.delete
+      button-attention()
+      button-small()
+
       background none
       img
         margin 0
         img-size(20px)
-      button-attention()
-      button-small()
   .main
     display flex
     justify-content space-between

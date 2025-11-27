@@ -25,10 +25,10 @@
   .background
     img-size(100%)
 
+    pointer-events none
     position absolute
     inset 0
     object-fit cover
-    pointer-events none
     trans()
 
   .overlay

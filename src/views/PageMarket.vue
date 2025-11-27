@@ -77,8 +77,8 @@
       flex 1
       animation-float()
       &.loaded
-        animation none
         opacity 1
+        animation none
 </style>
 
 <style scoped lang="stylus">
@@ -200,7 +200,7 @@ export default {
         .filter(goods => {
           return (
             (!this.filters.searchText || new RegExp(this.filters.searchText, 'i').test(goods.title)) &&
-            (!this.filters.categoryId || goods.categoryId === this.filters.categoryId)
+            (!this.filters.categoryId || String(goods.categoryId) === String(this.filters.categoryId))
           );
         })
         .sort((g1, g2) => {
@@ -226,6 +226,11 @@ export default {
 
   methods: {
     async updateGoods() {
+      console.log("GOODS:", (await this.$request(this, this.$api.getGoodsList, [], `Не удалось получить список товаров`)) as {
+          goods: Goods[];
+        }
+      );
+
       this.goods = (
         (await this.$request(this, this.$api.getGoodsList, [], `Не удалось получить список товаров`)) as {
           goods: Goods[];

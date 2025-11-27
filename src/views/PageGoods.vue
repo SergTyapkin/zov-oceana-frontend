@@ -64,6 +64,7 @@
           color colorTextInvert1
           background colorBgDark
           font-small-extra()
+          hover-effect()
       .header
         font-large-extra()
         font-upper()
@@ -89,7 +90,12 @@
         font-bold-extra()
         font-spaced()
 
-        margin-bottom 25px
+        margin-bottom 20px
+      .desc
+        font-small()
+        font-thin()
+        margin-bottom 80px
+
       .info-header
         font-medium()
         font-upper()
@@ -116,6 +122,7 @@
           .value
             font-small-extra()
             font-semibold()
+            text-align right
 
       .amount-selector
         display flex
@@ -173,7 +180,13 @@
 
       <div class="info-container">
         <ul class="categories-container">
-          <li v-if="goods.categoryName" class="category">{{ goods.categoryName }}</li>
+          <router-link
+            v-for="category in goods.categories"
+            :to="{ name: 'market', query: {categoryId: category.id} }"
+            :key="category.id"
+          >
+            <li class="category">{{ category.title }}</li>
+          </router-link>
         </ul>
         <header class="header">{{ goods.title }}</header>
         <p class="location"><img src="/static/icons/location-dark.svg" alt="location">{{ goods.fromLocation }}</p>
@@ -181,7 +194,6 @@
         <p class="info">Цена за кг</p>
         <p class="cost">₽{{ goods.cost }}</p>
 
-        <header v-if="goods.description" class="info-header">Описание</header>
         <p v-if="goods.description" class="desc">{{ goods.description }}</p>
 
         <header class="info-header">Характеристики</header>
@@ -200,14 +212,14 @@
         <header class="info">Количество (кг)</header>
         <section class="amount-selector">
           <button
-            @click="currentAmount = Math.round(Math.max(currentAmount - 0.1, 0.1) * 10) / 10"
+            @click="currentAmount = Math.round(Math.max(currentAmount - goods.amountStep, goods.amountMin) * 10) / 10"
             class="button-minus"
           >
             -
           </button>
           <div>{{ currentAmount }}</div>
           <button
-            @click="currentAmount = Math.round(Math.min(currentAmount + 0.1, goods.amountLeft) * 10) / 10"
+            @click="currentAmount = Math.round(Math.min(currentAmount + goods.amountStep, goods.amountLeft) * 10) / 10"
             class="button-plus"
           >
             +
@@ -220,7 +232,7 @@
             <div class="value">₽{{ Math.round(goods.cost * currentAmount * 100) / 100 }}</div>
           </div>
 
-          <button @click="addToCart" v-if="!$cart.find(g => g.id === goods.id)" class="button-add-to-cart">
+          <button @click="addToCart" v-if="$cart.findIndex(g => g.id === goods.id) === -1" class="button-add-to-cart">
             <img src="/static/icons/cart.svg" alt="cart">
             Добавить в корзину
           </button>
@@ -273,6 +285,7 @@ export default {
         [this.goodsId],
         `Не удалось получить список товаров`,
       )) as Goods;
+      console.log(this.goods);
     },
 
     addToCart() {

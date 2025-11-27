@@ -103,7 +103,7 @@
           </div>
 
           <div class="action-container">
-            <InputSwitch v-model="fields.emailNotifications" @input="updateEmailNotifications" />
+            <InputSwitch v-model="fields.isEmailNotificationsOn" @input="updateisEmailNotificationsOn" />
           </div>
         </li>
 
@@ -176,7 +176,7 @@ export default {
   data() {
     return {
       fields: {
-        emailNotifications: this.$user.emailNotifications,
+        isEmailNotificationsOn: this.$user.isEmailNotificationsOn,
         oldPassword: '',
         newPassword: '',
         newPasswordConfirmation: '',
@@ -196,14 +196,14 @@ export default {
   mounted() {},
 
   methods: {
-    async updateEmailNotifications() {
+    async updateisEmailNotificationsOn() {
       await this.$request(
         this,
         this.$api.updateProfile,
         [
           this.$user.id,
           {
-            emailNotifications: this.fields.emailNotifications,
+            isEmailNotificationsOn: this.fields.isEmailNotificationsOn,
           },
         ],
         `Не удалось обновить данные пользователя`,

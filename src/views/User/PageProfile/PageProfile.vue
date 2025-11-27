@@ -64,8 +64,8 @@
     display flex
     color colorTextInvert1
     text-align center
-    box-shadow 0 0 10px colorShadow
     background colorBgDark
+    box-shadow 0 0 10px colorShadow
     scrollable()
     > *
       display block
@@ -79,6 +79,8 @@
         background colorEmp2
 
   section.profile-main
+    animation-float()
+
     margin-top 60px
 </style>
 
@@ -91,7 +93,7 @@
 
       <div>
         <header class="username" style="--animation-index: 1">{{ $user.givenName }} {{ $user.familyName }}</header>
-        <div class="info-date" style="--animation-index: 2">Участник с {{ $user.id }}</div>
+        <div class="info-date" style="--animation-index: 2">Участник с {{ dateFormatter($user.joinedDate) }}</div>
       </div>
     </section>
 
@@ -102,7 +104,7 @@
       <router-link :to="{name: 'profileSettings'}" style="--animation-index: 3">Настройки</router-link>
     </nav>
 
-    <section class="profile-main">
+    <section class="profile-main" style="--animation-index: 1">
       <router-view #default="{ Component }">
         <transition name="opacity" mode="out-in">
           <component :is="Component" />
@@ -113,6 +115,8 @@
 </template>
 
 <script lang="ts">
+import { dateFormatter } from '~/utils/utils';
+
 export default {
 
   data() {
@@ -120,9 +124,11 @@ export default {
     };
   },
 
-  async mounted() {},
+  async mounted() {
+  },
 
   methods: {
+    dateFormatter,
   },
 };
 </script>
