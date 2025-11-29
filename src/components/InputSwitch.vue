@@ -128,6 +128,7 @@
         type="checkbox"
         autocomplete="off"
         :id="`input-${uid}`"
+        ref="input"
       >
       <label class="knobs" :for="`input-${uid}`" />
       <div class="layer" />
@@ -172,9 +173,13 @@ export default {
     };
   },
 
+  mounted() {
+    console.log(this.value);
+  },
+
   methods: {
     onInput() {
-      this.$emit('update:modelValue', this.value);
+      this.$emit('update:modelValue', this.$refs.input.checked);
       this.$emit('input');
     },
   },

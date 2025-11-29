@@ -32,6 +32,10 @@
       display flex
       flex-direction column
       width 100%
+      .desc
+        font-small()
+        color colorText5
+        text-align center
 </style>
 
 <template>
@@ -43,7 +47,8 @@
 
     <main class="main">
       <ul class="orders-list">
-        <OrderCard v-for="order in orders" :order="order" :key="order.id" />
+        <li class="desc" v-if="!orders.length">Заказов пока нет</li>
+        <OrderCard v-else v-for="order in orders" :order="order" :key="order.id" />
       </ul>
     </main>
 
@@ -74,7 +79,7 @@ export default {
   methods: {
     async updateOrders() {
       this.orders = (
-        (await this.$request(this, this.$api.getMyOrders, [], `Не удалось получить список заказов`)) as {orders: Order[]}
+        (await this.$request(this, this.$api.getUserOrders, [this.$user.id], `Не удалось получить список заказов`)) as {orders: Order[]}
       ).orders;
     },
   },

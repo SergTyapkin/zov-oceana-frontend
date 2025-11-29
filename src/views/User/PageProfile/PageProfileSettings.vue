@@ -103,7 +103,7 @@
           </div>
 
           <div class="action-container">
-            <InputSwitch v-model="fields.isEmailNotificationsOn" @input="updateisEmailNotificationsOn" />
+            <InputSwitch v-model="fields.isEmailNotificationsOn" @input="updateIsEmailNotificationsOn" />
           </div>
         </li>
 
@@ -196,7 +196,7 @@ export default {
   mounted() {},
 
   methods: {
-    async updateisEmailNotificationsOn() {
+    async updateIsEmailNotificationsOn() {
       await this.$request(
         this,
         this.$api.updateProfile,

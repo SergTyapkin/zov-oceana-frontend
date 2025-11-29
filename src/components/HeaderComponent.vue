@@ -68,6 +68,7 @@
       .cart
       .profile
       .menu
+        button-no-styles()
         hover-effect()
 
       .cart
@@ -137,6 +138,13 @@
         font-semibold()
 
         padding-block 5px
+      .buttons-container
+        button
+          centered-margin()
+          button-no-styles()
+          font-medium()
+          display block
+          padding 5px 10px
     .button-close
       button-no-fill()
       svg-inside(25px)
@@ -146,32 +154,81 @@
       right 0
       &:hover
         background none
+
+  .modal-inside
+    width 70vw
+    max-width 600px
+    min-width 450px
+    @media({mobile})
+      width calc(100vw - 40px)
+      min-width unset
+    .header
+      font-large()
+      font-spaced()
+
+      background colorBgDark
+      color colorTextInvert1
+      padding 30px
+      text-align center
+    .main
+      background colorBgLight
+      padding 30px
+      .desc
+        font-small()
+        font-spaced()
+        margin-block 10px
+        text-align center
+      .field
+        margin-block 10px
+      .submit
+        button-emp2()
+        centered-margin()
+        width fit-content
+        margin-top 40px
+      .button-different-login
+        button-no-fill()
+        font-lower()
+        font-small-extra()
+        centered-margin()
+        color colorText1
+        width fit-content
+        margin-top 10px
 </style>
 
 <template>
   <header class="root-header">
     <div class="row-inner">
       <router-link :to="{ name: 'default' }" class="left-group" style="--animation-index: 0">
-        <img class="logo" src="/static/images/logo-small.png" alt="logo">
+        <img class="logo" src="/static/images/logo-small.png" alt="logo" />
         <span class="text">Зов океана</span>
       </router-link>
 
       <div class="center-group" style="--animation-index: 1">
-        <router-link :to="{ name: 'default' }" @click="isOverlayMenuShown = false" class="button-home">Главная</router-link>
+        <router-link :to="{ name: 'default' }" @click="isOverlayMenuShown = false" class="button-home">
+          Главная
+        </router-link>
         <router-link :to="{ name: 'market' }" @click="isOverlayMenuShown = false">Магазин</router-link>
       </div>
 
       <div class="right-group" style="--animation-index: 3">
         <router-link :to="{ name: 'cart' }" class="cart" @click="isOverlayMenuShown = false">
-          <img src="/static/icons/cart-dark.svg" alt="cart">
+          <img src="/static/icons/cart-dark.svg" alt="cart" />
           <div class="goods-number" v-if="$store.state.cart.length">{{ $store.state.cart.length }}</div>
         </router-link>
-        <router-link :to="{ name: 'profile' }" class="profile" @click="isOverlayMenuShown = false">
-          <img src="/static/icons/profile.svg" alt="profile">
+
+        <router-link
+          v-if="$store.state.user.isSignedIn"
+          :to="{ name: 'profile' }"
+          class="profile"
+          @click="isOverlayMenuShown = false">
+          <img src="/static/icons/profile.svg" alt="profile" />
         </router-link>
+        <button v-else @click="$refs.loginModal.show()" class="profile">
+          <img src="/static/icons/profile.svg" alt="profile" />
+        </button>
 
         <button class="menu" @click="isOverlayMenuShown = true" style="--animation-index: 4">
-          <img src="/static/icons/menu.svg" alt="menu">
+          <img src="/static/icons/menu.svg" alt="menu" />
         </button>
       </div>
     </div>
@@ -179,13 +236,33 @@
     <section class="overlay-menu" :class="{ hidden: !isOverlayMenuShown }">
       <div class="bg" @click="isOverlayMenuShown = false" />
 
-      <header class="header"><img src="/static/images/logo-big.png" alt="logo">Зов океана</header>
+      <header class="header"><img src="/static/images/logo-big.png" alt="logo" />Зов океана</header>
 
       <nav class="nav">
         <header class="header">Навигация</header>
         <router-link :to="{ name: 'default' }" @click="isOverlayMenuShown = false">Главная</router-link>
         <router-link :to="{ name: 'market' }" @click="isOverlayMenuShown = false">Магазин</router-link>
-        <router-link :to="{ name: 'profile' }" @click="isOverlayMenuShown = false">Профиль</router-link>
+
+        <router-link v-if="$store.state.user.isSignedIn" :to="{ name: 'profile' }" @click="isOverlayMenuShown = false">
+          Профиль
+        </router-link>
+        <div v-else class="buttons-container">
+          <button
+            @click="
+              $refs.loginModal.show();
+              isOverlayMenuShown = false;
+            ">
+            Войти
+          </button>
+          <button
+            @click="
+              $refs.registerModal.show();
+              isOverlayMenuShown = false;
+            ">
+            Регистрация
+          </button>
+        </div>
+
         <router-link :to="{ name: 'cart' }" @click="isOverlayMenuShown = false">Корзина</router-link>
       </nav>
 
@@ -195,29 +272,276 @@
           v-for="category in $categories"
           :to="{ name: 'market', query: { categoryId: category.id } }"
           :key="category.id"
-          @click="isOverlayMenuShown = false"
-        >
+          @click="isOverlayMenuShown = false">
           {{ category.title }}
         </router-link>
       </nav>
 
       <button class="button-close" @click="isOverlayMenuShown = false">
-        <img src="/static/icons/cross.svg" alt="close">
+        <img src="/static/icons/cross.svg" alt="close" />
       </button>
     </section>
+
+    <ModalsExpandable ref="registerModal">
+      <div class="modal-inside">
+        <header class="header">Регистрация</header>
+        <main class="main">
+          <TGAuth @login="onTGLogin" />
+
+          <div class="desc">или</div>
+
+          <InputComponent
+            v-model="userData.givenName"
+            :error="errors.givenName"
+            title="Имя"
+            placeholder="Иван"
+            :icon="IconProfile"
+            icon-in-left
+            class="field" />
+          <InputComponent
+            v-model="userData.familyName"
+            :error="errors.familyName"
+            title="Фамилия"
+            placeholder="Иванов"
+            :icon="IconProfile"
+            icon-in-left
+            class="field" />
+          <InputComponent
+            v-model="userData.middleName"
+            :error="errors.middleName"
+            title="Отчество"
+            placeholder="Иванович"
+            :icon="IconProfile"
+            icon-in-left
+            class="field" />
+          <InputComponent
+            v-model="userData.email"
+            :error="errors.email"
+            title="Email"
+            placeholder="ivan.ivanov@email.com"
+            :icon="IconEmail"
+            icon-in-left
+            class="field" />
+          <InputComponent
+            v-model="userData.tel"
+            :error="errors.tel"
+            title="Телефон"
+            placeholder="+7 (999) 123-4567"
+            :icon="IconTelephone"
+            icon-in-left
+            class="field" />
+          <InputComponent
+            v-model="userData.password"
+            :error="errors.password"
+            title="Пароль"
+            placeholder="Пароль"
+            hideable
+            class="field" />
+          <InputComponent
+            v-model="userData.passwordRepeat"
+            :error="errors.passwordRepeat"
+            title="Повтор пароля"
+            placeholder="Пароль"
+            hideable
+            class="field" />
+
+          <button class="submit" @click="register">Зарегистрироваться</button>
+          <button
+            class="button-different-login"
+            @click="
+              $refs.registerModal.hide();
+              $refs.loginModal.show();
+            ">
+            Войти
+          </button>
+        </main>
+      </div>
+    </ModalsExpandable>
+
+    <ModalsExpandable ref="loginModal">
+      <div class="modal-inside">
+        <header class="header">Вход</header>
+        <main class="main">
+          <TGAuth @login="onTGLogin" />
+
+          <div class="desc">или</div>
+
+          <InputComponent
+            v-model="userData.emailOrTel"
+            :error="errors.emailOrTel"
+            title="Email или телефон"
+            placeholder="Email или телефон"
+            :icon="IconProfile"
+            icon-in-left
+            class="field" />
+          <InputComponent
+            v-model="userData.password"
+            :error="errors.password"
+            title="Пароль"
+            placeholder="Пароль"
+            hideable
+            class="field" />
+
+          <button class="submit" @click="signIn">Войти</button>
+          <button
+            class="button-different-login"
+            @click="
+              $refs.loginModal.hide();
+              $refs.registerModal.show();
+            ">
+            Зарегистрироваться
+          </button>
+        </main>
+      </div>
+    </ModalsExpandable>
   </header>
 </template>
 
 <script lang="ts">
+import ModalsExpandable from '~/components/ModalsExpandable.vue';
+import InputComponent from '~/components/InputComponent.vue';
+
+import IconProfile from '#/icons/profile.svg';
+import IconEmail from '#/icons/email.svg';
+import IconTelephone from '#/icons/telegram-logo.svg';
+import TGAuth, { TGUser } from '~/components/TGAuth.vue';
+import Validators from '~/utils/validators';
+
 export default {
+  components: { TGAuth, InputComponent, ModalsExpandable },
   data() {
     return {
       isOverlayMenuShown: false,
+
+      IconProfile,
+      IconEmail,
+      IconTelephone,
+
+      userData: {
+        givenName: '',
+        middleName: '',
+        familyName: '',
+        email: '',
+        tel: '',
+        password: '',
+        passwordRepeat: '',
+        emailOrTel: '',
+      },
+      errors: {
+        givenName: false,
+        middleName: false,
+        familyName: false,
+        email: false,
+        tel: false,
+        password: false,
+        passwordRepeat: false,
+        emailOrTel: false,
+      } as Record<PropertyKey, boolean | string>,
+
+      loading: false,
     };
   },
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    onTGLogin(user: TGUser) {},
+
+    async register() {
+      Object.keys(this.errors).forEach(key => (this.errors[key] = false));
+
+      this.errors.givenName = !Validators.name.validate(this.userData.givenName);
+      this.errors.middleName = !Validators.name.validate(this.userData.middleName);
+      this.errors.familyName = !Validators.name.validate(this.userData.familyName);
+      this.errors.email = !Validators.email.validate(this.userData.email);
+      this.errors.tel = !Validators.phone.validate(this.userData.tel);
+      this.errors.password = !Validators.password.validate(this.userData.password)
+        ? 'Пароль должен содержать минимум 6 символов'
+        : false;
+      this.errors.passwordRepeat =
+        !Validators.password.validate(this.userData.password) || this.userData.password !== this.userData.passwordRepeat
+          ? 'Пароли не совпадают'
+          : false;
+
+      if (Object.values(this.errors).findIndex(err => err) !== -1) {
+        return;
+      }
+
+      this.userData.givenName = Validators.name.prettifyResult(this.userData.givenName);
+      this.userData.middleName = Validators.name.prettifyResult(this.userData.middleName);
+      this.userData.familyName = Validators.name.prettifyResult(this.userData.familyName);
+      this.userData.email = Validators.email.prettifyResult(this.userData.email);
+      this.userData.tel = Validators.phone.prettifyResult(this.userData.tel);
+      this.userData.password = Validators.password.prettifyResult(this.userData.password);
+
+      await this.$request(
+        this,
+        this.$api.register,
+        [
+          this.userData.givenName,
+          this.userData.middleName,
+          this.userData.familyName,
+          this.userData.email,
+          this.userData.tel,
+          this.userData.password,
+        ],
+        `Не удалось зарегистрироваться`,
+        async () => {
+          await this.$store.dispatch('GET_USER');
+          await this.$router.push({ name: 'profile' });
+          (this.$refs.loginModal as ModalsExpandable).hide();
+          (this.$refs.loginRegister as ModalsExpandable).hide();
+        },
+        true,
+        {
+          409: () => {
+            this.errors.tel = 'Телефон или email уже заняты';
+            this.errors.email = 'Телефон или email уже заняты';
+          },
+        },
+      );
+    },
+
+    async signIn() {
+      Object.keys(this.errors).forEach(key => (this.errors[key] = false));
+
+      this.errors.password = !Validators.password.validate(this.userData.password)
+        ? 'Пароль должен содержать минимум 6 символов'
+        : false;
+      this.errors.emailOrTel =
+        !Validators.email.validate(this.userData.emailOrTel) && !Validators.phone.validate(this.userData.emailOrTel);
+
+      if (Object.values(this.errors).findIndex(err => err) !== -1) {
+        return;
+      }
+
+      this.userData.password = Validators.password.prettifyResult(this.userData.password);
+      if (Validators.email.validate(this.userData.emailOrTel)) {
+        this.userData.emailOrTel = Validators.email.prettifyResult(this.userData.emailOrTel);
+      } else {
+        this.userData.emailOrTel = Validators.phone.prettifyResult(this.userData.emailOrTel);
+      }
+
+      await this.$request(
+        this,
+        this.$api.login,
+        [this.userData.emailOrTel, this.userData.password],
+        `Не удалось войти`,
+        async () => {
+          await this.$store.dispatch('GET_USER');
+          await this.$router.push({ name: 'profile' });
+          (this.$refs.loginModal as ModalsExpandable).hide();
+          (this.$refs.loginRegister as ModalsExpandable).hide();
+        },
+        true,
+        {
+          401: () => {
+            this.errors.password = 'Неверные email/телефон или пароль';
+            this.errors.emailOrTel = 'Неверные email/телефон или пароль';
+          },
+        },
+      );
+    },
+  },
 };
 </script>

@@ -37,6 +37,8 @@
       color colorText1
       background colorBlockBg
       trans()
+      &.icon-in-left
+        padding-left 40px
 
       &::placeholder
         font-spaced()
@@ -51,13 +53,20 @@
 
     .images-container
       position absolute
-      top 0
+      top 50%
       right 10px
+      transform translateY(-50%)
+      &.left
+        right unset
+        left 10px
+      .image
+        img-size(1lh)
       .image-hidden
         cursor pointer
         box-sizing content-box
         height 0.8em
         padding-block calc(10px + 0.1em)
+        img-size(1lh)
         trans()
 
         &:hover
@@ -82,9 +91,14 @@
 
     .bottom-description
       min-width 0
-
     .keys-count
       trans()
+    .error
+      font-small-extra()
+      trans()
+      text-align left
+      color colorError
+      opacity 0
 
   &.error
     .title
@@ -92,6 +106,8 @@
     input
     .keys-count
       color colorError
+    .error
+      opacity 1
 
   &.success
     .title
@@ -106,22 +122,27 @@
     <header class="title" v-if="title">{{ title }}</header>
     <p v-if="description" class="description">{{ description }}</p>
 
-    <div
+    <section
       class="input-container"
       :class="{hideable}"
       @input="onInput"
     >
+      <div class="images-container left">
+        <img v-if="icon && iconInLeft" :src="icon" class="image" :alt="title">
+      </div>
+
       <input
         v-model="value"
         v-if="!maxSymbols || maxSymbols < 48"
         :placeholder="placeholder"
         :type="(isHidden && hideable) ? 'password' : (type || 'text')"
         :autocomplete="autocomplete || 'off'"
+        :class="{'icon-in-left': icon && iconInLeft}"
       >
       <textarea v-model="value" rows="4" v-else :placeholder="placeholder" />
 
       <div class="images-container">
-        <img v-if="icon" :src="icon" class="image" :alt="title">
+        <img v-if="icon && !iconInLeft" :src="icon" class="image" :alt="title">
 
         <img
           v-if="hideable && !isHidden"
@@ -138,12 +159,13 @@
           alt="show"
         >
       </div>
-    </div>
+    </section>
 
-    <div class="bottom-container">
-      <p class="bottom-description">{{ bottomDescription }}</p>
+    <section class="bottom-container">
+      <div class="error">{{ typeof error === 'boolean' ? 'Неверный формат' : error }}</div>
+      <p v-if="bottomDescription" class="bottom-description">{{ bottomDescription }}</p>
       <span class="keys-count" v-if="maxSymbols">{{ modelValue.length }}<span v-if="maxSymbols">/{{ maxSymbols }}</span></span>
-    </div>
+    </section>
   </section>
 </template>
 
@@ -190,9 +212,10 @@ export default {
       type: String,
       required: true,
     },
-    error: Boolean,
+    error: String as boolean | string,
     success: Boolean,
     hideable: Boolean,
+    iconInLeft: Boolean,
     hiddenByDefault: {
       type: Boolean,
       default: true,

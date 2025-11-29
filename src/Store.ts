@@ -45,6 +45,8 @@ export default new Vuex.Store({
       state.user.avatarUrl = userData.avatarUrl;
       state.user.joinedDate = new Date(userData.joinedDate);
 
+      state.user.isEmailNotificationsOn = Boolean(userData.isEmailNotificationsOn);
+
       state.user.isSignedIn = true;
     },
     DELETE_USER(state: State) {

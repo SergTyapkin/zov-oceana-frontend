@@ -1,3 +1,5 @@
+import { Type } from '@sergtyapkin/models-validator';
+
 export interface User {
   id: string;
   tgUsername?: string;
@@ -46,7 +48,13 @@ export interface Category {
 export interface Address {
   id: string;
   title?: string;
-  address: string;
+  createdDate: Date;
+  city?: string;
+  street?: string;
+  house?: string;
+  entrance?: string;
+  code?: string;
+  comment?: string;
 }
 
 export type OrderStatus = 'created' | 'paid' | 'prepared' | 'delivered' | 'cancelled';
@@ -58,7 +66,5 @@ export interface Order {
   cost: number;
   status: OrderStatus;
   userId?: string;
-  userGivenName?: string;
-  userFamilyName?: string;
 }
 

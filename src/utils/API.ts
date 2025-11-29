@@ -15,6 +15,7 @@ import {
   UserModelMockData,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address } from '~/utils/models';
+import { detectBrowser, detectOS } from '~/utils/utils';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -72,18 +73,18 @@ export default class API extends REST_API {
   getUser = () =>
     this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
     // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
-  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, password?: string, isisEmailNotificationsOnOn?: boolean }) =>
-    this.#PUT(`/user/${id}`, profileData, UserModel) as MyResponse<User>;
+  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, password?: string, isEmailNotificationsOn?: boolean }) =>
+    this.#PUT(`/user`, Object.assign({id}, profileData), UserModel) as MyResponse<User>;
   updateProfilePassword = (id: string, profileData: { oldPassword?: string, newPassword?: string }) =>
-    this.#PUT(`/user/${id}/password`, profileData, UserModel) as MyResponse<User>;
-  register = (username: string, email: string, password: string) =>
-    this.#POST(`/user`, { username, email, password }, UserModel) as MyResponse<User>;
+    this.#PUT(`/user`, Object.assign({id}, profileData), UserModel) as MyResponse<User>;
+  register = (givenName: string, middleName: string, familyName: string, email: string, tel: string, password: string) =>
+    this.#POST(`/user`, { givenName, middleName, familyName, email, tel, password, clientBrowser: detectBrowser(), clientOS: detectOS()}, UserModel) as MyResponse<User>;
   deleteProfile = () =>
     this.#DELETE(`/user`) as MyResponse<unknown>;
-  login = (usernameOrEmail: string, password: string) =>
-    this.#POST(`/auth`, { username_or_email: usernameOrEmail, password }, UserModel) as MyResponse<User>;
+  login = (emailOrTel: string, password: string) =>
+    this.#POST(`/user/auth`, { emailOrTel, password, clientBrowser: detectBrowser(), clientOS: detectOS() }, UserModel) as MyResponse<User>;
   logout = () =>
-    this.#DELETE(`/auth`) as MyResponse<unknown>;
+    this.#DELETE(`/user/session`) as MyResponse<unknown>;
   sendPasswordRestorationLetter = () =>
     this.#POST(`/auth/password/restore`) as MyResponse<unknown>;
   restorePasswordByCode = (code: string, newPassword: string): MyResponse<unknown> =>
@@ -101,11 +102,11 @@ export default class API extends REST_API {
 
   // Orders
   getUserOrders = (userId: string) =>
-    this.#GET(`/orders`, {userId}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
+    this.#GET(`/orders/user`, {userId}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
 
   // Addresses
-  getMyAddresses = () =>
-    this.#GET(`/addresses/my`, {}, AddressListModel, Response200(AddressListModelMockData)) as MyResponse<{addresses: Address[]}>;
+  getUserAddresses = (userId: string) =>
+    this.#GET(`/addresses/user`, {userId}, AddressListModel, Response200(AddressListModelMockData)) as MyResponse<{addresses: Address[]}>;
 
   // Cart
   getUserCart = (userId: string) =>

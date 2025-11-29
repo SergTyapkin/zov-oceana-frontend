@@ -3,45 +3,105 @@ import { Goods, Order } from '~/utils/models';
 
 export const UserModel = {
   id: String,
-  givenName: String,
-  familyName: String,
-  middleName: Type(String, true),
-  avatarUrl: Type(String, true),
-  tgUsername: Type(String, true),
-  tgId: Type(String, true),
-  email: Type(String, true),
-  tel: Type(String, true),
-  joinedDate: Date,
-  isEmailNotificationsOn: Boolean,
-  canEditOrders: Boolean,
-  canEditUsers: Boolean,
-  canEditGoods: Boolean,
-  canExecuteSQL: Boolean,
-  canEditGlobals: Boolean,
+  givenName: {
+    type: String,
+    from: 'givenname',
+  },
+  familyName: {
+    type: String,
+    from: 'familyname',
+  },
+  middleName: {
+    type: String,
+    from: 'middlename',
+    optional: true,
+  },
+  avatarUrl: {
+    type: String,
+    from: 'avatarurl',
+    optional: true,
+  },
+  tgUsername: {
+    type: String,
+    from: 'tgusername',
+    optional: true,
+  },
+  tgId: {
+    type: String,
+    from: 'tgid',
+    optional: true,
+  },
+  email: {
+    type: String,
+    optional: true,
+  },
+  tel: {
+    type: String,
+    optional: true,
+  },
+  joinedDate: {
+    type: Date,
+    from: 'joineddate',
+  },
+  isEmailNotificationsOn: {
+    type: Boolean,
+    from: 'isemailnotificationson',
+  },
+  canEditOrders: {
+    type: Boolean,
+    from: 'caneditorders',
+  },
+  canEditUsers: {
+    type: Boolean,
+    from: 'caneditusers',
+  },
+  canEditGoods: {
+    type: Boolean,
+    from: 'caneditgoods',
+  },
+  canExecuteSQL: {
+    type: Boolean,
+    from: 'canexecutesql',
+  },
+  canEditGlobals: {
+    type: Boolean,
+    from: 'caneditglobals',
+  },
 };
 
 export const UserModelMockData = validateModel(UserModel, {
   id: 'USER_ID',
-  givenName: 'Сергей',
-  familyName: 'Тяпкин',
-  middleName: 'Сергеевич',
+  givenname: 'Сергей',
+  familyname: 'Тяпкин',
+  middlename: 'Сергеевич',
   email: 'Tyapkin2002@mail.ru',
-  isEmailNotificationsOn: false,
-  canEditOrders: false,
-  canEditUsers: false,
-  canEditGoods: false,
-  canExecuteSQL: false,
-  canEditGlobals: false,
-  isAdmin: false,
-  joinedDate: new Date('2023-04-04'),
+  isemailnotificationson: false,
+  caneditorders: false,
+  caneditusers: false,
+  caneditgoods: false,
+  canexecutesql: false,
+  caneditglobals: false,
+  isadmin: false,
+  joineddate: new Date('2023-04-04'),
 });
 
 export const CategoryModel = {
   id: String,
   title: String,
-  description: Type(String, true),
-  previewUrl: Type(String, true),
-  goodsCount: Type(Number, true),
+  description: {
+    type: String,
+    optional: true,
+  },
+  previewUrl: {
+    type: String,
+    from: 'previewurl',
+    optional: true,
+  },
+  goodsCount: {
+    type: Number,
+    from: 'goodscount',
+    optional: true,
+  },
 };
 export const CategoriesListModel = {
   categories: ArrayType(CategoryModel),
@@ -50,8 +110,8 @@ export const CategoryModelMockData = validateModel(CategoryModel, {
   id: 'CATEGORY_ID',
   title: 'Свежая рыба',
   // description: '',
-  // previewUrl: '',
-  goodsCount: 23,
+  // previewurl: '',
+  goodscount: 23,
 });
 export const CategoriesListModelMockData = {
   categories: [
@@ -143,13 +203,21 @@ export const GoodsListModelMockData = {
 export const OrderModel = {
   id: String,
   goods: ArrayType(GoodsModel),
-  createdDate: Date,
-  updatedDate: Date,
+  createdDate: {
+    type: Date,
+    from: 'createddate',
+  },
+  updatedDate: {
+    type: Date,
+    from: 'updateddate',
+  },
   cost: Number,
   status: new Set(['created', 'accepted', 'prepared', 'delivered', 'cancelled']),
-  userId: Type(String, true),
-  userGivenName: Type(String, true),
-  userFamilyName: Type(String, true),
+  userId: {
+    type: String,
+    from: 'userid',
+    optional: true,
+  },
 };
 export const OrderListModel = {
   orders: ArrayType(OrderModel),
@@ -157,13 +225,13 @@ export const OrderListModel = {
 export const OrderModelMockData = validateModel(OrderModel, {
   id: 'ORDER_ID',
   goods: [],
-  createdDate: '2025-03-18',
-  updatedDate: '2025-04-20',
+  createddate: '2025-03-18',
+  updateddate: '2025-04-20',
   cost: 1250,
   status: 'created',
-  userId: 'USER_ID_1',
-  userGivenName: 'Петр',
-  userFamilyName: 'Иванов',
+  userid: 'USER_ID_1',
+  usergivenname: 'Петр',
+  userfamilyname: 'Иванов',
 }) as Order;
 OrderModelMockData.goods = GoodsListModelMockData.goods as Goods[];
 
@@ -180,15 +248,33 @@ export const OrderListModelMockData = {
 
 export const AddressModel = {
   id: String,
-  title: Type(String, true),
-  address: String,
+  title: {
+    type: String,
+    optional: true,
+  },
+  createdDate: {
+    type: Date,
+    from: 'createddate',
+  },
+  city: Type(String, true),
+  street: Type(String, true),
+  house: Type(String, true),
+  entrance: Type(String, true),
+  code: Type(String, true),
+  comment: Type(String, true),
 };
 export const AddressListModel = {
   addresses: ArrayType(AddressModel),
 };
 export const AddressModelMockData = validateModel(AddressModel, {
   id: 'ADDRESS_ID',
-  address: 'Бизнес-центр, офис 200, Санкт-Петербург, 654321',
+  createddate: '2025-03-18',
+  city: 'Москва',
+  street: 'Солохова',
+  house: '4к19',
+  entrance: '2',
+  // code: '',
+  comment: 'Позвоните',
 });
 export const AddressListModelMockData = {
   addresses: [

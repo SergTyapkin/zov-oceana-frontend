@@ -98,8 +98,12 @@ export default {
 
   methods: {
     async updateAddresses() {
+      console.log((await this.$request(this, this.$api.getUserAddresses, [this.$user.id], `Не удалось получить список адресов`)) as {
+        addresses: Address[];
+      });
+
       this.addresses = (
-        (await this.$request(this, this.$api.getMyAddresses, [], `Не удалось получить список адресов`)) as {
+        (await this.$request(this, this.$api.getUserAddresses, [this.$user.id], `Не удалось получить список адресов`)) as {
           addresses: Address[];
         }
       ).addresses;

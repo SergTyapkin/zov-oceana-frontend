@@ -40,6 +40,10 @@
         min-width 200px
       .button-save
         button-emp2()
+      .button-logout
+        button-attention()
+        color colorTextInvert1
+        margin-top 20px
 </style>
 
 <template>
@@ -63,6 +67,9 @@
       </div>
       <div class="row">
         <button class="button-save" @click="save" :disabled="!isEdited">Сохранить изменения</button>
+      </div>
+      <div class="row">
+        <button @click="logout" class="button-logout"><img src="/static/icons/signin.svg" alt="logout"/>Выйти</button>
       </div>
     </main>
 
@@ -149,7 +156,7 @@ export default {
         `Не удалось выйти из аккаунта`,
       );
       this.$store.dispatch('DELETE_USER');
-      this.$router.push({ name: 'login' });
+      this.$router.push({ name: 'default' });
     },
 
     copyToClipboard(str, description) {

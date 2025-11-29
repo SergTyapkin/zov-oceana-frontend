@@ -42,13 +42,22 @@
     padding-bottom 100px
     .images-container
       flex 1
+      display flex
+      flex-direction column
+      gap 30px
       min-width 200px
       max-width 400px
-      img
-        img-size(100%)
+      > img
+        width 100%
 
         object-fit contain
         object-position top
+      .images-small-container
+        display flex
+        gap 10px
+        overflow-x auto
+        > img
+          width 50%
 
     .info-container
       flex 1.2
@@ -175,7 +184,11 @@
 
     <section class="goods">
       <div class="images-container">
-        <img :src="goods.previewUrl || IMAGE_DEFAULT" alt="preview">
+<!--        <img :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]?.path}` || IMAGE_DEFAULT" alt="preview">-->
+        <img :src="IMAGE_DEFAULT" alt="preview">
+        <div class="images-small-container">
+          <img v-for="image in goods.images?.slice(1)" :src="IMAGE_DEFAULT" alt="preview">
+        </div>
       </div>
 
       <div class="info-container">
@@ -253,6 +266,7 @@ import { Goods } from '~/utils/models';
 import CircleLoading from '~/components/loaders/CircleLoading.vue';
 
 import IMAGE_DEFAULT from '#/images/ocean-bg.jpg';
+import { IMAGES_URL_BASE_PATH } from '~/constants';
 
 export default {
   components: { CircleLoading },
@@ -268,6 +282,7 @@ export default {
       currentAmount: 1,
 
       IMAGE_DEFAULT,
+      IMAGES_URL_BASE_PATH,
     };
   },
 

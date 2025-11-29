@@ -44,6 +44,7 @@ const Validators = {
   },
   password: {
     regExp: /^.{6,}$/i,
+    prettifyResult: (str: string): string => str,
   },
 } as unknown as { [key: string]: Validator };
 Object.entries(Validators).forEach(([, validator]) => {
