@@ -166,7 +166,14 @@ export default {
     updateElements() {
       (this.$refs.footer as typeof FooterComponent).$forceUpdate();
       (this.$refs.header as typeof HeaderComponent).$forceUpdate();
-    }
+    },
+
+    showSignInModal() {
+      this.$refs.header.showSignInModal();
+    },
+    showRegisterModal() {
+      this.$refs.header.showRegisterModal();
+    },
   },
 
   watch: {

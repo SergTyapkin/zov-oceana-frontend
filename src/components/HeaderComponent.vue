@@ -185,7 +185,7 @@
         centered-margin()
         width fit-content
         margin-top 40px
-      .button-different-login
+      .button-different-signin
         button-no-fill()
         font-lower()
         font-small-extra()
@@ -223,7 +223,7 @@
           @click="isOverlayMenuShown = false">
           <img src="/static/icons/profile.svg" alt="profile" />
         </router-link>
-        <button v-else @click="$refs.loginModal.show()" class="profile">
+        <button v-else @click="$refs.signInModal.show()" class="profile">
           <img src="/static/icons/profile.svg" alt="profile" />
         </button>
 
@@ -249,7 +249,7 @@
         <div v-else class="buttons-container">
           <button
             @click="
-              $refs.loginModal.show();
+              $refs.signInModal.show();
               isOverlayMenuShown = false;
             ">
             Войти
@@ -286,7 +286,7 @@
       <div class="modal-inside">
         <header class="header">Регистрация</header>
         <main class="main">
-          <TGAuth @login="onTGLogin" />
+          <TGAuth @signin="onTGSignIn" />
 
           <div class="desc">или</div>
 
@@ -295,6 +295,7 @@
             :error="errors.givenName"
             title="Имя"
             placeholder="Иван"
+            autocomplete="given-name"
             :icon="IconProfile"
             icon-in-left
             class="field"
@@ -305,6 +306,7 @@
             :error="errors.familyName"
             title="Фамилия"
             placeholder="Иванов"
+            autocomplete="family-name"
             :icon="IconProfile"
             icon-in-left
             class="field"
@@ -315,6 +317,7 @@
             :error="errors.middleName"
             title="Отчество"
             placeholder="Иванович"
+            autocomplete="additional-name"
             :icon="IconProfile"
             icon-in-left
             class="field"
@@ -325,6 +328,7 @@
             :error="errors.email"
             title="Email"
             placeholder="ivan.ivanov@email.com"
+            autocomplete="email"
             :icon="IconEmail"
             icon-in-left
             class="field"
@@ -335,6 +339,7 @@
             :error="errors.tel"
             title="Телефон"
             placeholder="+7 (999) 123-4567"
+            autocomplete="tel"
             :icon="IconTelephone"
             icon-in-left
             class="field"
@@ -346,6 +351,7 @@
             error-text="Пароль должен содержать минимум 6 символов"
             title="Пароль"
             placeholder="Пароль"
+            autocomplete="password"
             hideable
             class="field"
             @submit="register"
@@ -363,10 +369,10 @@
 
           <button class="submit" @click="register">Зарегистрироваться</button>
           <button
-            class="button-different-login"
+            class="button-different-signin"
             @click="
-              $refs.registerModal.hide();
-              $refs.loginModal.show();
+              showSignInModal();
+              hideRegisterModal();
             ">
             Войти
           </button>
@@ -374,11 +380,11 @@
       </div>
     </ModalsExpandable>
 
-    <ModalsExpandable ref="loginModal">
+    <ModalsExpandable ref="signInModal">
       <div class="modal-inside">
         <header class="header">Вход</header>
         <main class="main">
-          <TGAuth @login="onTGLogin" />
+          <TGAuth @signin="onTGSignIn" />
 
           <div class="desc">или</div>
 
@@ -387,6 +393,7 @@
             :error="errors.emailOrTel"
             title="Email или телефон"
             placeholder="Email или телефон"
+            autocomplete="email"
             :icon="IconProfile"
             icon-in-left
             class="field"
@@ -398,6 +405,7 @@
             error-text="Пароль должен содержать минимум 6 символов"
             title="Пароль"
             placeholder="Пароль"
+            autocomplete="password"
             hideable
             class="field"
             @submit="signIn"
@@ -405,10 +413,10 @@
 
           <button class="submit" @click="signIn">Войти</button>
           <button
-            class="button-different-login"
+            class="button-different-signin"
             @click="
-              $refs.loginModal.hide();
-              $refs.registerModal.show();
+              hideSignInModal();
+              showRegisterModal();
             ">
             Зарегистрироваться
           </button>
@@ -466,7 +474,7 @@ export default {
   mounted() {},
 
   methods: {
-    onTGLogin(user: TGUser) {},
+    onTGSignIn(user: TGUser) {},
 
     async register() {
       Object.keys(this.errors).forEach(key => (this.errors[key] = false));
@@ -506,8 +514,8 @@ export default {
           await this.$store.dispatch('GET_USER');
           this.$store.dispatch('LOAD_CART');
           await this.$router.push({ name: 'profile' });
-          (this.$refs.loginModal as ModalsExpandable).hide();
-          (this.$refs.loginRegister as ModalsExpandable).hide();
+          this.hideSignInModal();
+          this.hideRegisterModal();
         },
         true,
         {
@@ -546,8 +554,8 @@ export default {
           await this.$store.dispatch('GET_USER');
           this.$store.dispatch('LOAD_CART');
           await this.$router.push({ name: 'profile' });
-          (this.$refs.loginModal as ModalsExpandable).hide();
-          (this.$refs.loginRegister as ModalsExpandable).hide();
+          this.hideSignInModal();
+          this.hideRegisterModal();
         },
         true,
         {
@@ -557,6 +565,21 @@ export default {
           },
         },
       );
+    },
+
+    showSignInModal() {
+      (this.$refs.signInModal as HTMLDialogElement).show();
+      this.hideRegisterModal();
+    },
+    hideSignInModal() {
+      (this.$refs.signInModal as HTMLDialogElement).hide();
+    },
+    showRegisterModal() {
+      (this.$refs.registerModal as HTMLDialogElement).show();
+      this.hideSignInModal();
+    },
+    hideRegisterModal() {
+      (this.$refs.registerModal as HTMLDialogElement).hide();
     },
   },
 };

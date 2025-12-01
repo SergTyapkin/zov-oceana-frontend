@@ -130,15 +130,11 @@ export default {
       this.errors.middleName = !Validators.nameOptional.validate(this.fields.middleName);
       this.errors.email = !Validators.email.validate(this.fields.email);
       this.errors.tel = !Validators.phone.validate(this.fields.tel);
-      if (
-        this.errors.givenName ||
-        this.errors.familyName ||
-        this.errors.middleName ||
-        this.errors.email ||
-        this.errors.tel
-      ) {
+
+      if (Object.values(this.errors).findIndex(err => err) !== -1) {
         return;
       }
+
       this.fields.givenName = Validators.name.prettifyResult(this.fields.givenName);
       this.fields.familyName = Validators.name.prettifyResult(this.fields.familyName);
       this.fields.middleName = Validators.nameOptional.prettifyResult(this.fields.middleName);

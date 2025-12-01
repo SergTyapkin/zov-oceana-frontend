@@ -1,4 +1,4 @@
-import { ArrayType, Type, validateModel } from '@sergtyapkin/models-validator';
+import { ArrayType, ObjectType, Type, validateModel } from '@sergtyapkin/models-validator';
 import { Category, Goods, Order } from '~/utils/models';
 
 export const UserModel = {
@@ -206,52 +206,6 @@ export const GoodsListModelMockData = {
 };
 
 
-export const OrderModel = {
-  id: String,
-  goods: ArrayType(GoodsModel),
-  createdDate: {
-    type: Date,
-    from: 'createddate',
-  },
-  updatedDate: {
-    type: Date,
-    from: 'updateddate',
-  },
-  cost: Number,
-  status: new Set(['created', 'accepted', 'prepared', 'delivered', 'cancelled']),
-  userId: {
-    type: String,
-    from: 'userid',
-    optional: true,
-  },
-};
-export const OrderListModel = {
-  orders: ArrayType(OrderModel),
-};
-export const OrderModelMockData = validateModel(OrderModel, {
-  id: 'ORDER_ID',
-  goods: [],
-  createddate: '2025-03-18',
-  updateddate: '2025-04-20',
-  cost: 1250,
-  status: 'created',
-  userid: 'USER_ID_1',
-  usergivenname: 'Петр',
-  userfamilyname: 'Иванов',
-}) as Order;
-OrderModelMockData.goods = GoodsListModelMockData.goods as Goods[];
-
-export const OrderListModelMockData = {
-  orders: [
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', cost: 1400, status: 'created'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_2', cost: 4500, status: 'cancelled'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', cost: 1250, status: 'paid'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', cost: 3502, status: 'prepared'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', cost: 2400, status: 'delivered'}),
-  ],
-};
-
-
 export const AddressModel = {
   id: String,
   title: {
@@ -290,6 +244,67 @@ export const AddressListModelMockData = {
   addresses: [
     Object.assign({}, AddressModelMockData, {id: 'ADDRESS_ID_1', title: 'Дом',  address: 'ул. Морская, д. 123, Москва, 123456'}),
     Object.assign({}, AddressModelMockData, {id: 'ADDRESS_ID_2', address: 'Бизнес-центр, офис 200, Санкт-Петербург, 654321'}),
+  ],
+};
+
+
+export const OrderModel = {
+  id: String,
+  number: Number,
+  secretCode: {
+    type: String,
+    from: 'secretcode',
+  },
+  goods: ArrayType(GoodsModel),
+  createdDate: {
+    type: Date,
+    from: 'createddate',
+  },
+  updatedDate: {
+    type: Date,
+    from: 'updateddate',
+  },
+  status: new Set(['created', 'accepted', 'prepared', 'delivered', 'cancelled']),
+  userId: {
+    type: String,
+    from: 'userid',
+    optional: true,
+  },
+  address: ObjectType(AddressModel, true),
+  addressTextCopy: {
+    type: String,
+    from: 'addresstextcopy',
+  },
+  commentTextCopy: {
+    type: String,
+    from: 'commenttextcopy',
+    optional: true,
+  },
+};
+export const OrderListModel = {
+  orders: ArrayType(OrderModel),
+};
+export const OrderModelMockData = validateModel(OrderModel, {
+  id: 'ORDER_ID',
+  goods: [],
+  createddate: '2025-03-18',
+  updateddate: '2025-04-20',
+  status: 'created',
+  number: 123543,
+  secretcode: 'OS8DS2X',
+  userid: 'USER_ID_1',
+  addresstextcopy: 'г. Москва, ул. Кировоградского, д. 7, эт. 9, кв. 150, Код: В123В12312',
+  commenttextcopy: 'Ну наааадо, ну пожааалуйста!',
+}) as Order;
+OrderModelMockData.goods = GoodsListModelMockData.goods as Goods[];
+
+export const OrderListModelMockData = {
+  orders: [
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', cost: 1400, status: 'created'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_2', cost: 4500, status: 'cancelled'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', cost: 1250, status: 'paid'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', cost: 3502, status: 'prepared'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', cost: 2400, status: 'delivered'}),
   ],
 };
 

@@ -23,6 +23,7 @@
     background colorBgDark
     img
       img-size(1lh)
+      margin-right 5px
     button.delete
       button-attention()
       button-small()
@@ -61,7 +62,7 @@
   <div class="root-address-card">
     <header class="header">
       <img src="/static/icons/location.svg" alt="location">
-      {{ address.title || 'Адрес доставки' }}
+      {{ addressFormatter(address, 'Адрес') }}
       <button @click="$emit('delete')" class="delete"><img src="/static/icons/trashbox.svg" alt="delete"></button>
     </header>
 
@@ -99,6 +100,7 @@
 <script lang="ts">
 import { Address } from '~/utils/models';
 import { PropType } from 'vue';
+import { addressFormatter } from '~/utils/utils';
 
 export default {
   emits: ['edit', 'delete'],
@@ -114,5 +116,7 @@ export default {
     return {
     };
   },
+
+  methods: { addressFormatter },
 };
 </script>

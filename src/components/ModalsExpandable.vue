@@ -72,12 +72,12 @@ export default {
   data() {
     return {
       isShowed: false,
-      resolvePromise: null as ((value) => unknown) | null,
+      resolvePromise: null as ((value: any) => unknown) | null,
     };
   },
 
   mounted() {
-    window.addEventListener('keypress', this.onkeypress);
+    window.addEventListener('keydown', this.onkeypress);
   },
 
   unmounted() {
@@ -86,6 +86,7 @@ export default {
 
   methods: {
     onkeypress(evt: KeyboardEvent) {
+      console.log(evt.key);
       if (evt.key === 'Enter') {
         this.$emit('enter');
       } else if (evt.key == 'Escape') {

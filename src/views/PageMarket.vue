@@ -195,7 +195,6 @@ export default {
 
   computed: {
     goodsFiltered() {
-      console.log(this.filters.categoryId, this.goods);
       return this.goods
         .filter(goods => {
           return (

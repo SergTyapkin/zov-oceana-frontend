@@ -286,3 +286,7 @@ export function setSmoothScrollOnThisPage() {
     });
   });
 }
+
+export function addressFormatter(address: Address, defaultTitle = '') {
+  return defaultTitle || address.title || `г. ${address.city}, ул. ${address.street}, д. ${address.house}`;
+}

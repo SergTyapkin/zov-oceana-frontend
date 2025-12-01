@@ -90,7 +90,7 @@
     class="root-goods-card"
     :class="{ small }"
   >
-    <img class="background" :src="goods.previewUrl || IMAGE_DEFAULT" alt="">
+    <img class="background" :src="goods.images?.[0] || IMAGE_DEFAULT" alt="">
 
     <section class="overlay">
       <div class="location" v-if="goods.fromLocation">

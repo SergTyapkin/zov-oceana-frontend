@@ -59,83 +59,6 @@
       gap 20px
       list-no-styles()
       animation-float(0.5s, -20px, 0, left)
-      .goods
-        display flex
-        gap 20px
-        justify-content space-between
-        padding 20px
-        background colorBlockBg
-        .preview
-          min-width 200px
-          max-width 250px
-          height 100%
-          img
-            img-size(100%)
-
-            object-fit contain
-            object-position top
-
-            @media ({mobile})
-              object-fit cover
-
-          @media ({mobile})
-            width 20%
-            min-width 50px
-        .text-container
-          display flex
-          flex 1
-          flex-direction column
-          justify-content space-between
-          .title
-            font-large()
-
-            word-wrap anywhere
-            .location
-              font-small()
-              font-upper()
-              font-thin()
-              svg-inside()
-
-              margin-top 10px
-          .amount-selector-container
-            display flex
-            align-items center
-            justify-content space-between
-            width 100%
-            max-width 300px
-            font-large()
-            font-bold-extra()
-            button
-              button-no-fill()
-
-              padding-block 5px
-              color colorText1
-              font-large()
-
-        .right-container
-          display flex
-          flex-direction column
-          align-items end
-          justify-content space-between
-          .button-remove
-            button-no-fill()
-
-            width min-content
-            padding 5px
-            img
-              img-size(20px)
-
-              margin 0
-          .cost-total
-            font-large()
-            font-bold-extra()
-
-            margin-bottom 5px
-          .cost
-            font-small-extra()
-            font-upper()
-
-            color colorText3
 
     .order-controls
       animation-float(0.5s, 20px, 0, right)
@@ -186,13 +109,19 @@
 
         width 100%
         margin-top 20px
+
+    .section-take-order
+      margin-top 20px
+      .info-link
+        button-emp2()
+        text-align center
 </style>
 
 <template>
   <div class="root-page">
     <section class="title">
       <router-link :to="{ name: 'market' }" class="title-button-back" style="--animation-index: 0">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left">
+        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
         Назад к каталогу
       </router-link>
       <header class="header" style="--animation-index: 1">Корзина</header>
@@ -202,37 +131,16 @@
     <section class="cart">
       <ul class="goods-list" style="--animation-index: 1">
         <li class="goods" v-if="!$cart.length">В корзине пока что ничего нет</li>
-        <li class="goods" v-for="goods in $cart">
-          <div class="preview">
-            <img :src="goods.previewUrl || DEFAULT_IMAGE" alt="preview">
-          </div>
-
-          <div class="text-container">
-            <header class="title">
-              {{ goods.title }}
-              <div class="location">
-                <img src="/static/icons/location-dark.svg" alt="location">
-                {{ goods.fromLocation }}
-              </div>
-            </header>
-            <div class="amount-selector-container">
-              <button @click="addGoodsAmount(goods, -goods.amountStep)" class="button-minus">-</button>
-              <div>{{ goods.amount }}</div>
-              <button @click="addGoodsAmount(goods, goods.amountStep)" class="button-plus">+</button>
-            </div>
-          </div>
-
-          <div class="right-container">
-            <button class="button-remove" @click="removeFromCart(goods)">
-              <img src="/static/icons/trashbox.svg" alt="remove">
-            </button>
-
-            <div class="cost">
-              <div class="cost-total">₽{{ goods.cost * (goods.amount || 0) }}</div>
-              <div>₽{{ goods.cost }} за {{ goods.isWeighed ? 'кг' : 'шт' }}</div>
-            </div>
-          </div>
-        </li>
+        <GoodsInfoCard
+          ref="goodsCards"
+          v-for="goods in $cart"
+          :key="goods.id"
+          class="goods"
+          :goods="goods"
+          @increase-amount="addGoodsAmount(goods, goods.amountStep)"
+          @decrease-amount="addGoodsAmount(goods, -goods.amountStep)"
+          @delete="removeFromCart(goods)"
+        />
       </ul>
 
       <section class="order-controls" style="--animation-index: 1">
@@ -242,7 +150,7 @@
           <ul class="costs-list">
             <li class="cost-container">
               <p class="title">Стоимость товаров</p>
-              <div class="cost">₽{{ $cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0) }}</div>
+              <div class="cost">₽{{ Math.round($cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
             </li>
             <li class="cost-container">
               <p class="title">Стоимость Доставки</p>
@@ -252,11 +160,33 @@
 
           <div class="cost-total-container">
             <p class="title">Всего</p>
-            <div class="cost">₽{{ $cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0) }}</div>
+            <div class="cost">₽{{ Math.round($cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
           </div>
         </article>
 
-        <button class="button-confirm-order">Оформить заказ</button>
+        <section class="section-take-order">
+          <button class="info-link" v-if="!$user.isSignedIn" @click="$app.showSignInModal()">
+            Войти или создать профиль, чтобы оформить заказ
+          </button>
+          <router-link :to="{name: 'profileAddresses'}" v-else-if="!addresses.length" class="info-link">
+            Добавить адрес доставки в профиле
+          </router-link>
+          <SelectList
+            v-else
+            title="Выберите адрес доставки"
+            :list="addresses.map(a => ({ name: addressFormatter(a), value: a.id }))"
+            v-model="selectedAddressId"
+            error-text="Не выбрано"
+            :error="errors.address" />
+        </section>
+
+        <button
+          v-if="!isTakeOrderBlockShown"
+          :disabled="!selectedAddressId"
+          class="button-confirm-order"
+          @click="takeOrder">
+          Оформить заказ
+        </button>
       </section>
     </section>
 
@@ -267,28 +197,58 @@
 <script lang="ts">
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
-import DEFAULT_IMAGE from '#/images/ocean-bg.jpg';
-import { Goods } from '~/utils/models';
-import { toDebounced } from '~/utils/utils';
+import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
+import { Address, Goods } from '~/utils/models';
+import { addressFormatter, toDebounced } from '~/utils/utils';
+import SelectList from '~/components/SelectList.vue';
+import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 
 export default {
-  components: { CircleLinesLoading },
+  components: { GoodsInfoCard, SelectList, CircleLinesLoading },
 
   data() {
     return {
-      DEFAULT_IMAGE,
+      isTakeOrderBlockShown: false,
+
+      selectedAddressId: null as string | null,
+      addresses: [] as Address[],
+      errors: {
+        address: false,
+      },
 
       loading: false,
+
+      DEFAULT_GOODS_IMAGE,
     };
   },
 
   computed: {},
 
   mounted() {
+    this.updateAddresses();
     this.saveGoodsAmount = toDebounced(this.saveGoodsAmount, 800);
   },
 
   methods: {
+    addressFormatter,
+
+    async updateAddresses() {
+      if (!this.$user.isSignedIn) {
+        this.addresses = [];
+        return;
+      }
+      this.addresses = (
+        (await this.$request(
+          this,
+          this.$api.getUserAddresses,
+          [this.$user.id],
+          `Не удалось получить список адресов`,
+        )) as {
+          addresses: Address[];
+        }
+      ).addresses;
+    },
+
     async removeFromCart(goods: Goods) {
       if (!(await this.$modals.confirm('Вы уверены?', `Удалить из корзины "${goods.title}"?`))) {
         return;
@@ -298,15 +258,8 @@ export default {
     },
 
     addGoodsAmount(goods: Goods, addValue: number) {
-      const newAmount = Math.round(
-          Math.max(
-            Math.min(
-              (goods.amount || 0) + addValue,
-              goods.amountLeft || 0
-            ),
-            0.1,
-          ) * 10,
-        ) / 10;
+      const newAmount =
+        Math.round(Math.max(Math.min((goods.amount || 0) + addValue, goods.amountLeft || 0), 0.1) * 10) / 10;
 
       if (goods.amount === newAmount) {
         return;
@@ -316,7 +269,7 @@ export default {
         goodsId: goods.id,
         amount: newAmount,
       });
-      this.$forceUpdate();
+      this.$refs.goodsCards.forEach(g => g.$forceUpdate());
       this.saveGoodsAmount(goods.id);
     },
     async saveGoodsAmount(goodsId: string) {
@@ -330,7 +283,37 @@ export default {
         [this.$user.id, goods.id, goods.amount],
         `Не удалось обновить количество товаров`,
       );
-    }
+    },
+
+    async takeOrder() {
+      this.errors.address = !this.selectedAddressId;
+
+      if (Object.values(this.errors).findIndex(err => err) !== -1) {
+        return;
+      }
+
+      if (!(await this.$modals.confirm('Подтверждение', 'Вы подтверждаете оформление заказа?'))) {
+        return;
+      }
+
+      this.isTakeOrderBlockShown = true;
+      await this.$request(
+        this,
+        this.$api.createOrder,
+        [this.$user.id, this.selectedAddressId, this.$cart],
+        `Не удалось оформить заказ`,
+        () => {
+          this.$request(
+            this,
+            this.$api.setGoodsInCart,
+            [this.$user.id, []],
+            `Не удалось сбросить товары в корзине`,
+          );
+          this.$store.dispatch('CLEAR_CART');
+          this.$router.push({ name: 'profileOrders' });
+        },
+      );
+    },
   },
 };
 </script>

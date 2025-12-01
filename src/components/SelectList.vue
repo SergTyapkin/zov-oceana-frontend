@@ -44,6 +44,12 @@ field()
 
     transition all 0.2s ease
 
+  .error-text
+    font-small()
+    color colorError
+    opacity 0
+    trans()
+
   .selected-item
     input()
     field()
@@ -141,13 +147,20 @@ field()
     .selected-item
       img
         display none
+
+  &.error
+    .title
+    .selected-item
+      color colorError
+    .error-text
+      opacity 1
 </style>
 
 <template>
   <div
     class="select-root"
     ref="root"
-    :class="{ unrolled: isUnrolled }"
+    :class="{ unrolled: isUnrolled, error }"
     :disabled="disabled"
     :readonly="readonly"
     :style="{
@@ -155,7 +168,6 @@ field()
       '--overflow-x-length': overflowXLength,
     }"
   >
-    <span class="error-text">{{ currentError }}</span>
     <div class="selected-item" @click.stop="toggleOpen" :class="{default: currentSelectedIdx === undefined}">
       {{ currentSelectedIdx !== undefined ? list[currentSelectedIdx]?.name : (placeholder || 'Не выбрано') }}
       <img src="/static/icons/chevron-down.svg" alt="chevron">
@@ -179,6 +191,7 @@ field()
       </li>
     </ul>
     <span class="title">{{ title }}</span>
+    <span class="error-text">{{ errorText || 'Ошибка' }}</span>
   </div>
 </template>
 
@@ -220,9 +233,13 @@ export default {
       type: null as any,
       default: null,
     },
-    error: {
+    errorText: {
       type: String,
       default: '',
+    },
+    error: {
+      type: Boolean as boolean | string,
+      default: false,
     },
   },
 
@@ -234,8 +251,6 @@ export default {
         error: 2,
       },
       state: 0,
-
-      currentError: this.$props.error,
 
       currentSelectedIdx: undefined as number | undefined,
       isUnrolled: this.$props.opened,

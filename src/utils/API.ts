@@ -15,6 +15,8 @@ import {
   UserModelMockData,
   GlobalsModelMockData,
   GlobalsModel,
+  OrderModel,
+  OrderModelMockData,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
@@ -109,6 +111,10 @@ export default class API extends REST_API {
   // Orders
   getUserOrders = (userId) =>
     this.#GET(`/orders/user`, {userId}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
+  getOrder = (orderId) =>
+    this.#GET(`/orders`, {orderId}, OrderModel, Response200(OrderModelMockData)) as MyResponse<Order>;
+  createOrder = (userId, addressId, goods) =>
+    this.#POST(`/orders`, {userId, addressId, goods}) as MyResponse<unknown>;
 
   // Addresses
   getUserAddresses = (userId) =>

@@ -60,7 +60,7 @@ export interface Address {
   street?: string;
   house?: string;
   entrance?: string;
-  flor?: string;
+  floor?: string;
   apartment?: string;
   code?: string;
   comment?: string;
@@ -72,8 +72,12 @@ export interface Order {
   goods: Goods[];
   createdDate: Date;
   updatedDate: Date;
-  cost: number;
   status: OrderStatus;
+  number: number;
+  secretCode: string;
   userId?: string;
+  address?: Address;
+  addressTextCopy: string;
+  commentTextCopy?: string;
 }
 

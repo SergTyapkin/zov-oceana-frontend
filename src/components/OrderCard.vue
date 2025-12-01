@@ -85,20 +85,21 @@
 </style>
 
 <template>
-  <div class="root-order-card">
+  <router-link :to="{name: 'order', params: {id: order.id}}" class="root-order-card">
     <div class="order-preview">
-      <img src="/static/icons/box.svg" alt="order">
+      <img v-if="!order.goods.length" src="/static/icons/box.svg" alt="order">
+      <img v-else :src="IMAGES_URL_BASE_PATH + order.goods[0].images?.[0]" alt="goods">
     </div>
 
     <div class="main-container">
-      <div class="title">{{ order.id }}</div>
+      <div class="title">№{{ order.number }}</div>
       <div class="date">{{ dateFormatter(order.createdDate) }}</div>
       <div class="goods-count">Товаров {{ order.goods.length }}</div>
     </div>
 
     <div class="status-container">
       <div class="status-column">
-        <div class="cost">₽{{ order.cost }}</div>
+        <div class="cost">₽{{ totalCost }}</div>
         <div v-if="order.status === 'created'" class="status yellow">Не оплачен</div>
         <div v-else-if="order.status === 'paid'" class="status green">Оплачен</div>
         <div v-else-if="order.status === 'prepared'" class="status green">Собран</div>
@@ -110,13 +111,14 @@
         Подробнее
       </button>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
 import { Order } from '~/utils/models';
 import { PropType } from 'vue';
 import { dateFormatter } from '~/utils/utils';
+import { IMAGES_URL_BASE_PATH } from '~/constants';
 
 export default {
   props: {
@@ -128,7 +130,14 @@ export default {
 
   data() {
     return {
+      IMAGES_URL_BASE_PATH,
     };
+  },
+
+  computed: {
+    totalCost() {
+      return this.order.goods.reduce((acc, g) => acc + g.cost * g.amount, 0);
+    }
   },
 
   methods: {

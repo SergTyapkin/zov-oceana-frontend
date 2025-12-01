@@ -23,6 +23,12 @@
 
   .main
     padding 30px 0
+    .desc
+      font-small()
+      font-spaced()
+      text-align center
+      color colorText5
+      margin-bottom 20px
     .addresses-list
       list-no-styles()
 
@@ -33,11 +39,6 @@
       > *
         flex 1
         min-width 250px
-      .desc
-        font-small()
-        font-spaced()
-        text-align center
-        color colorText5
       .add-address-button
         button-no-styles()
         centered-flex-container()
@@ -77,11 +78,15 @@
         text-align center
       .field
         margin-block 10px
-      .submit
-        button-emp2()
-        centered-margin()
-        width fit-content
+      .buttons-container
+        display flex
+        gap 20px
         margin-top 40px
+        .submit
+          button-emp2()
+          flex 1
+        .cancel
+          button-attention()
       .button-different-login
         button-no-fill()
         font-lower()
@@ -100,8 +105,8 @@
     </header>
 
     <main class="main">
+      <p v-if="!addresses.length" class="desc">Добавьте ваш адрес доставки</p>
       <ul class="addresses-list">
-        <li v-if="!addresses.length" class="desc">Добавьте ваш адрес доставки</li>
         <AddressCard
           v-for="address in addresses"
           :address="address"
@@ -132,6 +137,7 @@
             :error="errors.city"
             error-text="Обязательное поле"
             title="Город"
+            autocomplete="address-level2"
             placeholder="Москва"
             class="field"
             @submit="addAddress" />
@@ -139,6 +145,7 @@
             v-model="addressData.street"
             :error="errors.street"
             error-text="Обязательное поле"
+            autocomplete="street-address"
             title="Улица"
             placeholder="Улица"
             class="field"
@@ -147,6 +154,7 @@
             v-model="addressData.house"
             :error="errors.house"
             error-text="Обязательное поле"
+            autocomplete="address-house"
             title="Дом"
             placeholder="1к11"
             class="field"
@@ -154,6 +162,7 @@
           <InputComponent
             v-model="addressData.entrance"
             :error="errors.entrance"
+            autocomplete="address-entrance"
             title="Подъезд"
             placeholder="4"
             class="field"
@@ -161,6 +170,7 @@
           <InputComponent
             v-model="addressData.floor"
             :error="errors.floor"
+            autocomplete="address-floor"
             title="Этаж"
             placeholder="10"
             class="field"
@@ -168,6 +178,7 @@
           <InputComponent
             v-model="addressData.apartment"
             :error="errors.apartment"
+            autocomplete="address-apartment"
             title="Квартира"
             placeholder="103"
             class="field"
@@ -175,6 +186,7 @@
           <InputComponent
             v-model="addressData.code"
             :error="errors.code"
+            autocomplete="address-house-code"
             title="Код домофона"
             placeholder="В103В9999"
             class="field"
@@ -188,7 +200,10 @@
             placeholder="Ваши пояснения"
             class="field" />
 
-          <button class="submit" @click="addAddress">Добавить</button>
+          <div class="buttons-container">
+            <button class="submit" @click="addAddress">Добавить</button>
+            <button class="cancel" @click="$refs.addAddressModal.close()">Отменить</button>
+          </div>
         </main>
       </div>
     </dialog>
@@ -265,7 +280,10 @@
             placeholder="Ваши пояснения"
             class="field" />
 
-          <button class="submit" @click="editAddress">Изменить</button>
+          <div class="buttons-container">
+            <button class="submit" @click="editAddress">Изменить</button>
+            <button class="cancel" @click="$refs.editAddressModal.close()">Отменить</button>
+          </div>
         </main>
       </div>
     </dialog>
