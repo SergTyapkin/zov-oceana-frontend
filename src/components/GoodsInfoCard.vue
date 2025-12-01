@@ -91,7 +91,11 @@
 <template>
   <section class="root-goods-card">
     <div class="preview">
-      <img :src="goods.images?.[0] || DEFAULT_GOODS_IMAGE" alt="preview" />
+      <ImageFallback
+        :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]}`"
+        :fallback-src="DEFAULT_GOODS_IMAGE"
+        alt="preview"
+      />
     </div>
 
     <div class="text-container">
@@ -126,8 +130,11 @@
 import { Goods } from '~/utils/models';
 import { PropType } from 'vue';
 import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
+import ImageFallback from '~/components/ImageFallback.vue';
+import { IMAGES_URL_BASE_PATH } from '~/constants';
 
 export default {
+  components: { ImageFallback },
   emits: ['increaseAmount', 'decreaseAmount', 'delete'],
 
   props: {
@@ -141,6 +148,7 @@ export default {
 
   data() {
     return {
+      IMAGES_URL_BASE_PATH,
       DEFAULT_GOODS_IMAGE,
     }
   },

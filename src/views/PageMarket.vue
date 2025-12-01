@@ -217,7 +217,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.filters.categoryId);
     this.updateGoods();
 
     setTimeout(() => {this.goodsAnimationLoaded = true}, 3000);
@@ -225,11 +224,6 @@ export default {
 
   methods: {
     async updateGoods() {
-      console.log("GOODS:", (await this.$request(this, this.$api.getGoodsList, [], `Не удалось получить список товаров`)) as {
-          goods: Goods[];
-        }
-      );
-
       this.goods = (
         (await this.$request(this, this.$api.getGoodsList, [], `Не удалось получить список товаров`)) as {
           goods: Goods[];

@@ -131,8 +131,6 @@ export default new Vuex.Store({
         undefined,
         {goods: []},
       ) as {goods: Goods[]}).goods;
-      console.log("LOCAL", goodsInCartInLocalStorage);
-      console.log("SERVER", goodsInCartOnServer);
       let isNeedsToSaveCart = false;
       const actualGoods = goodsInCartOnServer.concat();
       goodsInCartInLocalStorage.forEach(goodsOneToCheck => {
@@ -148,7 +146,6 @@ export default new Vuex.Store({
           isNeedsToSaveCart = true;
         }
       });
-      console.log("IS EQUAL:", !isNeedsToSaveCart);
       if (isNeedsToSaveCart) { // Перезаписать всю корзину на сервере
         await this.$app.$request(
           this.$app,

@@ -70,6 +70,8 @@
     width 100%
     padding-top 50px
     padding-bottom 100px
+    @media({mobile})
+      flex-direction column
     .goods-list
       display flex
       flex 3

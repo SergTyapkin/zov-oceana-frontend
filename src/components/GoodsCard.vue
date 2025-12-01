@@ -85,16 +85,17 @@
 </style>
 
 <template>
-  <router-link
-    :to="{name: 'goods', params: {id: goods.id}}"
-    class="root-goods-card"
-    :class="{ small }"
-  >
-    <img class="background" :src="goods.images?.[0] || IMAGE_DEFAULT" alt="">
+  <router-link :to="{ name: 'goods', params: { id: goods.id } }" class="root-goods-card" :class="{ small }">
+    <ImageFallback
+      :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]}`"
+      :fallback-src="DEFAULT_GOODS_IMAGE"
+      alt="preview"
+      class="background"
+    />
 
     <section class="overlay">
       <div class="location" v-if="goods.fromLocation">
-        <img src="/static/icons/location.svg" alt="location">
+        <img src="/static/icons/location.svg" alt="location" />
         <span>{{ goods.fromLocation }}</span>
       </div>
       <div class="title">{{ goods.title }}</div>
@@ -105,7 +106,7 @@
           <div class="value">₽{{ goods.cost }}</div>
         </div>
         <button class="button-to-cart">
-          <img src="/static/icons/cart.svg" alt="cart">
+          <img src="/static/icons/cart.svg" alt="cart" />
           В корзину
         </button>
       </div>
@@ -116,9 +117,12 @@
 <script lang="ts">
 import { Goods } from '~/utils/models';
 import { PropType } from 'vue';
-import IMAGE_DEFAULT from '#/images/ocean-bg.jpg';
+import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
+import ImageFallback from '~/components/ImageFallback.vue';
+import { IMAGES_URL_BASE_PATH } from '~/constants';
 
 export default {
+  components: { ImageFallback },
   props: {
     goods: {
       type: Object as PropType<Goods>,
@@ -130,8 +134,9 @@ export default {
 
   data() {
     return {
-      IMAGE_DEFAULT,
-    }
+      IMAGES_URL_BASE_PATH,
+      DEFAULT_GOODS_IMAGE,
+    };
   },
 };
 </script>

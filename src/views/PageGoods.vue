@@ -184,10 +184,19 @@
 
     <section class="goods">
       <div class="images-container">
-        <!--        <img :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]?.path}` || IMAGE_DEFAULT" alt="preview">-->
-        <img :src="IMAGE_DEFAULT" alt="preview" />
+        <ImageFallback
+          :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]?.path}`"
+          :fallback-src="DEFAULT_GOODS_IMAGE"
+          alt="preview"
+        />
         <div class="images-small-container">
-          <img v-for="image in goods.images?.slice(1)" :src="IMAGE_DEFAULT" alt="preview" />
+          <ImageFallback
+            v-for="image in goods.images?.slice(1)"
+            :key="image.id"
+            :src="`${IMAGES_URL_BASE_PATH}${image.path}`"
+            :fallback-src="DEFAULT_GOODS_IMAGE"
+            alt="preview"
+          />
         </div>
       </div>
 
@@ -253,13 +262,14 @@
 <script lang="ts">
 import { Goods } from '~/utils/models';
 
-import IMAGE_DEFAULT from '#/images/ocean-bg.jpg';
+import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
 import { IMAGES_URL_BASE_PATH } from '~/constants';
 import { toDebounced } from '~/utils/utils';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
+import ImageFallback from '~/components/ImageFallback.vue';
 
 export default {
-  components: { CircleLinesLoading },
+  components: { ImageFallback, CircleLinesLoading },
 
   data() {
     return {
@@ -271,7 +281,7 @@ export default {
 
       currentAmount: 0,
 
-      IMAGE_DEFAULT,
+      DEFAULT_GOODS_IMAGE,
       IMAGES_URL_BASE_PATH,
     };
   },
@@ -307,7 +317,7 @@ export default {
 
     addGoodsAmount(addValue: number) {
       const newAmount =
-        Math.round(Math.max(Math.min((this.currentAmount || 0) + addValue, this.goods.amountLeft || 0), 0.1) * 10) / 10;
+        Math.round(Math.max(Math.min((this.currentAmount || 0) + addValue, this.goods.amountLeft || 0), this.goods.amountMin) * 10) / 10;
 
       if (this.currentAmount === newAmount) {
         return;

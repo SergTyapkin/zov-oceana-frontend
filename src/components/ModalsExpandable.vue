@@ -86,7 +86,6 @@ export default {
 
   methods: {
     onkeypress(evt: KeyboardEvent) {
-      console.log(evt.key);
       if (evt.key === 'Enter') {
         this.$emit('enter');
       } else if (evt.key == 'Escape') {
