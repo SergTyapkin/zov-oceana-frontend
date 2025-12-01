@@ -105,8 +105,8 @@
 
       <section class="column">
         <header>Категории</header>
-        <router-link 
-          v-for="category in $categories"
+        <router-link
+          v-for="category in $globals?.categories"
           :to="{ name: 'market', query: {categoryId: category.id} }"
           :key="category.id"
         >

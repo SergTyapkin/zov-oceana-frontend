@@ -27,7 +27,7 @@ borderWidth = 3px
     width var(--size)
     height var(--size)
     border borderWidth solid
-    border-color colorEmp1 transparent
+    border-color colorText1 transparent
     border-radius 50%
 
   @keyframes opacity-in

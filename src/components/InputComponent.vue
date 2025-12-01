@@ -118,53 +118,55 @@
 </style>
 
 <template>
-  <section class="input-root" :class="{error, success}">
+  <section class="input-root" :class="{ error, success }">
     <header class="title" v-if="title">{{ title }}</header>
     <p v-if="description" class="description">{{ description }}</p>
 
-    <section
-      class="input-container"
-      :class="{hideable}"
-      @input="onInput"
-    >
+    <section class="input-container" :class="{ hideable }" @input="onInput">
       <div class="images-container left">
-        <img v-if="icon && iconInLeft" :src="icon" class="image" :alt="title">
+        <img v-if="icon && iconInLeft" :src="icon" class="image" :alt="title" />
       </div>
 
       <input
         v-model="value"
-        v-if="!maxSymbols || maxSymbols < 48"
+        v-if="!textarea && (!maxSymbols || maxSymbols < 48)"
         :placeholder="placeholder"
-        :type="(isHidden && hideable) ? 'password' : (type || 'text')"
+        :type="isHidden && hideable ? 'password' : type || 'text'"
         :autocomplete="autocomplete || 'off'"
-        :class="{'icon-in-left': icon && iconInLeft}"
-      >
-      <textarea v-model="value" rows="4" v-else :placeholder="placeholder" />
+        :class="{ 'icon-in-left': icon && iconInLeft }"
+        @keydown.enter="$emit('submit')" />
+      <textarea
+        v-model="value"
+        rows="4"
+        v-else
+        :placeholder="placeholder"
+        @keydown.enter="$emit('submit')"
+      />
 
       <div class="images-container">
-        <img v-if="icon && !iconInLeft" :src="icon" class="image" :alt="title">
+        <img v-if="icon && !iconInLeft" :src="icon" class="image" :alt="title" />
 
         <img
           v-if="hideable && !isHidden"
           @click="isHidden = !isHidden"
           src="/static/icons/hidden.svg"
           class="image-hidden"
-          alt="hide"
-        >
+          alt="hide" />
         <img
           v-else-if="hideable && isHidden"
           @click="isHidden = !isHidden"
           src="/static/icons/visible.svg"
           class="image-hidden"
-          alt="show"
-        >
+          alt="show" />
       </div>
     </section>
 
     <section class="bottom-container">
-      <div class="error">{{ typeof error === 'boolean' ? 'Неверный формат' : error }}</div>
+      <div class="error">{{ typeof error === 'boolean' ? (errorText || 'Неверный формат') : error }}</div>
       <p v-if="bottomDescription" class="bottom-description">{{ bottomDescription }}</p>
-      <span class="keys-count" v-if="maxSymbols">{{ modelValue.length }}<span v-if="maxSymbols">/{{ maxSymbols }}</span></span>
+      <span class="keys-count" v-if="maxSymbols">
+        {{ modelValue.length }}<span v-if="maxSymbols">/{{ maxSymbols }}</span>
+      </span>
     </section>
   </section>
 </template>
@@ -173,7 +175,7 @@
 import { PropType } from 'vue';
 
 export default {
-  emits: ['update:modelValue', 'input'],
+  emits: ['update:modelValue', 'input', 'submit'],
 
   props: {
     title: {
@@ -212,9 +214,14 @@ export default {
       type: String,
       required: true,
     },
+    errorText: {
+      type: String,
+      default: '',
+    },
     error: String as boolean | string,
     success: Boolean,
     hideable: Boolean,
+    textarea: Boolean,
     iconInLeft: Boolean,
     hiddenByDefault: {
       type: Boolean,

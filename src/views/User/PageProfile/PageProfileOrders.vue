@@ -48,21 +48,21 @@
     <main class="main">
       <ul class="orders-list">
         <li class="desc" v-if="!orders.length">Заказов пока нет</li>
-        <OrderCard v-else v-for="order in orders" :order="order" :key="order.id" />
+        <OrderCard v-for="order in orders" :order="order" :key="order.id" />
       </ul>
     </main>
 
-    <CircleLoading v-if="loading" centered />
+    <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
 <script lang="ts">
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import OrderCard from '~/components/OrderCard.vue';
 import { Order } from '~/utils/models';
 
 export default {
-  components: { OrderCard, CircleLoading },
+  components: { OrderCard, CircleLinesLoading },
 
   data() {
     return {

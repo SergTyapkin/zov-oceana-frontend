@@ -216,9 +216,9 @@
               </div>
             </header>
             <div class="amount-selector-container">
-              <button @click="addGoodsAmount(goods, -0.1)" class="button-minus">-</button>
+              <button @click="addGoodsAmount(goods, -goods.amountStep)" class="button-minus">-</button>
               <div>{{ goods.amount }}</div>
-              <button @click="addGoodsAmount(goods, 0.1)" class="button-plus">+</button>
+              <button @click="addGoodsAmount(goods, goods.amountStep)" class="button-plus">+</button>
             </div>
           </div>
 
@@ -229,7 +229,7 @@
 
             <div class="cost">
               <div class="cost-total">₽{{ goods.cost * (goods.amount || 0) }}</div>
-              <div>₽{{ goods.cost }} за кг</div>
+              <div>₽{{ goods.cost }} за {{ goods.isWeighed ? 'кг' : 'шт' }}</div>
             </div>
           </div>
         </li>
@@ -260,18 +260,19 @@
       </section>
     </section>
 
-    <CircleLoading v-if="loading" centered />
+    <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
 <script lang="ts">
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import DEFAULT_IMAGE from '#/images/ocean-bg.jpg';
 import { Goods } from '~/utils/models';
+import { toDebounced } from '~/utils/utils';
 
 export default {
-  components: { CircleLoading },
+  components: { CircleLinesLoading },
 
   data() {
     return {
@@ -283,7 +284,9 @@ export default {
 
   computed: {},
 
-  mounted() {},
+  mounted() {
+    this.saveGoodsAmount = toDebounced(this.saveGoodsAmount, 800);
+  },
 
   methods: {
     async removeFromCart(goods: Goods) {
@@ -295,9 +298,7 @@ export default {
     },
 
     addGoodsAmount(goods: Goods, addValue: number) {
-      this.$store.dispatch('SET_CART_GOODS_AMOUNT', {
-        goodsId: goods.id,
-        amount: Math.round(
+      const newAmount = Math.round(
           Math.max(
             Math.min(
               (goods.amount || 0) + addValue,
@@ -305,9 +306,30 @@ export default {
             ),
             0.1,
           ) * 10,
-        ) / 10,
+        ) / 10;
+
+      if (goods.amount === newAmount) {
+        return;
+      }
+
+      this.$store.dispatch('SET_CART_GOODS_AMOUNT', {
+        goodsId: goods.id,
+        amount: newAmount,
       });
       this.$forceUpdate();
+      this.saveGoodsAmount(goods.id);
+    },
+    async saveGoodsAmount(goodsId: string) {
+      const goods = this.$cart.find(goods => String(goods.id) === String(goodsId));
+      if (!goods) {
+        return;
+      }
+      await this.$request(
+        this,
+        this.$api.updateGoodsInCartAmount,
+        [this.$user.id, goods.id, goods.amount],
+        `Не удалось обновить количество товаров`,
+      );
     }
   },
 };

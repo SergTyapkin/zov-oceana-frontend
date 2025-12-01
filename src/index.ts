@@ -10,8 +10,6 @@ import swAPI from '~/serviceWorker/swAPI';
 
 await swAPI.register();
 
-await Store.dispatch('LOAD_CART');
-
 const Router = createVueRouter(Store);
 const app = createApp(App).use(Router).use(Store).mount('#app');
 Store.$app = app;

@@ -269,7 +269,7 @@
       <nav class="nav">
         <header class="header">Категории</header>
         <router-link
-          v-for="category in $categories"
+          v-for="category in $globals?.categories"
           :to="{ name: 'market', query: { categoryId: category.id } }"
           :key="category.id"
           @click="isOverlayMenuShown = false">
@@ -297,7 +297,9 @@
             placeholder="Иван"
             :icon="IconProfile"
             icon-in-left
-            class="field" />
+            class="field"
+            @submit="register"
+          />
           <InputComponent
             v-model="userData.familyName"
             :error="errors.familyName"
@@ -305,7 +307,9 @@
             placeholder="Иванов"
             :icon="IconProfile"
             icon-in-left
-            class="field" />
+            class="field"
+            @submit="register"
+          />
           <InputComponent
             v-model="userData.middleName"
             :error="errors.middleName"
@@ -313,7 +317,9 @@
             placeholder="Иванович"
             :icon="IconProfile"
             icon-in-left
-            class="field" />
+            class="field"
+            @submit="register"
+          />
           <InputComponent
             v-model="userData.email"
             :error="errors.email"
@@ -321,7 +327,9 @@
             placeholder="ivan.ivanov@email.com"
             :icon="IconEmail"
             icon-in-left
-            class="field" />
+            class="field"
+            @submit="register"
+          />
           <InputComponent
             v-model="userData.tel"
             :error="errors.tel"
@@ -329,21 +337,29 @@
             placeholder="+7 (999) 123-4567"
             :icon="IconTelephone"
             icon-in-left
-            class="field" />
+            class="field"
+            @submit="register"
+          />
           <InputComponent
             v-model="userData.password"
             :error="errors.password"
+            error-text="Пароль должен содержать минимум 6 символов"
             title="Пароль"
             placeholder="Пароль"
             hideable
-            class="field" />
+            class="field"
+            @submit="register"
+          />
           <InputComponent
             v-model="userData.passwordRepeat"
             :error="errors.passwordRepeat"
+            error-text="Пароли не совпадают"
             title="Повтор пароля"
             placeholder="Пароль"
             hideable
-            class="field" />
+            class="field"
+            @submit="register"
+          />
 
           <button class="submit" @click="register">Зарегистрироваться</button>
           <button
@@ -373,14 +389,19 @@
             placeholder="Email или телефон"
             :icon="IconProfile"
             icon-in-left
-            class="field" />
+            class="field"
+            @submit="signIn"
+          />
           <InputComponent
             v-model="userData.password"
             :error="errors.password"
+            error-text="Пароль должен содержать минимум 6 символов"
             title="Пароль"
             placeholder="Пароль"
             hideable
-            class="field" />
+            class="field"
+            @submit="signIn"
+          />
 
           <button class="submit" @click="signIn">Войти</button>
           <button
@@ -455,13 +476,8 @@ export default {
       this.errors.familyName = !Validators.name.validate(this.userData.familyName);
       this.errors.email = !Validators.email.validate(this.userData.email);
       this.errors.tel = !Validators.phone.validate(this.userData.tel);
-      this.errors.password = !Validators.password.validate(this.userData.password)
-        ? 'Пароль должен содержать минимум 6 символов'
-        : false;
-      this.errors.passwordRepeat =
-        !Validators.password.validate(this.userData.password) || this.userData.password !== this.userData.passwordRepeat
-          ? 'Пароли не совпадают'
-          : false;
+      this.errors.password = !Validators.password.validate(this.userData.password);
+      this.errors.passwordRepeat = this.userData.password !== this.userData.passwordRepeat;
 
       if (Object.values(this.errors).findIndex(err => err) !== -1) {
         return;
@@ -488,6 +504,7 @@ export default {
         `Не удалось зарегистрироваться`,
         async () => {
           await this.$store.dispatch('GET_USER');
+          this.$store.dispatch('LOAD_CART');
           await this.$router.push({ name: 'profile' });
           (this.$refs.loginModal as ModalsExpandable).hide();
           (this.$refs.loginRegister as ModalsExpandable).hide();
@@ -505,9 +522,7 @@ export default {
     async signIn() {
       Object.keys(this.errors).forEach(key => (this.errors[key] = false));
 
-      this.errors.password = !Validators.password.validate(this.userData.password)
-        ? 'Пароль должен содержать минимум 6 символов'
-        : false;
+      this.errors.password = !Validators.password.validate(this.userData.password);
       this.errors.emailOrTel =
         !Validators.email.validate(this.userData.emailOrTel) && !Validators.phone.validate(this.userData.emailOrTel);
 
@@ -529,6 +544,7 @@ export default {
         `Не удалось войти`,
         async () => {
           await this.$store.dispatch('GET_USER');
+          this.$store.dispatch('LOAD_CART');
           await this.$router.push({ name: 'profile' });
           (this.$refs.loginModal as ModalsExpandable).hide();
           (this.$refs.loginRegister as ModalsExpandable).hide();

@@ -67,7 +67,7 @@
 </style>
 
 <template>
-  <div class="root-category-card">
+  <router-link class="root-category-card" :to="{ name: 'market', query: { categoryId: category.id } }">
     <img class="background" :src="category.previewUrl || IMAGE_DEFAULT" alt="">
 
     <section class="overlay">
@@ -75,7 +75,7 @@
       <div v-if="category.description" class="description">{{ category.description }}</div>
       <div v-if="category.goodsCount !== undefined" class="goods-count">{{ category.goodsCount }} товаров</div>
     </section>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">

@@ -177,17 +177,17 @@
   <div class="root-page">
     <router-link :to="{ name: 'market' }">
       <section class="title">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left">
+        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
         Назад к каталогу
       </section>
     </router-link>
 
     <section class="goods">
       <div class="images-container">
-<!--        <img :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]?.path}` || IMAGE_DEFAULT" alt="preview">-->
-        <img :src="IMAGE_DEFAULT" alt="preview">
+        <!--        <img :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]?.path}` || IMAGE_DEFAULT" alt="preview">-->
+        <img :src="IMAGE_DEFAULT" alt="preview" />
         <div class="images-small-container">
-          <img v-for="image in goods.images?.slice(1)" :src="IMAGE_DEFAULT" alt="preview">
+          <img v-for="image in goods.images?.slice(1)" :src="IMAGE_DEFAULT" alt="preview" />
         </div>
       </div>
 
@@ -195,16 +195,15 @@
         <ul class="categories-container">
           <router-link
             v-for="category in goods.categories"
-            :to="{ name: 'market', query: {categoryId: category.id} }"
-            :key="category.id"
-          >
+            :to="{ name: 'market', query: { categoryId: category.id } }"
+            :key="category.id">
             <li class="category">{{ category.title }}</li>
           </router-link>
         </ul>
         <header class="header">{{ goods.title }}</header>
-        <p class="location"><img src="/static/icons/location-dark.svg" alt="location">{{ goods.fromLocation }}</p>
+        <p class="location"><img src="/static/icons/location-dark.svg" alt="location" />{{ goods.fromLocation }}</p>
 
-        <p class="info">Цена за кг</p>
+        <p class="info">Цена за {{ goods.isWeighed ? 'кг' : 'шт' }}</p>
         <p class="cost">₽{{ goods.cost }}</p>
 
         <p v-if="goods.description" class="desc">{{ goods.description }}</p>
@@ -222,21 +221,11 @@
           </li>
         </ul>
 
-        <header class="info">Количество (кг)</header>
+        <header class="info">Количество ({{ goods.isWeighed ? 'кг' : 'шт' }})</header>
         <section class="amount-selector">
-          <button
-            @click="currentAmount = Math.round(Math.max(currentAmount - goods.amountStep, goods.amountMin) * 10) / 10"
-            class="button-minus"
-          >
-            -
-          </button>
+          <button @click="addGoodsAmount(-goods.amountStep)" class="button-minus">-</button>
           <div>{{ currentAmount }}</div>
-          <button
-            @click="currentAmount = Math.round(Math.min(currentAmount + goods.amountStep, goods.amountLeft) * 10) / 10"
-            class="button-plus"
-          >
-            +
-          </button>
+          <button @click="addGoodsAmount(goods.amountStep)" class="button-plus">+</button>
         </section>
 
         <section class="add-to-cart">
@@ -245,31 +234,32 @@
             <div class="value">₽{{ Math.round(goods.cost * currentAmount * 100) / 100 }}</div>
           </div>
 
-          <button @click="addToCart" v-if="$cart.findIndex(g => g.id === goods.id) === -1" class="button-add-to-cart">
-            <img src="/static/icons/cart.svg" alt="cart">
+          <button @click="addToCart" v-if="$cart.findIndex(g => String(g.id) === String(goods.id)) === -1" class="button-add-to-cart">
+            <img src="/static/icons/cart.svg" alt="cart" />
             Добавить в корзину
           </button>
           <button @click="removeFromCart" v-else class="button-add-to-cart">
-            <img src="/static/icons/remove.svg" alt="remove">
+            <img src="/static/icons/remove.svg" alt="remove" />
             Убрать из корзины
           </button>
         </section>
       </div>
     </section>
 
-    <CircleLoading v-if="loading" centered />
+    <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
 <script lang="ts">
 import { Goods } from '~/utils/models';
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
 
 import IMAGE_DEFAULT from '#/images/ocean-bg.jpg';
 import { IMAGES_URL_BASE_PATH } from '~/constants';
+import { toDebounced } from '~/utils/utils';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 export default {
-  components: { CircleLoading },
+  components: { CircleLinesLoading },
 
   data() {
     return {
@@ -279,7 +269,7 @@ export default {
 
       loading: false,
 
-      currentAmount: 1,
+      currentAmount: 0,
 
       IMAGE_DEFAULT,
       IMAGES_URL_BASE_PATH,
@@ -288,8 +278,11 @@ export default {
 
   computed: {},
 
-  mounted() {
-    this.updateGoods();
+  async mounted() {
+    this.saveGoodsAmount = toDebounced(this.saveGoodsAmount, 800);
+    this.currentAmount = this.$cart.find(g => String(g.id) === String(this.goodsId))?.amount || 0;
+    await this.updateGoods();
+    this.currentAmount = this.currentAmount || this.goods.amountMin;
   },
 
   methods: {
@@ -300,19 +293,46 @@ export default {
         [this.goodsId],
         `Не удалось получить список товаров`,
       )) as Goods;
-      console.log(this.goods);
     },
 
     addToCart() {
-      this.$store.dispatch('ADD_TO_CART', {goods: this.goods, amount: this.currentAmount});
-      console.log(this.$cart);
+      this.$store.dispatch('ADD_TO_CART', { goods: this.goods, amount: this.currentAmount });
       this.$forceUpdate();
     },
 
     removeFromCart() {
       this.$store.dispatch('REMOVE_FROM_CART', this.goods);
       this.$forceUpdate();
-    }
+    },
+
+    addGoodsAmount(addValue: number) {
+      const newAmount =
+        Math.round(Math.max(Math.min((this.currentAmount || 0) + addValue, this.goods.amountLeft || 0), 0.1) * 10) / 10;
+
+      if (this.currentAmount === newAmount) {
+        return;
+      }
+      this.currentAmount = newAmount;
+
+      this.$store.dispatch('SET_CART_GOODS_AMOUNT', {
+        goodsId: this.goods.id,
+        amount: newAmount,
+      });
+      this.$forceUpdate();
+      this.saveGoodsAmount();
+    },
+    async saveGoodsAmount() {
+      const goods = this.$cart.find(goods => String(goods.id) === String(this.goods.id));
+      if (!goods) {
+        return;
+      }
+      await this.$request(
+        this,
+        this.$api.updateGoodsInCartAmount,
+        [this.$user.id, goods.id, this.currentAmount],
+        `Не удалось обновить количество товаров`,
+      );
+    },
   },
 };
 </script>

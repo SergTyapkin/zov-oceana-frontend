@@ -135,6 +135,7 @@
                   description="Более 6 символов"
                 />
                 <InputComponent
+                  error-text="Пароли не совпадают"
                   :error="errors.newPasswordConfirmation"
                   v-model="fields.newPasswordConfirmation"
                   title="Новый пароль ещё раз"
@@ -160,18 +161,18 @@
       </ul>
     </main>
 
-    <CircleLoading v-if="loading" centered />
+    <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
 <script lang="ts">
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import InputSwitch from '~/components/InputSwitch.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import Validators from '~/utils/validators';
 
 export default {
-  components: { InputComponent, InputSwitch, CircleLoading },
+  components: { InputComponent, InputSwitch, CircleLinesLoading },
 
   data() {
     return {
@@ -213,9 +214,7 @@ export default {
     async changePassword() {
       this.errors.oldPassword = !Validators.password.validate(this.fields.oldPassword);
       this.errors.newPassword = !Validators.password.validate(this.fields.newPassword);
-      this.errors.newPasswordConfirmation =
-        !Validators.password.validate(this.fields.newPasswordConfirmation) ||
-        this.fields.newPasswordConfirmation !== this.fields.newPassword;
+      this.errors.newPasswordConfirmation = this.fields.newPasswordConfirmation !== this.fields.newPassword;
       if (this.errors.oldPassword || this.errors.newPassword || this.errors.newPasswordConfirmation) {
         return;
       }
@@ -228,12 +227,19 @@ export default {
         this.$api.updateProfilePassword,
         [
           this.$user.id,
-          {
-            oldPassword: this.fields.oldPassword,
-            newPassword: this.fields.newPassword,
-          },
+          this.fields.oldPassword,
+          this.fields.newPassword,
         ],
         `Не удалось обновить пароль`,
+        () => {
+          this.passwordChangeBlockOpened = false;
+        },
+        undefined,
+        {
+          401: () => {
+            this.errors.oldPassword = 'Пароль не подходит';
+          }
+        }
       );
     },
   },

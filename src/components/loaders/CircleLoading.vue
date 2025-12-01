@@ -130,7 +130,7 @@ export default {
     },
     dark: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     centered: Boolean,
   }

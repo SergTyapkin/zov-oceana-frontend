@@ -198,7 +198,7 @@
 
     <button class="submit" @click="submit">
       <transition name="opacity" mode="out-in" duration="200">
-        <CircleLoading v-if="loading" size="1.2em" light />
+        <CircleLinesLoading v-if="loading" size="1.2em" light />
         <span v-else>{{ submitText || 'Отправить' }}</span>
       </transition>
     </button>
@@ -206,11 +206,11 @@
 </template>
 
 <script lang="ts">
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import SelectList from "~/components/SelectList.vue";
 
 export default {
-  components: {SelectList, CircleLoading },
+  components: {SelectList, CircleLinesLoading },
 
   props: {
     fields: {

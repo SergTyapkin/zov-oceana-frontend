@@ -1,5 +1,3 @@
-import { Type } from '@sergtyapkin/models-validator';
-
 export interface User {
   id: string;
   tgUsername?: string;
@@ -23,6 +21,12 @@ export interface User {
   isSignedIn: boolean;
 }
 
+export interface Globals {
+  isOnMaintenance: boolean;
+  goodsOnLanding: Goods[];
+  categories: Category[];
+}
+
 export interface Goods {
   id: string;
   title: string;
@@ -31,7 +35,10 @@ export interface Goods {
   amountLeft?: number;
   amount?: number;
   amountStep: number;
+  amountMin: number;
   cost: number;
+  isOnSale: boolean;
+  isWeighed: boolean;
   images: {id: string, path: string}[];
   categories: {id: string, title: string}[];
   characters?: Record<PropertyKey, string | number>;
@@ -53,6 +60,8 @@ export interface Address {
   street?: string;
   house?: string;
   entrance?: string;
+  flor?: string;
+  apartment?: string;
   code?: string;
   comment?: string;
 }

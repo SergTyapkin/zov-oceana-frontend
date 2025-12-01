@@ -229,37 +229,10 @@
       <AutoScroller>
         <ul class="carousel">
           <GoodsCard
+            v-for="goods in $globals?.goodsOnLanding"
             class="goods"
-            :goods="{
-              id: '123',
-              title: 'Лосось',
-              fromLocation: 'Норвегия',
-              cost: 2450,
-              amountLeft: 10,
-              characters: {},
-            }"
-          />
-          <GoodsCard
-            class="goods"
-            :goods="{
-              id: '1232',
-              title: 'Креветки',
-              fromLocation: 'Таиланд',
-              cost: 2310,
-              amountLeft: 10,
-              characters: {},
-            }"
-          />
-          <GoodsCard
-            class="goods"
-            :goods="{
-              id: '1233',
-              title: 'Омар',
-              fromLocation: 'МЭН. США',
-              cost: 6320,
-              amountLeft: 10,
-              characters: {},
-            }"
+            :goods="goods"
+            :key="goods.id"
           />
         </ul>
       </AutoScroller>
@@ -270,7 +243,7 @@
       <header class="header">Выбор по категориям</header>
       <div class="section-desc">Найдите именно то, что ищете</div>
       <ul class="categories-container">
-        <li v-for="category in $categories" class="category-card">
+        <li v-for="category in $globals?.categories" class="category-card">
           <CategoryCard :category="category" />
         </li>
       </ul>

@@ -48,3 +48,34 @@ a
 
 a:visited
   color inherit
+
+dialogTransitionTime = 0.3s
+dialog
+  position fixed
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+  max-width calc(100vw - 40px)
+  max-height calc(100vh - 80px)
+  overflow auto
+  transition all dialogTransitionTime allow-discrete
+  border none
+
+  animation close dialogTransitionTime forwards
+  &[open]
+    animation open dialogTransitionTime forwards
+  &::backdrop
+    background-color black
+    opacity 0.6
+    backdrop-filter blur(10px)
+
+  @keyframes open
+    from
+      opacity 0
+    to
+      opacity 1
+  @keyframes close
+    from
+      opacity 1
+    to
+      opacity 0

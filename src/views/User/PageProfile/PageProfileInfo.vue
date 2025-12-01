@@ -55,9 +55,17 @@
 
     <main class="main" @input="isEdited = true">
       <div class="row">
-        <InputComponent title="Фамилия" v-model="fields.familyName" placeholder="Ваша фамилия" :error="errors.familyName" />
+        <InputComponent
+          title="Фамилия"
+          v-model="fields.familyName"
+          placeholder="Ваша фамилия"
+          :error="errors.familyName" />
         <InputComponent title="Имя" v-model="fields.givenName" placeholder="Ваше имя" :error="errors.givenName" />
-        <InputComponent title="Отчество" v-model="fields.middleName" placeholder="Ваше отчество" :error="errors.middleName" />
+        <InputComponent
+          title="Отчество"
+          v-model="fields.middleName"
+          placeholder="Ваше отчество"
+          :error="errors.middleName" />
       </div>
       <div class="row">
         <InputComponent title="Email" v-model="fields.email" placeholder="your@email.ru" :error="errors.email" />
@@ -69,21 +77,21 @@
         <button class="button-save" @click="save" :disabled="!isEdited">Сохранить изменения</button>
       </div>
       <div class="row">
-        <button @click="logout" class="button-logout"><img src="/static/icons/signin.svg" alt="logout"/>Выйти</button>
+        <button @click="logout" class="button-logout"><img src="/static/icons/signin.svg" alt="logout" />Выйти</button>
       </div>
     </main>
 
-    <CircleLoading v-if="loading" centered />
+    <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
 <script lang="ts">
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import Validators from '~/utils/validators';
 import InputComponent from '~/components/InputComponent.vue';
 
 export default {
-  components: { InputComponent, CircleLoading },
+  components: { InputComponent, CircleLinesLoading },
 
   data() {
     return {
@@ -140,26 +148,22 @@ export default {
       await this.$request(
         this,
         this.$api.updateProfile,
-        [
-          this.$user.id,
-          this.fields,
-        ],
+        [this.$user.id, this.fields],
         `Не удалось обновить данные пользователя`,
+        () => {
+          this.isEdited = false;
+        }
       );
     },
 
     async logout() {
-      await this.$request(
-        this,
-        this.$api.logout,
-        [],
-        `Не удалось выйти из аккаунта`,
-      );
+      await this.$request(this, this.$api.logout, [], `Не удалось выйти из аккаунта`);
       this.$store.dispatch('DELETE_USER');
+      this.$store.dispatch('CLEAR_CART');
       this.$router.push({ name: 'default' });
     },
 
-    copyToClipboard(str, description) {
+    copyToClipboard(str: string, description: string) {
       navigator.clipboard.writeText(str);
       this.$popups.success('Скопировано', `${description} скопировано в буфер обмена`);
     },

@@ -27,7 +27,7 @@
 <template>
   <div class="root-placeholder" :class="{error}" :style="{'--height': height, '--width': width}">
     <transition name="opacity">
-      <CircleLoading v-if="showLoadingSymbol && !error" class="loading-symbol" light />
+      <CircleLinesLoading v-if="showLoadingSymbol && !error" class="loading-symbol" light />
     </transition>
     <transition name="opacity">
       <div v-if="error" class="loading-symbol">Unable to load component</div>
@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import CircleLoading from "~/components/loaders/CircleLoading.vue";
+import CircleLinesLoading from "~/components/loaders/CircleLinesLoading.vue";
 
 export default {
-  components: {CircleLoading},
+  components: {CircleLinesLoading},
   props: {
     height: {
       type: String,

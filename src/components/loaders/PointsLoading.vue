@@ -14,7 +14,7 @@
   margin-top calc(var(--size) / 4 * 1.5)
   margin-bottom calc(var(--size) / 4 * 1.5)
   border-radius 50%
-  color colorEmp1
+  color colorText1
   animation opacity-in 0.4s linear forwards, fill 1s ease-in infinite alternate
   &::before
   &::after
@@ -40,7 +40,7 @@
 
   @keyframes fill
     0%
-      box-shadow 0 0 0 -1px inset
+      box-shadow 0 0 0 1px inset
     100%
       box-shadow 0 0 0 calc(var(--size) / 8) inset
 </style>

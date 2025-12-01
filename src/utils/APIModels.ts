@@ -1,5 +1,5 @@
 import { ArrayType, Type, validateModel } from '@sergtyapkin/models-validator';
-import { Goods, Order } from '~/utils/models';
+import { Category, Goods, Order } from '~/utils/models';
 
 export const UserModel = {
   id: String,
@@ -85,6 +85,7 @@ export const UserModelMockData = validateModel(UserModel, {
   joineddate: new Date('2023-04-04'),
 });
 
+
 export const CategoryModel = {
   id: String,
   title: String,
@@ -161,6 +162,10 @@ export const GoodsModel = {
     from: 'isweighed',
     default: false,
   },
+  isOnSale: {
+    type: Boolean,
+    from: 'isonsale',
+  },
   cost: {
     type: Number,
     optional: true,
@@ -184,6 +189,7 @@ export const GoodsModelMockData = validateModel(GoodsModel, {
   amountmin: 0.5,
   isweighed: false,
   cost: 2430,
+  isonsale: true,
   categories: [
     {
       id: 'CATEGORY_ID_2',
@@ -260,6 +266,8 @@ export const AddressModel = {
   street: Type(String, true),
   house: Type(String, true),
   entrance: Type(String, true),
+  floor: Type(String, true),
+  apartment: Type(String, true),
   code: Type(String, true),
   comment: Type(String, true),
 };
@@ -273,6 +281,8 @@ export const AddressModelMockData = validateModel(AddressModel, {
   street: 'Солохова',
   house: '4к19',
   entrance: '2',
+  floor: '9',
+  apartment: '106',
   // code: '',
   comment: 'Позвоните',
 });
@@ -282,3 +292,28 @@ export const AddressListModelMockData = {
     Object.assign({}, AddressModelMockData, {id: 'ADDRESS_ID_2', address: 'Бизнес-центр, офис 200, Санкт-Петербург, 654321'}),
   ],
 };
+
+
+export const GlobalsModel = {
+  isOnMaintenance: {
+    type: Boolean,
+    from: 'isonmaintenance',
+  },
+  goodsOnLanding: {
+    type: Array,
+    item: {
+      type: Object,
+      fields: GoodsModel,
+    },
+    from: 'goodsonlanding',
+  },
+  categories: ArrayType(CategoryModel),
+};
+
+export const GlobalsModelMockData = validateModel(GlobalsModel, {
+  isonmaintenance: false,
+  goodsonlanding: [],
+  categories: [],
+});
+GlobalsModelMockData.goods = GoodsListModelMockData.goods as Goods[];
+GlobalsModelMockData.categories = CategoriesListModelMockData.categories as Category[];

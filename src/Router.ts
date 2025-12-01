@@ -55,16 +55,17 @@ export default function createVueRouter(Store: Store): Router {
   });
 
   let router_got_user = false;
-  let router_got_categories = false;
+  let router_got_globals = false;
   // Router.beforeEach(async (to: RouteLocationNormalized, _, next: NavigationGuardNext) => {
   Router.beforeEach(async (_, __, next: NavigationGuardNext) => {
     if (!router_got_user) {
       await Store.dispatch('GET_USER');
+      await Store.dispatch('LOAD_CART');
       router_got_user = true;
     }
-    if (!router_got_categories) {
-      await Store.dispatch('GET_CATEGORIES');
-      router_got_categories = true;
+    if (!router_got_globals) {
+      await Store.dispatch('GET_GLOBALS');
+      router_got_globals = true;
     }
 
     // const notLoginedRedirect = {

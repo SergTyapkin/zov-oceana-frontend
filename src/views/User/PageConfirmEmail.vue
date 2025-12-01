@@ -14,15 +14,15 @@
 <template>
   <div class="root-confirm-email">
     Подтверждаем ваш E-mail...
-    <CircleLoading />
+    <CircleLinesLoading />
   </div>
 </template>
 
 <script>
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 export default {
-  components: { CircleLoading },
+  components: { CircleLinesLoading },
 
   data() {
     return {

@@ -101,7 +101,7 @@
       <div v-if="goods.description" class="description">{{ goods.description }}</div>
       <div class="bottom-block">
         <div class="cost">
-          <div class="info">цена за кг</div>
+          <div class="info">цена за {{ goods.isWeighed ? 'кг' : 'шт' }}</div>
           <div class="value">₽{{ goods.cost }}</div>
         </div>
         <button class="button-to-cart">

@@ -114,7 +114,7 @@
             placeholder="Все категории"
             can-be-null
             :list="
-              $categories.map(category => ({
+              $globals?.categories?.map?.(category => ({
                 id: category.id,
                 name: category.title,
                 value: category.id,
@@ -163,7 +163,7 @@
       </transition-group>
     </section>
 
-    <CircleLoading v-if="loading" centered />
+    <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
@@ -172,10 +172,10 @@ import GoodsCard from '~/components/GoodsCard.vue';
 import { Goods } from '~/utils/models';
 import InputSearch from '~/components/InputSearch.vue';
 import SelectList from '~/components/SelectList.vue';
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 export default {
-  components: { CircleLoading, SelectList, InputSearch, GoodsCard },
+  components: { CircleLinesLoading, SelectList, InputSearch, GoodsCard },
 
   data() {
     return {
@@ -200,7 +200,7 @@ export default {
         .filter(goods => {
           return (
             (!this.filters.searchText || new RegExp(this.filters.searchText, 'i').test(goods.title)) &&
-            (!this.filters.categoryId || String(goods.categoryId) === String(this.filters.categoryId))
+            (!this.filters.categoryId || (goods.categories.findIndex(c => String(c.id) === String(this.filters.categoryId)) !== -1))
           );
         })
         .sort((g1, g2) => {

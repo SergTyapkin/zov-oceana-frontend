@@ -15,7 +15,7 @@ interface State {
   user: User;
   cart: Goods[];
   commit: (event: string, data?: any) => void;
-  categories: Category[];
+  globals: Globals;
 }
 
 declare module 'vue' {
@@ -23,6 +23,6 @@ declare module 'vue' {
     $store: Store;
     $user: User;
     $cart: Goods[];
-    $categories: Category[];
+    $globals: Globals;
   }
 }

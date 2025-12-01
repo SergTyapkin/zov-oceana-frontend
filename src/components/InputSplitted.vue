@@ -78,17 +78,17 @@
       @click="(evt: MouseEvent) => onClick(evt)"
     >
 
-    <CircleLoading v-if="loading" class="icon" />
+    <CircleLinesLoading v-if="loading" class="icon" />
     <img v-else-if="error" src="/static/icons/close-red.svg" class="icon" alt="error">
     <img v-else-if="success" src="/static/icons/done-green.svg" class="icon" alt="error">
   </section>
 </template>
 
 <script lang="ts">
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 export default {
-  components: { CircleLoading },
+  components: { CircleLinesLoading },
   emits: ['update:modelValue', 'input', 'finish'],
 
   props: {
