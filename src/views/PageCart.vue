@@ -116,6 +116,7 @@
       margin-top 20px
       .info-link
         button-emp2()
+        width 100%
         text-align center
 </style>
 
