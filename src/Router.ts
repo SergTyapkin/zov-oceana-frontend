@@ -67,6 +67,7 @@ export default function createVueRouter(Store: Store): Router {
     }
     if (!router_got_globals) {
       await Store.dispatch('GET_GLOBALS');
+      Store.$app.updateElements();
       router_got_globals = true;
     }
 

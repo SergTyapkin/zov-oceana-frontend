@@ -169,10 +169,10 @@ export default {
     },
 
     showSignInModal() {
-      this.$refs.header.showSignInModal();
+      (this.$refs.header as typeof HeaderComponent).showSignInModal();
     },
     showRegisterModal() {
-      this.$refs.header.showRegisterModal();
+      (this.$refs.header as typeof HeaderComponent).showRegisterModal();
     },
   },
 
