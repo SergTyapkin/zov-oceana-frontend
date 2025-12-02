@@ -440,7 +440,7 @@ import InputComponent from '~/components/InputComponent.vue';
 
 import IconProfile from '#/icons/profile.svg';
 import IconEmail from '#/icons/email.svg';
-import IconTelephone from '#/icons/telegram-logo.svg';
+import IconTelephone from '#/icons/phone.svg';
 import TGAuth, { TGUser } from '~/components/TGAuth.vue';
 import Validators from '~/utils/validators';
 

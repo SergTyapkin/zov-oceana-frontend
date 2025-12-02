@@ -204,16 +204,20 @@
     <section class="numbers" id="about" style="--animation-index: 4">
       <ul class="numbers-list">
         <li class="number-container">
-          <div class="number">500+</div>
+          <div class="number">100+</div>
           <div class="desc">товаров</div>
         </li>
         <li class="number-container">
-          <div class="number">25+</div>
-          <div class="desc">стран</div>
+          <div class="number">2000+</div>
+          <div class="desc">кг икры продано</div>
         </li>
+        <!--        <li class="number-container">-->
+        <!--          <div class="number">2+</div>-->
+        <!--          <div class="desc">лет на рынке</div>-->
+        <!--        </li>-->
         <li class="number-container">
-          <div class="number">10К+</div>
-          <div class="desc">клиентов</div>
+          <div class="number">1500+</div>
+          <div class="desc">кг крабов и рыбы продано</div>
         </li>
         <li class="number-container">
           <div class="number">98%</div>
