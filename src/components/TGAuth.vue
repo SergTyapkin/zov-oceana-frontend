@@ -7,6 +7,11 @@
 @import '../styles/animations.styl'
 @import '../styles/scrollbars.styl'
 
+.root-tg-auth
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
 </style>
 
 <template>

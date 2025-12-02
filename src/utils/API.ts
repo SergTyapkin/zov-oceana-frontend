@@ -81,8 +81,15 @@ export default class API extends REST_API {
     this.#PUT(`/user`, Object.assign({id}, profileData), UserModel) as MyResponse<User>;
   updateProfilePassword = (id: string, oldPassword: string, newPassword: string) =>
     this.#PUT(`/user/password`, {id, oldPassword, newPassword}) as MyResponse<unknown>;
-  register = (givenName: string, middleName: string, familyName: string, email: string, tel: string, password: string) =>
-    this.#POST(`/user`, { givenName, middleName, familyName, email, tel, password, clientBrowser: detectBrowser(), clientOS: detectOS()}, UserModel) as MyResponse<User>;
+  register = (
+    givenName: string, middleName: string, familyName: string, email: string, tel: string, password: string,
+    tgId: string, tgUsername: string, tgHash: string, tgAuthDate: string, tgPhotoUrl: string, tgFirstName: string, tgLastName: string,
+  ) =>
+    this.#POST(`/user`, {
+      givenName, middleName, familyName, email, tel, password,
+      tgId, tgUsername, tgHash, tgAuthDate, tgPhotoUrl, tgFirstName, tgLastName,
+      clientBrowser: detectBrowser(), clientOS: detectOS(),
+    }, UserModel) as MyResponse<User>;
   deleteProfile = () =>
     this.#DELETE(`/user`) as MyResponse<unknown>;
   login = (emailOrTel: string, password: string) =>

@@ -105,7 +105,7 @@
     </header>
 
     <main class="main">
-      <p v-if="!addresses.length" class="desc">Добавьте ваш адрес доставки</p>
+      <p v-if="!addresses.length && !loading" class="desc">Добавьте ваш адрес доставки</p>
       <ul class="addresses-list">
         <AddressCard
           v-for="address in addresses"

@@ -47,7 +47,7 @@
 
     <main class="main">
       <ul class="orders-list">
-        <li class="desc" v-if="!orders.length">Заказов пока нет</li>
+        <li class="desc" v-if="!orders.length && !loading">Заказов пока нет</li>
         <OrderCard v-for="order in orders" :order="order" :key="order.id" />
       </ul>
     </main>

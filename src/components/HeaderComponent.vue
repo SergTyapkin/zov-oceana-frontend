@@ -173,6 +173,8 @@
     .main
       background colorBgLight
       padding 30px
+      .tg-auth
+        centered-margin()
       .desc
         font-small()
         font-spaced()
@@ -223,7 +225,7 @@
           @click="isOverlayMenuShown = false">
           <img src="/static/icons/profile.svg" alt="profile" />
         </router-link>
-        <button v-else @click="$refs.signInModal.show()" class="profile">
+        <button v-else @click="showSignInModal()" class="profile">
           <img src="/static/icons/profile.svg" alt="profile" />
         </button>
 
@@ -249,14 +251,14 @@
         <div v-else class="buttons-container">
           <button
             @click="
-              $refs.signInModal.show();
+              showSignInModal();
               isOverlayMenuShown = false;
             ">
             Войти
           </button>
           <button
             @click="
-              $refs.registerModal.show();
+              showRegisterModal();
               isOverlayMenuShown = false;
             ">
             Регистрация
@@ -286,15 +288,17 @@
       <div class="modal-inside">
         <header class="header">Регистрация</header>
         <main class="main">
-          <div v-if="!userData.tgId">
-            <TGAuth @signin="onTGSignIn" />
+          <transition name="opacity" mode="out-in">
+<!--            <div v-if="!userData.tgId">-->
+<!--              <TGAuth @login="onTGSignIn" class="tg-auth" />-->
 
-            <div class="desc">или</div>
-          </div>
-          <div v-else>
-            Вы успешно авторизованы через Telegram: @{{ userData.tgUsername }}<br>
-            Заполните данные ниже для завершения регистрации
-          </div>
+<!--              <div class="desc">или</div>-->
+<!--            </div>-->
+            <div v-if="userData.tgId">
+              Вы успешно авторизованы через Telegram: @{{ userData.tgUsername }}<br>
+              Заполните данные ниже для завершения регистрации
+            </div>
+          </transition>
 
           <InputComponent
             v-model="userData.givenName"
@@ -373,7 +377,12 @@
             @submit="register"
           />
 
-          <button class="submit" @click="register">Зарегистрироваться</button>
+          <button
+            class="submit"
+            :disabled="loading"
+            @click="register">
+            Зарегистрироваться
+          </button>
           <button
             class="button-different-signin"
             @click="
@@ -391,7 +400,7 @@
         <header class="header">Вход</header>
         <main class="main">
           <div>
-            <TGAuth @signin="onTGSignIn" />
+            <TGAuth @login="onTGSignIn" class="tg-auth" />
 
             <div class="desc">или</div>
           </div>
@@ -419,7 +428,12 @@
             @submit="signIn"
           />
 
-          <button class="submit" @click="signIn">Войти</button>
+          <button
+            class="submit"
+            :disabled="loading"
+            @click="signIn">
+            Войти
+          </button>
           <button
             class="button-different-signin"
             @click="
@@ -455,8 +469,14 @@ export default {
       IconTelephone,
 
       userData: {
-        tgId: '',
-        tgUsername: '',
+        tgId: undefined as string | undefined,
+        tgUsername: undefined as string | undefined,
+        tgHash: undefined as string | undefined,
+        tgAuthDate: undefined as string | undefined,
+        tgPhotoUrl: undefined as string | undefined,
+        tgFirstName: undefined as string | undefined,
+        tgLastName: undefined as string | undefined,
+
         givenName: '',
         middleName: '',
         familyName: '',
@@ -505,7 +525,13 @@ export default {
           },
           404: () => {
             this.userData.tgId = String(user.id);
-            this.userData.tgUsername = user.username || '';
+            this.userData.tgUsername = user.username;
+            this.userData.tgHash = user.hash;
+            this.userData.tgAuthDate = user.auth_date;
+            this.userData.tgPhotoUrl = user.photo_url;
+            this.userData.tgFirstName = user.first_name;
+            this.userData.tgLastName = user.last_name;
+
             this.userData.givenName = user.first_name;
             this.userData.familyName = user.last_name || '';
             this.hideSignInModal();
@@ -547,6 +573,14 @@ export default {
           this.userData.email,
           this.userData.tel,
           this.userData.password,
+
+          this.userData.tgId,
+          this.userData.tgUsername,
+          this.userData.tgHash,
+          this.userData.tgAuthDate,
+          this.userData.tgPhotoUrl,
+          this.userData.tgFirstName,
+          this.userData.tgLastName,
         ],
         `Не удалось зарегистрироваться`,
         async () => {
@@ -611,14 +645,14 @@ export default {
       this.hideRegisterModal();
     },
     hideSignInModal() {
-      (this.$refs.signInModal as HTMLDialogElement).hide();
+      (this.$refs.signInModal as HTMLDialogElement).close();
     },
     showRegisterModal() {
       (this.$refs.registerModal as HTMLDialogElement).show();
       this.hideSignInModal();
     },
     hideRegisterModal() {
-      (this.$refs.registerModal as HTMLDialogElement).hide();
+      (this.$refs.registerModal as HTMLDialogElement).close();
     },
   },
 };

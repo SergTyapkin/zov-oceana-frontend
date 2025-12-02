@@ -28,6 +28,7 @@
     pointer-events none
     position absolute
     inset 0
+    z-index -1
     object-fit cover
     trans()
 

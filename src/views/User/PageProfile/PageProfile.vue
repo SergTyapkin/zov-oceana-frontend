@@ -94,6 +94,9 @@
       <div>
         <header class="username" style="--animation-index: 1">{{ $user.givenName }} {{ $user.familyName }}</header>
         <div class="info-date" style="--animation-index: 2">Участник с {{ dateFormatter($user.joinedDate) }}</div>
+        <div v-if="$user.tgId" class="info-date" style="--animation-index: 3">
+          Telegram: {{ $user.tgUsername ? `@${$user.tgUsername}` : `id: ${$user.tgId}` }}
+        </div>
       </div>
     </section>
 
