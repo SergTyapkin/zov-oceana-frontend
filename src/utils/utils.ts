@@ -1,5 +1,6 @@
 import swAPI from '~/serviceWorker/swAPI';
 import routes from '~/routes';
+import { Address } from '~/utils/models';
 
 export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
   popupsError: (title: string, desc: string) => any,
@@ -79,18 +80,18 @@ export function deleteCookie(name: string) {
   });
 }
 
-export function toDebounced(callee: (...args: any[]) => unknown, timeoutMs: number) {
-  return function perform(...args) {
-    const previousCall = this.lastCall
+export function toDebounced(callee: (...args: unknown[]) => unknown, timeoutMs: number) {
+  return function perform(this: {lastCall: number, lastCallTimer: ReturnType<typeof setTimeout>}, ...args: unknown[]) {
+    const previousCall = this.lastCall;
 
-    this.lastCall = Date.now()
+    this.lastCall = Date.now();
 
-    if (previousCall && this.lastCall - previousCall <= timeoutMs) {
-      clearTimeout(this.lastCallTimer)
+    if (previousCall && (this.lastCall - previousCall <= timeoutMs)) {
+      clearTimeout(this.lastCallTimer);
     }
 
-    this.lastCallTimer = setTimeout(() => callee(...args), timeoutMs)
-  }
+    this.lastCallTimer = setTimeout(() => callee(...args), timeoutMs);
+  };
 }
 
 export function detectBrowser() {

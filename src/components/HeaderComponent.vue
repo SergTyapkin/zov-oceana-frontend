@@ -286,9 +286,15 @@
       <div class="modal-inside">
         <header class="header">Регистрация</header>
         <main class="main">
-          <TGAuth @signin="onTGSignIn" />
+          <div v-if="!userData.tgId">
+            <TGAuth @signin="onTGSignIn" />
 
-          <div class="desc">или</div>
+            <div class="desc">или</div>
+          </div>
+          <div v-else>
+            Вы успешно авторизованы через Telegram: @{{ userData.tgUsername }}<br>
+            Заполните данные ниже для завершения регистрации
+          </div>
 
           <InputComponent
             v-model="userData.givenName"
@@ -384,9 +390,11 @@
       <div class="modal-inside">
         <header class="header">Вход</header>
         <main class="main">
-          <TGAuth @signin="onTGSignIn" />
+          <div>
+            <TGAuth @signin="onTGSignIn" />
 
-          <div class="desc">или</div>
+            <div class="desc">или</div>
+          </div>
 
           <InputComponent
             v-model="userData.emailOrTel"
@@ -447,6 +455,8 @@ export default {
       IconTelephone,
 
       userData: {
+        tgId: '',
+        tgUsername: '',
         givenName: '',
         middleName: '',
         familyName: '',
@@ -474,7 +484,36 @@ export default {
   mounted() {},
 
   methods: {
-    onTGSignIn(user: TGUser) {},
+    async onTGSignIn(user: TGUser) {
+      // Попытаемся войти
+      await this.$request(
+        this,
+        this.$api.loginWithTG,
+        [String(user.id), user.username, user.hash, user.auth_date, user.photo_url, user.first_name, user.last_name],
+        'Ошибка запроса входа через Telegram',
+        async () => {
+          await this.$store.dispatch('GET_USER');
+          this.$store.dispatch('LOAD_CART');
+          await this.$router.push({ name: 'profile' });
+          this.hideSignInModal();
+          this.hideRegisterModal();
+        },
+        true,
+        {
+          401: () => {
+            this.$popups.error('Ошибка данных авторизации Telegram', 'Попробуйте ещё раз или войдите обычным способом');
+          },
+          404: () => {
+            this.userData.tgId = String(user.id);
+            this.userData.tgUsername = user.username || '';
+            this.userData.givenName = user.first_name;
+            this.userData.familyName = user.last_name || '';
+            this.hideSignInModal();
+            this.showRegisterModal();
+          },
+        },
+      );
+    },
 
     async register() {
       Object.keys(this.errors).forEach(key => (this.errors[key] = false));

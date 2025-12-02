@@ -14,6 +14,7 @@ export default {
   '/market': true,
   '/goods/:id': true,
   '/cart': true,
+  '/order/:id': true,
 
   // Page 404
   '/:pathMatch(.*)*': false,

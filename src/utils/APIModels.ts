@@ -1,5 +1,5 @@
 import { ArrayType, ObjectType, Type, validateModel } from '@sergtyapkin/models-validator';
-import { Category, Goods, Order } from '~/utils/models';
+import { Category, Globals, Goods, Order } from '~/utils/models';
 
 export const UserModel = {
   id: String,
@@ -329,6 +329,6 @@ export const GlobalsModelMockData = validateModel(GlobalsModel, {
   isonmaintenance: false,
   goodsonlanding: [],
   categories: [],
-});
-GlobalsModelMockData.goods = GoodsListModelMockData.goods as Goods[];
+}) as Globals;
+GlobalsModelMockData.goodsOnLanding = GoodsListModelMockData.goods as Goods[];
 GlobalsModelMockData.categories = CategoriesListModelMockData.categories as Category[];

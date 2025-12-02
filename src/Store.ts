@@ -1,11 +1,11 @@
 import Vuex from 'vuex';
 import { type State, type Store } from '~/types/store';
-import { Category, Goods, User } from '~/utils/models';
+import { Globals, Goods, User } from '~/utils/models';
 import { reverseValidateModel, validateModel } from '@sergtyapkin/models-validator';
 import { GoodsListModel } from '~/utils/APIModels';
 
 function saveCartToLocalStorage(cart: Goods[]) {
-  cart = reverseValidateModel(GoodsListModel, { goods: cart });
+  cart = reverseValidateModel(GoodsListModel, { goods: cart }) as Goods[];
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
@@ -96,7 +96,7 @@ export default new Vuex.Store({
         this.$app.$api.getUser,
         [],
         undefined,
-        (data) => {state.commit('SET_USER', data)},
+        (data: User) => {state.commit('SET_USER', data)},
         () => {state.commit('DELETE_USER')},
       );
     },
@@ -111,7 +111,7 @@ export default new Vuex.Store({
         this.$app.$api.getGlobals,
         [],
         undefined,
-        (data) => {state.commit('SET_GLOBALS', data)},
+        (data: Globals) => {state.commit('SET_GLOBALS', data)},
         () => {},
       );
     },
@@ -138,7 +138,7 @@ export default new Vuex.Store({
           goodsOne => String(goodsOneToCheck.id) === String(goodsOne.id)
         );
         if (goodsOneOnServer) { // Товар уже есть в корзине
-          const actualAmount = Math.max(goodsOneOnServer.amount, goodsOneToCheck.amount);
+          const actualAmount = Math.max(goodsOneOnServer.amount || 0, goodsOneToCheck.amount || 0);
           isNeedsToSaveCart ||= (goodsOneOnServer.amount !== actualAmount);
           goodsOneOnServer.amount = actualAmount;
         } else { // Товара с сервера нет в корзине
