@@ -68,7 +68,12 @@
 
 <template>
   <router-link class="root-category-card" :to="{ name: 'market', query: { categoryId: category.id } }">
-    <img class="background" :src="category.previewUrl || IMAGE_DEFAULT" alt="">
+    <ImageFallback
+      :src="`${IMAGES_URL_BASE_PATH}${category.previewUrl}`"
+      :fallback-src="DEFAULT_CATEGORIES_IMAGE"
+      alt="preview"
+      class="background"
+    />
 
     <section class="overlay">
       <div class="title">{{ category.title }}</div>
@@ -81,9 +86,12 @@
 <script lang="ts">
 import { Category } from '~/utils/models';
 import { PropType } from 'vue';
-import IMAGE_DEFAULT from '#/images/ocean-bg.jpg';
+import DEFAULT_CATEGORIES_IMAGE from '#/images/ocean-bg.jpg';
+import ImageFallback from '~/components/ImageFallback.vue';
+import { IMAGES_URL_BASE_PATH } from '~/constants';
 
 export default {
+  components: { ImageFallback },
   props: {
     category: {
       type: Object as PropType<Category>,
@@ -93,7 +101,8 @@ export default {
 
   data() {
     return {
-      IMAGE_DEFAULT,
+      IMAGES_URL_BASE_PATH,
+      DEFAULT_CATEGORIES_IMAGE,
     };
   },
 };
