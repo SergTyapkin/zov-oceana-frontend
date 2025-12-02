@@ -235,5 +235,12 @@ export default {
       this.$router.replace({name: 'market', query: {categoryId: this.filters.categoryId}});
     },
   },
+
+  watch: {
+    '$route.query.categoryId'() {
+      this.filters.categoryId = this.$route.query.categoryId;
+      this.filters.categoryId = this.$route.query.categoryId;
+    }
+  }
 };
 </script>

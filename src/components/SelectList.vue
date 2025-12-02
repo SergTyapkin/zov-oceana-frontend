@@ -177,7 +177,7 @@ field()
         v-if="canBeNull"
         class="item default"
         :class="{ selected: currentSelectedIdx === undefined }"
-        @click.stop="selectItem(undefined)"
+        @click.stop="selectItemById(undefined)"
       >
         {{ placeholder || 'Не выбрано' }}
       </li>
@@ -185,7 +185,7 @@ field()
         v-for="(item, idx) in list"
         class="item"
         :class="{ selected: idx === currentSelectedIdx }"
-        @click.stop="selectItem(idx)"
+        @click.stop="selectItemById(idx)"
       >
         {{ item.name }}
       </li>
@@ -263,20 +263,8 @@ export default {
   mounted() {
     window.addEventListener('click', this.onClick);
 
-    if (this.$props.selectedIdx !== undefined) {
-      this.currentSelectedIdx = this.$props.selectedIdx;
-    } else {
-      this.currentSelectedIdx = this.list.findIndex(item =>
-        (item.id !== undefined) &&
-        (String(item.id) === String(this.$props.selectedId))
-      );
-      if (this.currentSelectedIdx === -1) {
-        this.currentSelectedIdx = undefined;
-        return;
-      }
-    }
-
-    this.selectItem(this.currentSelectedIdx, true);
+    this.selectItemByIdx(this.$props.selectedIdx, true);
+    this.selectItemById(this.currentSelectedIdx, true);
   },
 
   unmounted() {
@@ -292,7 +280,25 @@ export default {
       this.isUnrolled = true;
     },
 
-    selectItem(idx: number | undefined, disableEmitting = false) {
+    selectItemByIdx(idx: number | undefined, disableEmitting = false) {
+      this.state = this.States.default;
+      this.currentSelectedIdx = idx;
+
+      if (idx !== undefined) {
+        this.$emit('update:modelValue', this.list[idx].value);
+        if (!disableEmitting) {
+          this.$emit('input', idx, this.list[idx].value);
+        }
+      } else {
+        this.$emit('update:modelValue', undefined);
+        if (!disableEmitting) {
+          this.$emit('input', null, undefined);
+        }
+      }
+      this.setClose();
+    },
+
+    selectItemById(idx: number | undefined, disableEmitting = false) {
       this.state = this.States.default;
       this.currentSelectedIdx = idx;
 
@@ -351,8 +357,9 @@ export default {
         }
       }
 
-      this.selectItem(this.currentSelectedIdx, true);
+      this.selectItemById(this.currentSelectedIdx, true);
     },
+
   },
 };
 </script>

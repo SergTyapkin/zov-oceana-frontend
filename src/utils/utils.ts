@@ -288,6 +288,8 @@ export function setSmoothScrollOnThisPage() {
   });
 }
 
-export function addressFormatter(address: Address, defaultTitle = '') {
-  return defaultTitle || address.title || `г. ${address.city}, ул. ${address.street}, д. ${address.house}`;
+export function addressFormatter(address: Address, defaultTitle = '', addFullDescription = false) {
+  const fullAddress = `г. ${address.city}, ул. ${address.street}, д. ${address.house}`;
+  const title = defaultTitle || address.title;
+  return title ? (addFullDescription ? `${title} (${fullAddress})` : title) : fullAddress;
 }

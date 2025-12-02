@@ -176,8 +176,9 @@
           </router-link>
           <SelectList
             v-else
+            :disabled="!$cart.length || loading"
             title="Выберите адрес доставки"
-            :list="addresses.map(a => ({ name: addressFormatter(a), value: a.id }))"
+            :list="addresses.map(a => ({ name: addressFormatter(a, '', true), value: a.id }))"
             v-model="selectedAddressId"
             error-text="Не выбрано"
             :error="errors.address" />
@@ -185,7 +186,7 @@
 
         <button
           v-if="!isTakeOrderBlockShown"
-          :disabled="!selectedAddressId || loading"
+          :disabled="!selectedAddressId || !$cart.length || loading"
           class="button-confirm-order"
           @click="takeOrder">
           Оформить заказ
@@ -274,6 +275,7 @@ export default {
       });
       this.$refs.goodsCards.forEach(g => g.$forceUpdate());
       this.saveGoodsAmount(goods.id);
+      this.$forceUpdate();
     },
     async saveGoodsAmount(goodsId: string) {
       const goods = this.$cart.find(goods => String(goods.id) === String(goodsId));

@@ -120,6 +120,7 @@
       align-items center
       justify-content space-evenly
       width 100vw
+      z-index 0
       .goods
         flex 1
 
