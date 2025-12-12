@@ -25,7 +25,7 @@
       img-size(1lh)
       margin-right 5px
     button.delete
-      button-attention()
+      button-error()
       button-small()
 
       background none

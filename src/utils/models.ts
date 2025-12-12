@@ -9,6 +9,7 @@ export interface User {
   email?: string;
   tel?: string;
   joinedDate: Date;
+  partnerStatus?: boolean;
 
   isEmailNotificationsOn: boolean;
 

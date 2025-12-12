@@ -19,6 +19,8 @@ import PageProfileSettings from '~/views/User/PageProfile/PageProfileSettings.vu
 import PageGoods from '~/views/PageGoods.vue';
 import PageCart from '~/views/PageCart.vue';
 import PageOrder from '~/views/PageOrder.vue';
+import PagePartnership from '~/views/PagePartnership.vue';
+import PageProfilePartnership from '~/views/User/PageProfile/PageProfilePartnership.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -35,12 +37,14 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/goods/:id', name: 'goods', component: PageGoods },
     { path: '/cart', name: 'cart', component: PageCart },
     { path: '/order/:id', name: 'order', component: PageOrder },
+    { path: '/partnership', name: 'partnership', component: PagePartnership },
 
     { path: '/profile', component: PageProfile, meta: {loginRequired: true}, children: [
         { path: '/profile', name: 'profile', component: PageProfileInfo, meta: {loginRequired: true} },
         { path: '/profile/orders', name: 'profileOrders', component: PageProfileOrders, meta: {loginRequired: true} },
         { path: '/profile/addresses', name: 'profileAddresses', component: PageProfileAddresses, meta: {loginRequired: true} },
         { path: '/profile/settings', name: 'profileSettings', component: PageProfileSettings, meta: {loginRequired: true} },
+        { path: '/profile/partnership', name: 'profilePartnership', component: PageProfilePartnership, meta: {loginRequired: true} },
       ],
     },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },

@@ -41,9 +41,16 @@
       .button-save
         button-emp2()
       .button-logout
-        button-attention()
-        color colorTextInvert1
+        button-error()
         margin-top 20px
+        background colorBgLight
+        border solid 1px colorError
+        color colorError
+        img
+          trans()
+        &:hover
+          img
+            filter saturate(0) brightness(10)
 </style>
 
 <template>

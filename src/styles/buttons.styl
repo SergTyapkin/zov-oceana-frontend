@@ -95,14 +95,16 @@ button-emp2-no-fill()
     background mix(colorEmp2, white, 20%)
 
 
-button-attention()
+button-error()
   button()
 
   border-color colorError
-  background mix(colorError, transparent)
+  background colorError
+  color colorTextInvert1
 
   &:hover
     border-color mix(colorError, white)
+    background mix(colorError, white)
     color colorTextInvert1
 
 button-success()

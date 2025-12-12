@@ -29,22 +29,7 @@
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     .avatar
       centered-flex-container()
-      font-large-extra()
       animation-float()
-
-      overflow hidden
-      width 100px
-      min-width 100px
-      height 100px
-      min-height 100px
-      border-radius radiusMax
-      background colorEmp2
-
-      @media ({mobile})
-        width 80px
-        min-width 80px
-        height 80px
-        min-height 80px
     .username
       font-large-extra-extra()
       font-semibold()
@@ -87,9 +72,7 @@
 <template>
   <div class="root-profile">
     <section class="title">
-      <div class="avatar" style="--animation-index: 0">
-        {{ $user.givenName?.slice(0, 1) }}{{ $user.familyName?.slice(0, 1) }}
-      </div>
+      <UserAvatar class="avatar" :user="$user" size="100px" size-mobile="80px"/>
 
       <div>
         <header class="username" style="--animation-index: 1">{{ $user.givenName }} {{ $user.familyName }}</header>
@@ -102,6 +85,7 @@
 
     <nav class="navigation">
       <router-link :to="{name: 'profile'}" style="--animation-index: 0">Профиль</router-link>
+      <router-link :to="{name: 'profilePartnership'}" style="--animation-index: 2">Партнерство</router-link>
       <router-link :to="{name: 'profileOrders'}" style="--animation-index: 1">Заказы</router-link>
       <router-link :to="{name: 'profileAddresses'}" style="--animation-index: 2">Адреса</router-link>
       <router-link :to="{name: 'profileSettings'}" style="--animation-index: 3">Настройки</router-link>
@@ -119,8 +103,10 @@
 
 <script lang="ts">
 import { dateFormatter } from '~/utils/utils';
+import UserAvatar from '~/components/UserAvatar.vue';
 
 export default {
+  components: { UserAvatar },
 
   data() {
     return {

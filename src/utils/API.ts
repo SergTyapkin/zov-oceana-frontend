@@ -105,6 +105,10 @@ export default class API extends REST_API {
   restorePasswordByCode = (code: string, newPassword: string): MyResponse<unknown> =>
     this.#PUT(`/auth/password/restore`, { code, new_password: newPassword }) as MyResponse<unknown>;
 
+  // Partnership
+  sendPartnershipRequest = (id: string) =>
+    this.#PUT(`/user`, {id, partnerStatus: null}, UserModel) as MyResponse<User>;
+
   // Globals
   getGlobals = () =>
     this.#GET(`/globals`, {}, GlobalsModel, Response200(GlobalsModelMockData)) as MyResponse<Globals>;

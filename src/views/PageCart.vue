@@ -273,7 +273,7 @@ export default {
         goodsId: goods.id,
         amount: newAmount,
       });
-      this.$refs.goodsCards.forEach(g => g.$forceUpdate());
+      (this.$refs.goodsCards as GoodsInfoCard[]).forEach(g => g.$forceUpdate());
       this.saveGoodsAmount(goods.id);
       this.$forceUpdate();
     },

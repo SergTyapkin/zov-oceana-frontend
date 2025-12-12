@@ -47,6 +47,11 @@ export const UserModel = {
     type: Boolean,
     from: 'isemailnotificationson',
   },
+  partnerStatus: {
+    type: Boolean,
+    from: 'partnerstatus',
+    optional: true,
+  },
   canEditOrders: {
     type: Boolean,
     from: 'caneditorders',

@@ -134,12 +134,16 @@
         :type="isHidden && hideable ? 'password' : type || 'text'"
         :autocomplete="autocomplete || 'off'"
         :class="{ 'icon-in-left': icon && iconInLeft }"
+        :readonly="readonly"
+        :disabled="disabled"
         @keydown.enter="$emit('submit')" />
       <textarea
         v-model="value"
         rows="4"
         v-else
         :placeholder="placeholder"
+        :readonly="readonly"
+        :disabled="disabled"
         @keydown.enter="$emit('submit')"
       />
 
@@ -158,6 +162,13 @@
           src="/static/icons/visible.svg"
           class="image-hidden"
           alt="show" />
+
+        <img
+          v-if="copyable"
+          @click="copyToClipboard"
+          src="/static/icons/copy.svg"
+          class="image-hidden"
+          alt="copy" />
       </div>
     </section>
 
@@ -227,6 +238,9 @@ export default {
       type: Boolean,
       default: true,
     },
+    readonly: Boolean,
+    disabled: Boolean,
+    copyable: Boolean,
   },
 
   data() {
@@ -243,6 +257,19 @@ export default {
       }
       this.$emit('update:modelValue', this.value);
       this.$emit('input');
+    },
+
+    async copyToClipboard() {
+      if (!navigator.clipboard) {
+        this.$popups.success('Ошибка копирования', `Запись в буфер не поддерживается браузером`);
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(this.modelValue);
+        this.$popups.success('Скопировано', `Скопировано в буфер обмена`);
+      } catch {
+        this.$popups.success('Ошибка копирования', `Не удалось записать в буфер`);
+      }
     },
   },
 

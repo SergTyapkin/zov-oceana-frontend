@@ -86,13 +86,13 @@
           button-emp2()
           flex 1
         .cancel
-          button-attention()
+          button-error()
       .button-different-login
         button-no-fill()
         font-lower()
         font-small-extra()
         centered-margin()
-        color colorText1
+        color colorText1In
         width fit-content
         margin-top 10px
 </style>

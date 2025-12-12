@@ -24,8 +24,6 @@
 
 <script lang="ts">
 export default {
-  emits: ['update:modelValue', 'input'],
-
   props: {
     src: {
       type: String,
