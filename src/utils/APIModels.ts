@@ -47,10 +47,19 @@ export const UserModel = {
     type: Boolean,
     from: 'isemailnotificationson',
   },
+  referrerId: {
+    type: String,
+    from: 'referrerid',
+    optional: true,
+  },
   partnerStatus: {
     type: Boolean,
     from: 'partnerstatus',
     optional: true,
+  },
+  partnerBonuses: {
+    type: Number,
+    from: 'partnerbonuses',
   },
   canEditOrders: {
     type: Boolean,
@@ -59,6 +68,10 @@ export const UserModel = {
   canEditUsers: {
     type: Boolean,
     from: 'caneditusers',
+  },
+  canEditPartners: {
+    type: Boolean,
+    from: 'caneditpartners',
   },
   canEditGoods: {
     type: Boolean,
@@ -73,6 +86,26 @@ export const UserModel = {
     from: 'caneditglobals',
   },
 };
+export const UserOtherModel = {
+  id: String,
+  givenName: {
+    type: String,
+    from: 'givenname',
+  },
+  familyName: {
+    type: String,
+    from: 'familyname',
+  },
+  avatarUrl: {
+    type: String,
+    from: 'avatarurl',
+    optional: true,
+  },
+  joinedDate: {
+    type: Date,
+    from: 'joineddate',
+  },
+};
 
 export const UserModelMockData = validateModel(UserModel, {
   id: 'USER_ID',
@@ -81,12 +114,21 @@ export const UserModelMockData = validateModel(UserModel, {
   middlename: 'Сергеевич',
   email: 'Tyapkin2002@mail.ru',
   isemailnotificationson: false,
+  partnerbonuses: 0,
   caneditorders: false,
   caneditusers: false,
   caneditgoods: false,
+  caneditpartners: false,
   canexecutesql: false,
   caneditglobals: false,
   isadmin: false,
+  joineddate: new Date('2023-04-04'),
+});
+
+export const UserOtherModelMockData = validateModel(UserOtherModel, {
+  id: 'USER_ID',
+  givenname: 'Сергей',
+  familyname: 'Тяпкин',
   joineddate: new Date('2023-04-04'),
 });
 

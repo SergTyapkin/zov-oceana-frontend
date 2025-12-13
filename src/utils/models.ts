@@ -9,17 +9,27 @@ export interface User {
   email?: string;
   tel?: string;
   joinedDate: Date;
+  referrerId?: string;
   partnerStatus?: boolean;
+  partnerBonuses: number;
 
   isEmailNotificationsOn: boolean;
 
   canEditOrders: boolean;
   canEditUsers: boolean;
+  canEditPartners: boolean;
   canEditGoods: boolean;
   canExecuteSQL: boolean;
   canEditGlobals: boolean;
 
   isSignedIn: boolean;
+}
+export interface UserOther {
+  id: string;
+  givenName: string;
+  familyName: string;
+  avatarUrl?: string;
+  joinedDate: Date;
 }
 
 export interface Globals {

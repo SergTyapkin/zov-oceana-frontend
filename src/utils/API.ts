@@ -17,8 +17,10 @@ import {
   GlobalsModel,
   OrderModel,
   OrderModelMockData,
+  UserOtherModel,
+  UserOtherModelMockData,
 } from '~/utils/APIModels';
-import { Category, Goods, Order, User, Address, Globals } from '~/utils/models';
+import { Category, Goods, Order, User, Address, Globals, UserOther } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
@@ -76,6 +78,8 @@ export default class API extends REST_API {
   // User
   getUser = () =>
     this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
+  getOtherUser = (id: string) =>
+    this.#GET(`/user`, {id}, UserOtherModel, Response200(UserOtherModelMockData)) as MyResponse<UserOther>;
     // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
   updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, password?: string, isEmailNotificationsOn?: boolean }) =>
     this.#PUT(`/user`, Object.assign({id}, profileData), UserModel) as MyResponse<User>;
@@ -108,6 +112,10 @@ export default class API extends REST_API {
   // Partnership
   sendPartnershipRequest = (id: string) =>
     this.#PUT(`/user`, {id, partnerStatus: null}, UserModel) as MyResponse<User>;
+  getUserBonusesHistoryMonthly = (userId: string) =>
+    this.#GET(`/partner/history/monthly`, {userId}) as MyResponse<unknown>;
+  getAllPartnerUsers = (userId: string) =>
+    this.#GET(`/partner/users/bonuses/monthly`, {userId}) as MyResponse<unknown>;
 
   // Globals
   getGlobals = () =>

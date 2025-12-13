@@ -85,7 +85,7 @@
 
     <nav class="navigation">
       <router-link :to="{name: 'profile'}" style="--animation-index: 0">Профиль</router-link>
-      <router-link :to="{name: 'profilePartnership'}" style="--animation-index: 2">Партнерство</router-link>
+      <router-link v-if="$user.partnerStatus" :to="{name: 'profilePartnership'}" style="--animation-index: 2">Партнерство</router-link>
       <router-link :to="{name: 'profileOrders'}" style="--animation-index: 1">Заказы</router-link>
       <router-link :to="{name: 'profileAddresses'}" style="--animation-index: 2">Адреса</router-link>
       <router-link :to="{name: 'profileSettings'}" style="--animation-index: 3">Настройки</router-link>

@@ -44,7 +44,9 @@ export default new Vuex.Store({
       state.user.tgId = userData.tgId;
       state.user.avatarUrl = userData.avatarUrl;
       state.user.joinedDate = new Date(userData.joinedDate);
+      state.user.referrerId = userData.referrerId;
       state.user.partnerStatus = userData.partnerStatus;
+      state.user.partnerBonuses = userData.partnerBonuses;
 
       state.user.isEmailNotificationsOn = Boolean(userData.isEmailNotificationsOn);
 
