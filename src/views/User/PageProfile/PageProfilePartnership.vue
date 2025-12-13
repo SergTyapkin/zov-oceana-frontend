@@ -129,6 +129,7 @@
 
         <main class="main">
           <ul class="dates-transactions-container">
+            <li v-if="!compressedHistory.length && !loading">Нет ни одного начисления бонусов</li>
             <li class="date-container" v-for="historyRecord in compressedHistory">
               <span class="date">{{dateFormatter(historyRecord.date)}} - ₽{{historyRecord.totalValue}}</span>
               <ul class="users-transactions-container">
@@ -168,9 +169,9 @@
               </div>
             </div>
 
-            <img class="arrow" src="/static/icons/arrow-much.svg" alt="arrow-down" />
+            <img v-if="partners.length" class="arrow" src="/static/icons/arrow-much.svg" alt="arrow-down" />
 
-            <div class="partners-list">
+            <div v-if="partners.length" class="partners-list">
               <div v-for="partner in partners" class="user-container partner">
                 <div class="name">{{partner.givenname}} {{partner.familyname}}</div>
                 <div class="bottom-row">
@@ -208,6 +209,7 @@ import InputComponent from '~/components/InputComponent.vue';
 import QRGenerator from '~/components/QRGenerator.vue';
 import { dateFormatter } from '~/utils/utils';
 import { UserOther } from '~/utils/models';
+import { QUERY_PARAM_REFERRER_ID } from '~/constants';
 
 
 function isDatesInSameDay(d1: Date, d2: Date) {
@@ -232,7 +234,7 @@ export default {
 
   computed: {
     referrerLink() {
-      return `${location.origin}/?referrerId=${this.$user.id}`;
+      return `${location.origin}/?${QUERY_PARAM_REFERRER_ID}=${this.$user.id}`;
     },
 
     compressedHistory() {
@@ -298,7 +300,7 @@ export default {
         this.$api.getOtherUser,
         [this.$user.referrerId],
         `Не удалось получить информацию про вышестоящего партнера`,
-      ) as UserOther;
+      );
     },
   },
 };

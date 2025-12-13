@@ -21,6 +21,8 @@ import PageCart from '~/views/PageCart.vue';
 import PageOrder from '~/views/PageOrder.vue';
 import PagePartnership from '~/views/PagePartnership.vue';
 import PageProfilePartnership from '~/views/User/PageProfile/PageProfilePartnership.vue';
+import { QUERY_PARAM_REFERRER_ID } from '~/constants';
+import PageAdmin from '~/views/Admin/PageAdmin.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -52,6 +54,8 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/password/restore', name: 'restorePassword', component: PageRestorePassword, meta: {loginRequired: true} },
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
 
+    { path: '/admin', name: 'admin', component: PageAdmin, meta: {loginRequired: true} },
+
     { path: '/:pathMatch(.*)*', name: 'page404', component: Page404 },
   ];
 
@@ -60,19 +64,20 @@ export default function createVueRouter(Store: Store): Router {
     routes: routesList,
   });
 
-  let router_got_user = false;
-  let router_got_globals = false;
+  let router_got_initials = false;
   // Router.beforeEach(async (to: RouteLocationNormalized, _, next: NavigationGuardNext) => {
-  Router.beforeEach(async (_, __, next: NavigationGuardNext) => {
-    if (!router_got_user) {
+  Router.beforeEach(async (route, __, next: NavigationGuardNext) => {
+    if (!router_got_initials) {
       await Store.dispatch('GET_USER');
       await Store.dispatch('LOAD_CART');
-      router_got_user = true;
-    }
-    if (!router_got_globals) {
       await Store.dispatch('GET_GLOBALS');
+      await Store.dispatch('LOAD_REFERRER_ID');
       Store.$app.updateElements();
-      router_got_globals = true;
+      router_got_initials = true;
+    }
+    const referrerIdQueryParam = route.query[QUERY_PARAM_REFERRER_ID];
+    if (referrerIdQueryParam) {
+      await Store.dispatch('SET_REFERRER_ID', referrerIdQueryParam);
     }
 
     // const notLoginedRedirect = {

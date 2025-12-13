@@ -14,8 +14,9 @@ interface Store extends VuexStore<any> {
 interface State {
   user: User;
   cart: Goods[];
-  commit: (event: string, data?: any) => void;
+  referrerId: string | null;
   globals: Globals;
+  commit: (event: string, data?: any) => void;
 }
 
 declare module 'vue' {
@@ -23,6 +24,7 @@ declare module 'vue' {
     $store: Store;
     $user: User;
     $cart: Goods[];
+    $referrerId: string | null;
     $globals: Globals;
   }
 }

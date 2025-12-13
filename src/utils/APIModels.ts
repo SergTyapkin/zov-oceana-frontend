@@ -311,7 +311,7 @@ export const OrderModel = {
     type: Date,
     from: 'updateddate',
   },
-  status: new Set(['created', 'accepted', 'prepared', 'delivered', 'cancelled']),
+  status: new Set(['created', 'paid', 'prepared', 'delivered', 'cancelled']),
   userId: {
     type: String,
     from: 'userid',

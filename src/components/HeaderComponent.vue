@@ -512,6 +512,7 @@ export default {
         [String(user.id), user.username, user.hash, user.auth_date, user.photo_url, user.first_name, user.last_name],
         'Ошибка запроса входа через Telegram',
         async () => {
+          await this.$store.dispatch('CLEAR_REFERRER_ID');
           await this.$store.dispatch('GET_USER');
           this.$store.dispatch('LOAD_CART');
           await this.$router.push({ name: 'profile' });
@@ -581,9 +582,12 @@ export default {
           this.userData.tgPhotoUrl,
           this.userData.tgFirstName,
           this.userData.tgLastName,
+
+          this.$store.state.referrerId,
         ],
         `Не удалось зарегистрироваться`,
         async () => {
+          await this.$store.dispatch('CLEAR_REFERRER_ID');
           await this.$store.dispatch('GET_USER');
           this.$store.dispatch('LOAD_CART');
           await this.$router.push({ name: 'profile' });
@@ -624,6 +628,7 @@ export default {
         [this.userData.emailOrTel, this.userData.password],
         `Не удалось войти`,
         async () => {
+          await this.$store.dispatch('CLEAR_REFERRER_ID');
           await this.$store.dispatch('GET_USER');
           this.$store.dispatch('LOAD_CART');
           await this.$router.push({ name: 'profile' });

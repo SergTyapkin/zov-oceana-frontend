@@ -21,9 +21,18 @@ function loadCartFromLocalStorage(): Goods[] {
     return [];
   }
 }
-
 function removeCartFromLocalStorage() {
   localStorage.removeItem('cart');
+}
+
+function saveReferrerIdToLocalStorage(referrerId: string) {
+  localStorage.setItem('referrerId', referrerId);
+}
+function loadReferrerFromToLocalStorage() {
+  return localStorage.getItem('referrerId');
+}
+function removeReferrerIdFromLocalStorage() {
+  localStorage.removeItem('referrerId');
 }
 
 export default new Vuex.Store({
@@ -31,6 +40,7 @@ export default new Vuex.Store({
     user: {} as User,
     cart: [] as Goods[],
     globals: {} as Globals,
+    referrerId: null as string | null,
   },
   mutations: {
     SET_USER(state: State, userData: User) {
@@ -90,6 +100,17 @@ export default new Vuex.Store({
       }
       state.cart[idx].amount = data.amount;
       saveCartToLocalStorage(state.cart);
+    },
+    SET_REFERRER_ID(state: State, referrerId: string) {
+      state.referrerId = referrerId;
+      saveReferrerIdToLocalStorage(referrerId);
+    },
+    LOAD_REFERRER_ID(state: State) {
+      state.referrerId = loadReferrerFromToLocalStorage();
+    },
+    CLEAR_REFERRER_ID(state: State) {
+      state.referrerId = null;
+      removeReferrerIdFromLocalStorage();
     },
   },
   actions: {
@@ -172,6 +193,15 @@ export default new Vuex.Store({
     },
     SET_CART_GOODS_AMOUNT(this: Store, state: State, data: { goodsId: string; amount: number }) {
       state.commit('SET_CART_GOODS_AMOUNT', data);
+    },
+    SET_REFERRER_ID(this: Store, state: State, referrerId: string) {
+      state.commit('SET_REFERRER_ID', referrerId);
+    },
+    LOAD_REFERRER_ID(this: Store, state: State) {
+      state.commit('LOAD_REFERRER_ID');
+    },
+    CLEAR_REFERRER_ID(this: Store, state: State) {
+      state.commit('CLEAR_REFERRER_ID');
     },
   },
 });

@@ -133,6 +133,7 @@ export default {
     this.global.$user = this.$store.state.user;
     this.global.$globals = this.$store.state.globals;
     this.global.$cart = this.$store.state.cart;
+    this.global.$referrerId = this.$store.state.referrerId;
     this.global.$modals = this.$refs.modals;
     this.global.$popups = this.$refs.popups;
     this.global.$app = this;

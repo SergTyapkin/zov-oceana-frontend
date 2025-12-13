@@ -88,10 +88,12 @@ export default class API extends REST_API {
   register = (
     givenName: string, middleName: string, familyName: string, email: string, tel: string, password: string,
     tgId: string, tgUsername: string, tgHash: string, tgAuthDate: string, tgPhotoUrl: string, tgFirstName: string, tgLastName: string,
+    referrerId: string,
   ) =>
     this.#POST(`/user`, {
       givenName, middleName, familyName, email, tel, password,
       tgId, tgUsername, tgHash, tgAuthDate, tgPhotoUrl, tgFirstName, tgLastName,
+      referrerId,
       clientBrowser: detectBrowser(), clientOS: detectOS(),
     }, UserModel) as MyResponse<User>;
   deleteProfile = () =>
@@ -138,6 +140,8 @@ export default class API extends REST_API {
     this.#GET(`/orders`, {orderId}, OrderModel, Response200(OrderModelMockData)) as MyResponse<Order>;
   createOrder = (userId: string, addressId: string, goods: Goods[]) =>
     this.#POST(`/orders`, {userId, addressId, goods}) as MyResponse<unknown>;
+  updateOrderStatus = (number: string, status: string) =>
+    this.#PUT(`/orders`, {number, status}) as MyResponse<unknown>;
 
   // Addresses
   getUserAddresses = (userId: string) =>
