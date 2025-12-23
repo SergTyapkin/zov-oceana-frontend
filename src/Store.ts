@@ -58,7 +58,22 @@ export default new Vuex.Store({
       state.user.partnerStatus = userData.partnerStatus;
       state.user.partnerBonuses = userData.partnerBonuses;
 
-      state.user.isEmailNotificationsOn = Boolean(userData.isEmailNotificationsOn);
+      state.user.isEmailNotificationsOn = userData.isEmailNotificationsOn;
+
+      state.user.canEditUsers = userData.canEditUsers;
+      state.user.canEditGoods = userData.canEditGoods;
+      state.user.canEditOrders = userData.canEditOrders;
+      state.user.canEditPartners = userData.canEditPartners;
+      state.user.canEditGlobals = userData.canEditGlobals;
+      state.user.canExecuteSQL = userData.canExecuteSQL;
+
+      state.user.hasSomeAdminRights =
+        state.user.canEditUsers ||
+        state.user.canEditGoods ||
+        state.user.canEditOrders ||
+        state.user.canEditPartners ||
+        state.user.canEditGlobals ||
+        state.user.canExecuteSQL;
 
       state.user.isSignedIn = true;
     },

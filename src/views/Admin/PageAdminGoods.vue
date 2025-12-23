@@ -1,48 +1,23 @@
 <style scoped lang="stylus">
-@import '../styles/constants.styl'
-@import '../styles/components.styl'
-@import '../styles/buttons.styl'
-@import '../styles/fonts.styl'
-@import '../styles/utils.styl'
-@import '../styles/animations.styl'
-@import '../styles/scrollbars.styl'
+@import '../../styles/constants.styl'
+@import '../../styles/components.styl'
+@import '../../styles/buttons.styl'
+@import '../../styles/fonts.styl'
+@import '../../styles/utils.styl'
+@import '../../styles/animations.styl'
+@import '../../styles/scrollbars.styl'
 
-.root-page
+.root-page-admin-goods
   page-root()
 
-  padding-block 0
-
-  section.title
   section.filters
-    page-root()
     page-root-disable()
-
-    width 100vw
-
-  section.title
-    gap 50px
-    color colorTextInvert1
-    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
-    .header
-      font-large-extra-extra()
-      font-semibold()
-      font-upper()
-      animation-float(0.5s, -20px, 0, left)
-
-      margin-bottom 20px
-      word-wrap break-word
-
-      @media ({mobile})
-        font-large-extra()
-    .title-desc
-      font-small()
-      font-thin()
-      animation-float(0.5s, -20px, 0, left)
-
-  section.filters
-    padding-block 30px
-    box-shadow 0 15px 15px #00000033
     animation-float()
+
+    margin-inline 0
+    @media({mobile})
+      margin-inline 0
+
     .top-row
       display flex
       flex-wrap wrap
@@ -56,55 +31,40 @@
           min-width 150px
         .category-selector
           min-width 150px
-    .bottom-row
-      font-small-extra()
-
-      width min-content
-      margin-top 20px
-      padding 5px 10px
-      white-space nowrap
-      background #f0f9ff
 
   section.goods
-    display flex
-    flex-wrap wrap
-    gap 15px
-    justify-content space-evenly
     width 100%
-    margin-inline auto
-    padding-block 50px
-    .goods-card
-      flex 1
-      animation-float()
-      &.loaded
-        opacity 1
-        animation none
-</style>
+    display grid
+    grid-template-columns repeat(6, auto)
+    grid-row-gap 10px
+    align-items center
+    box-shadow 0 15px 15px #00000033
+    padding 40px 10px
+    .row
+      display contents
+      > *
+        trans()
+        padding-inline 10px
+      &:not(.header):hover
+        > *
+          opacity 0.6
+      &.header
+        font-bold()
+        > *
+          margin-bottom 10px
+    .info
+      font-small()
+      color colorText5
 
-<style scoped lang="stylus">
-.list-enter-active
-.list-leave-active
-  transition all 0.3s ease
-
-.list-enter-from
-.list-leave-to
-  transform scale(0.8)
-  opacity 0 !important
-
+  .button-plus
+    centered-margin()
+    button-emp2()
+    margin-top 30px
+    width fit-content
 </style>
 
 <template>
-  <div class="root-page">
-    <section class="title">
-      <header class="header" style="--animation-index: 0">
-        Магазин<br>
-        Морепродуктов
-      </header>
-      <div class="title-desc" style="--animation-index: 1">
-        Просмотрите наш полный ассортимент премиальных морепродуктов
-      </div>
-    </section>
-
+  <div class="root-page-admin-goods">
     <section class="filters" style="--animation-index: 0">
       <div class="top-row">
         <div class="input-group">
@@ -122,8 +82,7 @@
             "
             :selected-id="filters.categoryId"
             v-model="filters.categoryId"
-            @input="saveFilters"
-          />
+            @input="saveFilters" />
         </div>
 
         <SelectList
@@ -142,26 +101,37 @@
               name: 'Цена (сначала дорогие)',
               value: 'cost-expensive',
             },
-          ]"
-        />
-      </div>
-      <div v-if="filters.searchText || filters.categoryId" class="bottom-row">
-        Найдено {{ goodsFiltered.length }} товаров
+          ]" />
       </div>
     </section>
 
     <section class="goods">
-      <transition-group name="list">
-        <GoodsCard
-          v-for="(goodsOne, i) in goodsFiltered"
-          :key="goodsOne.id"
-          class="goods-card"
-          :class="{loaded: goodsAnimationLoaded}"
-          :goods="goodsOne"
-          :style="`--animation-index: ${i}`"
-        />
-      </transition-group>
+      <div class="row header">
+        <div>#</div>
+        <div>Название</div>
+        <div>Цена</div>
+        <div>Происхождение</div>
+        <div>На складе</div>
+        <div>В продаже?</div>
+      </div>
+
+      <router-link class="row" :to="{name: 'goods', params: {id: goodsOne.id}}" v-for="goodsOne in goodsFiltered" :key="goodsOne.id">
+        <div>{{ goodsOne.id }}</div>
+        <div>{{ goodsOne.title }}</div>
+        <div>{{ costFormatter(goodsOne.cost) }}</div>
+        <div>{{ goodsOne.fromLocation }}</div>
+        <div>{{ goodsOne.amountLeft }}</div>
+        <div><InputSwitch v-model="goodsOne.isOnSale" @click.prevent /></div>
+      </router-link>
+
+      <div/>
+      <div/>
+      <div/>
+      <div v-if="!goodsFiltered.length" class="info">Товаров не найдено</div>
+      <div/>
+      <div/>
     </section>
+    <button class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</button>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -169,13 +139,15 @@
 
 <script lang="ts">
 import GoodsCard from '~/components/GoodsCard.vue';
-import { Goods } from '~/utils/models';
-import InputSearch from '~/components/InputSearch.vue';
 import SelectList from '~/components/SelectList.vue';
+import InputSearch from '~/components/InputSearch.vue';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
+import { Goods } from '~/utils/models';
+import { costFormatter } from '~/utils/utils';
+import InputSwitch from '~/components/InputSwitch.vue';
 
 export default {
-  components: { CircleLinesLoading, SelectList, InputSearch, GoodsCard },
+  components: { InputSwitch, CircleLinesLoading, SelectList, InputSearch, GoodsCard },
 
   data() {
     return {
@@ -188,8 +160,6 @@ export default {
       },
 
       loading: false,
-
-      goodsAnimationLoaded: false,
     };
   },
 
@@ -199,7 +169,8 @@ export default {
         .filter(goods => {
           return (
             (!this.filters.searchText || new RegExp(this.filters.searchText, 'i').test(goods.title)) &&
-            (!this.filters.categoryId || (goods.categories.findIndex(c => String(c.id) === String(this.filters.categoryId)) !== -1))
+            (!this.filters.categoryId ||
+              goods.categories.findIndex(c => String(c.id) === String(this.filters.categoryId)) !== -1)
           );
         })
         .sort((g1, g2) => {
@@ -218,11 +189,11 @@ export default {
 
   mounted() {
     this.updateGoods();
-
-    setTimeout(() => {this.goodsAnimationLoaded = true}, 3000);
   },
 
   methods: {
+    costFormatter,
+
     async updateGoods() {
       this.goods = (
         (await this.$request(this, this.$api.getGoodsList, [], `Не удалось получить список товаров`)) as {
@@ -232,14 +203,14 @@ export default {
     },
 
     saveFilters() {
-      this.$router.replace({name: 'market', query: {categoryId: this.filters.categoryId}});
+      this.$router.replace({ name: 'admin', query: { categoryId: this.filters.categoryId } });
     },
   },
 
   watch: {
     '$route.query.categoryId'() {
       this.filters.categoryId = this.$route.query.categoryId;
-    }
-  }
+    },
+  },
 };
 </script>

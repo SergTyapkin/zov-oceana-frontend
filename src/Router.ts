@@ -1,4 +1,10 @@
-import { createRouter, createWebHistory, Router, /* RouteLocationNormalized, */ NavigationGuardNext } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  Router,
+  NavigationGuardNext,
+  RouteLocationNormalized,
+} from 'vue-router';
 import { type Store } from '~/types/store';
 
 // Components:
@@ -23,6 +29,11 @@ import PagePartnership from '~/views/PagePartnership.vue';
 import PageProfilePartnership from '~/views/User/PageProfile/PageProfilePartnership.vue';
 import { QUERY_PARAM_REFERRER_ID } from '~/constants';
 import PageAdmin from '~/views/Admin/PageAdmin.vue';
+import PageAdminGoods from '~/views/Admin/PageAdminGoods.vue';
+import PageAdminUsers from '~/views/Admin/PageAdminUsers.vue';
+import PageAdminOrders from '~/views/Admin/PageAdminOrders.vue';
+import PageAdminGlobals from '~/views/Admin/PageAdminGlobals.vue';
+import PageAdminCategories from '~/views/Admin/PageAdminCategories.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -54,7 +65,14 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/password/restore', name: 'restorePassword', component: PageRestorePassword, meta: {loginRequired: true} },
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
 
-    { path: '/admin', name: 'admin', component: PageAdmin, meta: {loginRequired: true} },
+    { path: '/admin', component: PageAdmin, meta: {adminRequired: true}, children: [
+        { path: '/admin', name: 'admin', component: PageAdminGoods, meta: {adminRequired: true} },
+        { path: '/admin/categories', name: 'adminCategories', component: PageAdminCategories, meta: {adminRequired: true} },
+        { path: '/admin/orders', name: 'adminOrders', component: PageAdminOrders, meta: {adminRequired: true} },
+        { path: '/admin/users', name: 'adminUsers', component: PageAdminUsers, meta: {adminRequired: true} },
+        { path: '/admin/globals', name: 'adminGlobals', component: PageAdminGlobals, meta: {adminRequired: true} },
+      ],
+    },
 
     { path: '/:pathMatch(.*)*', name: 'page404', component: Page404 },
   ];
@@ -65,8 +83,7 @@ export default function createVueRouter(Store: Store): Router {
   });
 
   let router_got_initials = false;
-  // Router.beforeEach(async (to: RouteLocationNormalized, _, next: NavigationGuardNext) => {
-  Router.beforeEach(async (route, __, next: NavigationGuardNext) => {
+  Router.beforeEach(async (to: RouteLocationNormalized, _, next: NavigationGuardNext) => {
     if (!router_got_initials) {
       await Store.dispatch('GET_USER');
       await Store.dispatch('LOAD_CART');
@@ -75,51 +92,42 @@ export default function createVueRouter(Store: Store): Router {
       Store.$app.updateElements();
       router_got_initials = true;
     }
-    const referrerIdQueryParam = route.query[QUERY_PARAM_REFERRER_ID];
+    const referrerIdQueryParam = to.query[QUERY_PARAM_REFERRER_ID];
     if (referrerIdQueryParam) {
       await Store.dispatch('SET_REFERRER_ID', referrerIdQueryParam);
     }
 
-    // const notLoginedRedirect = {
-    //   name: 'login',
-    // };
-    // const loginedRedirect = {
-    //   name: 'profile',
-    // };
-
-    // if (to.path === '/' || to.path === '') {
-    //   if (Store.state.user.isSignedIn) {
-    //     next(loginedRedirect);
-    //     return;
-    //   }
-    //   next(notLoginedRedirect);
-    //   return;
-    // }
+    const loginedRedirect = {
+      name: 'profile',
+    };
+    const notLoginedRedirect = {
+      name: 'default',
+    };
 
     // Login required redirects
-    // if (to.matched.some(record => record.meta.loginRequired === true || record.meta.adminRequired === true)) {
-    //   if (Store.state.user.isSignedIn) {
-    //     next();
-    //     return;
-    //   }
-    //   next(notLoginedRedirect);
-    //   return;
-    // } else if (to.matched.some(record => record.meta.noLoginRequired === true)) {
-    //   if (!Store.state.user.isSignedIn) {
-    //     next();
-    //     return;
-    //   }
-    //   next(loginedRedirect);
-    //   return;
-    // }
-    // if (to.matched.some(record => record.meta.adminRequired === true)) {
-    //   if (Store.state.user.isAdmin) {
-    //     next();
-    //     return;
-    //   }
-    //   next(loginedRedirect);
-    //   return;
-    // }
+    if (to.matched.some(record => record.meta.loginRequired === true || record.meta.adminRequired === true)) {
+      if (Store.state.user.isSignedIn) {
+        next();
+        return;
+      }
+      next(notLoginedRedirect);
+      return;
+    } else if (to.matched.some(record => record.meta.noLoginRequired === true)) {
+      if (!Store.state.user.isSignedIn) {
+        next();
+        return;
+      }
+      next(loginedRedirect);
+      return;
+    }
+    if (to.matched.some(record => record.meta.adminRequired === true)) {
+      if (Store.state.user.hasSomeAdminRights) {
+        next();
+        return;
+      }
+      next(loginedRedirect);
+      return;
+    }
     next();
   });
 

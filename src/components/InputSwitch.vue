@@ -26,7 +26,7 @@
     overflow hidden
     width 74px
     height 36px
-    margin -20px auto 0 auto
+    margin 0 auto
 
     &:before
       content counter(button-counter)

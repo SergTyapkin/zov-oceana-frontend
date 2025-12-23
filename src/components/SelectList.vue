@@ -177,7 +177,7 @@ field()
         v-if="canBeNull"
         class="item default"
         :class="{ selected: currentSelectedIdx === undefined }"
-        @click.stop="selectItemById(undefined)"
+        @click.stop="selectItemByIdx(undefined)"
       >
         {{ placeholder || 'Не выбрано' }}
       </li>
@@ -185,7 +185,7 @@ field()
         v-for="(item, idx) in list"
         class="item"
         :class="{ selected: idx === currentSelectedIdx }"
-        @click.stop="selectItemById(idx)"
+        @click.stop="selectItemByIdx(idx)"
       >
         {{ item.name }}
       </li>
@@ -238,7 +238,7 @@ export default {
       default: '',
     },
     error: {
-      type: Boolean as boolean | string,
+      type: Boolean as PropType<boolean | string>,
       default: false,
     },
   },
@@ -264,7 +264,6 @@ export default {
     window.addEventListener('click', this.onClick);
 
     this.selectItemByIdx(this.$props.selectedIdx, true);
-    this.selectItemById(this.currentSelectedIdx, true);
   },
 
   unmounted() {
@@ -280,17 +279,21 @@ export default {
       this.isUnrolled = true;
     },
 
-    selectItemByIdx(idx: number | undefined, disableEmitting = false) {
+    selectItemByIdx(idx: number | undefined, disableEmitting = false, disableUpdating = false) {
       this.state = this.States.default;
       this.currentSelectedIdx = idx;
 
       if (idx !== undefined) {
-        this.$emit('update:modelValue', this.list[idx].value);
+        if (!disableUpdating) {
+          this.$emit('update:modelValue', this.list[idx].value);
+        }
         if (!disableEmitting) {
           this.$emit('input', idx, this.list[idx].value);
         }
       } else {
-        this.$emit('update:modelValue', undefined);
+        if (!disableUpdating) {
+          this.$emit('update:modelValue', undefined);
+        }
         if (!disableEmitting) {
           this.$emit('input', null, undefined);
         }
@@ -298,24 +301,10 @@ export default {
       this.setClose();
     },
 
-    selectItemById(idx: number | undefined, disableEmitting = false) {
-      this.state = this.States.default;
-      this.currentSelectedIdx = idx;
-
-      if (idx !== undefined) {
-        this.$emit('update:modelValue', this.list[idx].value);
-        if (!disableEmitting) {
-          this.$emit('input', idx, this.list[idx].value);
-        }
-      } else {
-        this.$emit('update:modelValue', undefined);
-        if (!disableEmitting) {
-          this.$emit('input', null, undefined);
-        }
-      }
-      this.setClose();
+    selectItemById(id: string | undefined, disableEmitting = false, disableUpdating = false) {
+      const idx = this.list.findIndex(i => i.id === id);
+      this.selectItemByIdx(idx === -1 ? undefined : idx, disableEmitting, disableUpdating);
     },
-
 
     toggleOpen() {
       if (!this.isUnrolled) {
@@ -344,7 +333,7 @@ export default {
   },
 
   watch: {
-    list(from, to) {
+    list(from: any, to: any) {
       if (JSON.stringify(from) === JSON.stringify(to)) {
         return;
       }
@@ -357,9 +346,13 @@ export default {
         }
       }
 
-      this.selectItemById(this.currentSelectedIdx, true);
+      this.selectItemByIdx(this.currentSelectedIdx, true);
     },
 
+    modelValue() {
+      const idx = this.list.findIndex(i => i.value === this.modelValue);
+      this.selectItemByIdx(idx === -1 ? undefined : idx, true, true);
+    },
   },
 };
 </script>

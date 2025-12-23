@@ -126,6 +126,12 @@ export default class API extends REST_API {
   // Categories
   getCategories = () =>
     this.#GET(`/categories`, {}, CategoriesListModel, Response200(CategoriesListModelMockData)) as MyResponse<{categories: Category[]}>;
+  createCategory = (title: string, description: string) =>
+    this.#POST(`/categories`, {title, description}) as MyResponse<unknown>;
+  deleteCategory = (id: string) =>
+    this.#DELETE(`/categories`, {id}) as MyResponse<unknown>;
+  updateCategory = (id: string, title: string, description: string) =>
+    this.#PUT(`/categories`, {id, title, description}) as MyResponse<unknown>;
 
   // Goods
   getGoodsList = () =>

@@ -22,6 +22,8 @@ export interface User {
   canExecuteSQL: boolean;
   canEditGlobals: boolean;
 
+  hasSomeAdminRights: boolean;
+
   isSignedIn: boolean;
 }
 export interface UserOther {

@@ -153,17 +153,17 @@
           <ul class="costs-list">
             <li class="cost-container">
               <p class="title">Стоимость товаров</p>
-              <div class="cost">₽{{ Math.round($cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
+              <div class="cost">{{ costFormatter($cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
             </li>
             <li class="cost-container">
               <p class="title">Стоимость Доставки</p>
-              <div class="cost">₽{{ `???` }}</div>
+              <div class="cost">{{ costFormatter(0) }}</div>
             </li>
           </ul>
 
           <div class="cost-total-container">
             <p class="title">Всего</p>
-            <div class="cost">₽{{ Math.round($cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
+            <div class="cost">{{ costFormatter($cart.reduce((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
           </div>
         </article>
 
@@ -203,7 +203,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
 import { Address, Goods } from '~/utils/models';
-import { addressFormatter, toDebounced } from '~/utils/utils';
+import { addressFormatter, costFormatter, toDebounced } from '~/utils/utils';
 import SelectList from '~/components/SelectList.vue';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 
@@ -234,6 +234,7 @@ export default {
   },
 
   methods: {
+    costFormatter,
     addressFormatter,
 
     async updateAddresses() {

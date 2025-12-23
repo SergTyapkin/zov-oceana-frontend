@@ -9,14 +9,55 @@
 
 .root-page
   page-root()
+
+  nav.navigation
+    page-root-disable()
+    overflow-x auto
+    display flex
+    color colorTextInvert1
+    text-align center
+    background colorBgDark
+    box-shadow 0 0 10px colorShadow
+    scrollable()
+    > *
+      display block
+      flex 1
+      padding 15px 20px
+      background colorBgDark
+      trans()
+      hover-effect()
+      animation-float()
+      &.router-link-exact-active
+        background colorEmp2
+
+  section.admin-main
+    page-root-disable()
+    animation-float()
+
+    margin-top 60px
+
   button
     button-emp2()
 </style>
 
 <template>
   <div class="root-page">
-    <InputComponent v-model="orderNumber" />
-    <button @click="changeOrderStatus">Оплатить заказ</button>
+    <nav class="navigation">
+      <router-link v-if="true" :to="{name: 'admin'}" style="--animation-index: 0">Товары</router-link>
+      <router-link v-if="true" :to="{name: 'adminOrders'}" style="--animation-index: 1">Заказы</router-link>
+      <router-link v-if="true" :to="{name: 'adminUsers'}" style="--animation-index: 2">Пользователи</router-link>
+      <router-link v-if="true" :to="{name: 'adminCategories'}" style="--animation-index: 3">Категории товаров</router-link>
+      <router-link v-if="true" :to="{name: 'adminGlobals'}" style="--animation-index: 4">Глобальное</router-link>
+    </nav>
+
+    <section class="admin-main" style="--animation-index: 1">
+      <router-view #default="{ Component }">
+        <transition name="opacity" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </section>
+
   </div>
 </template>
 
@@ -28,24 +69,12 @@ export default {
 
   data() {
     return {
-      orderNumber: 0,
     };
   },
 
   mounted() {},
 
   methods: {
-    async changeOrderStatus() {
-      await this.$request(
-        this,
-        this.$api.updateOrderStatus,
-        [this.orderNumber, 'paid'],
-        `Не удалось обновить статус заказа`,
-        () => {
-          this.$popups.success('Статус заказа обновлен');
-        }
-      );
-    }
   },
 };
 </script>

@@ -250,17 +250,17 @@
           <ul class="costs-list">
             <li class="cost-container">
               <p class="title">Стоимость товаров</p>
-              <div class="cost">₽{{ order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0) }}</div>
+              <div class="cost">{{ costFormatter(order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
             </li>
             <li class="cost-container">
               <p class="title">Стоимость Доставки</p>
-              <div class="cost">₽{{ `???` }}</div>
+              <div class="cost">{{ costFormatter(0) }}</div>
             </li>
           </ul>
 
           <div class="cost-total-container">
             <p class="title">Всего</p>
-            <div class="cost">₽{{ order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0) }}</div>
+            <div class="cost">{{ costFormatter(order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
           </div>
         </article>
       </section>
@@ -276,6 +276,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
+import { costFormatter } from '~/utils/utils';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
@@ -304,6 +305,7 @@ export default {
   },
 
   methods: {
+    costFormatter,
     async updateOrder() {
       this.order = (await this.$request(
         this,

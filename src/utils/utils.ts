@@ -193,7 +193,7 @@ export function dateTimeFormatter(
   return dateFormatter(d, dateStyle) + ' ' + timeFormatter(d, timeStyle);
 }
 
-export function moneyFormatter(val: number): string {
+export function costFormatterWorded(val: number): string {
   let postfix = '';
   if (val >= 1_000_000_000) {
     val /= 1_000_000_000;
@@ -292,4 +292,8 @@ export function addressFormatter(address: Address, defaultTitle = '', addFullDes
   const fullAddress = `г. ${address.city}, ул. ${address.street}, д. ${address.house}`;
   const title = defaultTitle || address.title;
   return title ? (addFullDescription ? `${title} (${fullAddress})` : title) : fullAddress;
+}
+
+export function costFormatter(cost: number) {
+  return '₽' + Math.round(cost * 100) / 100;
 }

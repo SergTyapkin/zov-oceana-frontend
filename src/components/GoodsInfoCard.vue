@@ -119,8 +119,8 @@
       </button>
 
       <div class="cost">
-        <div class="cost-total">₽{{ Math.round(goods.cost * (goods.amount || 0)) }}</div>
-        <div>₽{{ goods.cost }} за {{ goods.isWeighed ? 'кг' : 'шт' }}</div>
+        <div class="cost-total">{{ costFormatter(goods.cost * (goods.amount || 0)) }}</div>
+        <div>{{ costFormatter(goods.cost) }} за {{ goods.isWeighed ? 'кг' : 'шт' }}</div>
       </div>
     </div>
   </section>
@@ -132,8 +132,10 @@ import { PropType } from 'vue';
 import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
 import ImageFallback from '~/components/ImageFallback.vue';
 import { IMAGES_URL_BASE_PATH } from '~/constants';
+import { costFormatter } from '~/utils/utils';
 
 export default {
+  methods: { costFormatter },
   components: { ImageFallback },
   emits: ['increaseAmount', 'decreaseAmount', 'delete'],
 

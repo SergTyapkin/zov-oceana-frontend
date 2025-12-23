@@ -99,7 +99,7 @@
 
     <div class="status-container">
       <div class="status-column">
-        <div class="cost">₽{{ totalCost }}</div>
+        <div class="cost">{{ costFormatter(totalCost) }}</div>
         <div v-if="order.status === 'created'" class="status yellow">Не оплачен</div>
         <div v-else-if="order.status === 'paid'" class="status green">Оплачен</div>
         <div v-else-if="order.status === 'prepared'" class="status green">Собран</div>
@@ -117,7 +117,7 @@
 <script lang="ts">
 import { Order } from '~/utils/models';
 import { PropType } from 'vue';
-import { dateFormatter } from '~/utils/utils';
+import { costFormatter, dateFormatter } from '~/utils/utils';
 import { IMAGES_URL_BASE_PATH } from '~/constants';
 
 export default {
@@ -141,6 +141,7 @@ export default {
   },
 
   methods: {
+    costFormatter,
     dateFormatter,
   }
 };

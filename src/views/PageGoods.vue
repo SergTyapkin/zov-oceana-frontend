@@ -213,7 +213,7 @@
         <p class="location"><img src="/static/icons/location-dark.svg" alt="location" />{{ goods.fromLocation }}</p>
 
         <p class="info">Цена за {{ goods.isWeighed ? 'кг' : 'шт' }}</p>
-        <p class="cost">₽{{ goods.cost }}</p>
+        <p class="cost">{{ costFormatter(goods.cost) }}</p>
 
         <p v-if="goods.description" class="desc">{{ goods.description }}</p>
 
@@ -240,7 +240,7 @@
         <section class="add-to-cart">
           <div class="top-row">
             <p class="title">Итого</p>
-            <div class="value">₽{{ Math.round(goods.cost * currentAmount * 100) / 100 }}</div>
+            <div class="value">{{ costFormatter(goods.cost * currentAmount) }}</div>
           </div>
 
           <button @click="addToCart" v-if="$cart.findIndex(g => String(g.id) === String(goods.id)) === -1" class="button-add-to-cart">
@@ -264,7 +264,7 @@ import { Goods } from '~/utils/models';
 
 import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
 import { IMAGES_URL_BASE_PATH } from '~/constants';
-import { toDebounced } from '~/utils/utils';
+import { costFormatter, toDebounced } from '~/utils/utils';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import ImageFallback from '~/components/ImageFallback.vue';
 
@@ -296,6 +296,7 @@ export default {
   },
 
   methods: {
+    costFormatter,
     async updateGoods() {
       this.goods = (await this.$request(
         this,

@@ -29,6 +29,7 @@
       text-align center
 
   section.info
+    margin-bottom 100px
     .button-submit
       button-emp2()
       centered-margin()

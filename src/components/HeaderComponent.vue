@@ -66,10 +66,13 @@
         flex 1
 
       .cart
+      .admin
       .profile
       .menu
         button-no-styles()
         hover-effect()
+        img
+          img-size(16px)
 
       .cart
         position relative
@@ -213,6 +216,10 @@
       </div>
 
       <div class="right-group" style="--animation-index: 3">
+        <router-link v-if="$store.state.user.hasSomeAdminRights" :to="{ name: 'admin' }" class="admin">
+          <img src="/static/icons/admin.svg" alt="admin" />
+        </router-link>
+
         <router-link :to="{ name: 'cart' }" class="cart" @click="isOverlayMenuShown = false">
           <img src="/static/icons/cart-dark.svg" alt="cart" />
           <div class="goods-number" v-if="$store.state.cart.length">{{ $store.state.cart.length }}</div>
@@ -239,6 +246,11 @@
       <div class="bg" @click="isOverlayMenuShown = false" />
 
       <header class="header"><img src="/static/images/logo-big.png" alt="logo" />Зов океана</header>
+
+      <nav v-if="$store.state.user.hasSomeAdminRights" class="nav">
+        <header class="header">Администрирование</header>
+        <router-link :to="{ name: 'admin' }" @click="isOverlayMenuShown = false">Админская страница</router-link>
+      </nav>
 
       <nav class="nav">
         <header class="header">Навигация</header>
@@ -575,13 +587,13 @@ export default {
           this.userData.tel,
           this.userData.password,
 
-          this.userData.tgId,
-          this.userData.tgUsername,
-          this.userData.tgHash,
-          this.userData.tgAuthDate,
-          this.userData.tgPhotoUrl,
-          this.userData.tgFirstName,
-          this.userData.tgLastName,
+          this.userData.tgId!,
+          this.userData.tgUsername!,
+          this.userData.tgHash!,
+          this.userData.tgAuthDate!,
+          this.userData.tgPhotoUrl!,
+          this.userData.tgFirstName!,
+          this.userData.tgLastName!,
 
           this.$store.state.referrerId,
         ],

@@ -113,7 +113,7 @@
       <span>Статистика продаж за последний месяц</span>
       <div class="withdraw-container">
         <span class="small">БАЛАНС</span>
-        <span class="main">₽{{ $user.partnerBonuses }}</span>
+        <span class="main">{{ costFormatter($user.partnerBonuses) }}</span>
         <button class="button-withdraw" :disabled="$user.partnerBonuses === 0">
           Вывести
         </button>
@@ -131,12 +131,12 @@
           <ul class="dates-transactions-container">
             <li v-if="!compressedHistory.length && !loading">Нет ни одного начисления бонусов</li>
             <li class="date-container" v-for="historyRecord in compressedHistory">
-              <span class="date">{{dateFormatter(historyRecord.date)}} - ₽{{historyRecord.totalValue}}</span>
+              <span class="date">{{dateFormatter(historyRecord.date)}} - {{costFormatter(historyRecord.totalValue)}}</span>
               <ul class="users-transactions-container">
                 <li class="transaction" v-for="transaction in historyRecord.transactions">
                   <UserAvatar :user="transaction" size="30px" size-mobile="30px"/>
                   <div class="name">{{transaction.givenName}} {{transaction.familyName}}</div>
-                  <div class="cost">₽{{ transaction.value }}</div>
+                  <div class="cost">{{ costFormatter(transaction.value) }}</div>
                 </li>
               </ul>
             </li>
@@ -165,7 +165,7 @@
               <div class="name">Я ({{$user.givenName}} {{$user.familyName}})</div>
               <div class="bottom-row">
                 <UserAvatar class="avatar" :user="$user" />
-                <div class="cost">₽{{ yourMonthlyTotalValue }}</div>
+                <div class="cost">{{ costFormatter(yourMonthlyTotalValue) }}</div>
               </div>
             </div>
 
@@ -176,7 +176,7 @@
                 <div class="name">{{partner.givenname}} {{partner.familyname}}</div>
                 <div class="bottom-row">
                   <UserAvatar class="avatar" :user="partner" />
-                  <div class="cost">₽{{ partner.totalvalue }}</div>
+                  <div class="cost">{{ costFormatter(partner.totalvalue) }}</div>
                 </div>
               </div>
             </div>
@@ -207,7 +207,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import UserAvatar from '~/components/UserAvatar.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import QRGenerator from '~/components/QRGenerator.vue';
-import { dateFormatter } from '~/utils/utils';
+import { costFormatter, dateFormatter } from '~/utils/utils';
 import { UserOther } from '~/utils/models';
 import { QUERY_PARAM_REFERRER_ID } from '~/constants';
 
@@ -272,6 +272,7 @@ export default {
   },
 
   methods: {
+    costFormatter,
     dateFormatter,
 
     async updatePartnershipHistory() {

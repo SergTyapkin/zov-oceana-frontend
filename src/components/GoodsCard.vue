@@ -104,7 +104,7 @@
       <div class="bottom-block">
         <div class="cost">
           <div class="info">цена за {{ goods.isWeighed ? 'кг' : 'шт' }}</div>
-          <div class="value">₽{{ goods.cost }}</div>
+          <div class="value">{{ costFormatter(goods.cost) }}</div>
         </div>
         <button class="button-to-cart">
           <img src="/static/icons/cart.svg" alt="cart" />
@@ -121,8 +121,10 @@ import { PropType } from 'vue';
 import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
 import ImageFallback from '~/components/ImageFallback.vue';
 import { IMAGES_URL_BASE_PATH } from '~/constants';
+import { costFormatter } from '~/utils/utils';
 
 export default {
+  methods: { costFormatter },
   components: { ImageFallback },
   props: {
     goods: {
