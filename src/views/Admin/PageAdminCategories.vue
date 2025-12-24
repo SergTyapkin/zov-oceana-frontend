@@ -77,7 +77,7 @@
         <div></div>
       </div>
 
-      <div class="row" v-for="category in categories" :key="category.id">
+      <div class="row" v-for="category in $globals.categories" :key="category.id">
         <div>{{ category.id }}</div>
         <div>{{ category.title }}</div>
         <div>{{ category.description }}</div>
@@ -85,7 +85,7 @@
         <button class="button" @click="deleteCategory(category)"><img src="/static/icons/trashbox.svg" alt="delete"/></button>
       </div>
 
-      <div v-if="!categories.length" class="info">Категорий нет</div>
+      <div v-if="!$globals.categories.length" class="info">Категорий нет</div>
     </section>
     <button class="button-plus" @click="createCategory()"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</button>
 
@@ -102,8 +102,6 @@ export default {
 
   data() {
     return {
-      categories: [] as Category[],
-
       loading: false,
     };
   },
@@ -114,11 +112,8 @@ export default {
 
   methods: {
     async updateCategories() {
-      this.categories = (
-        (await this.$request(this, this.$api.getCategories, [], `Не удалось получить список категорий`)) as {
-          categories: Category[];
-        }
-      ).categories;
+      await this.$store.dispatch('GET_GLOBALS');
+      this.$forceUpdate();
     },
 
     async createCategory() {

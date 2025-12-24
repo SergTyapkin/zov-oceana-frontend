@@ -34,6 +34,7 @@ import PageAdminUsers from '~/views/Admin/PageAdminUsers.vue';
 import PageAdminOrders from '~/views/Admin/PageAdminOrders.vue';
 import PageAdminGlobals from '~/views/Admin/PageAdminGlobals.vue';
 import PageAdminCategories from '~/views/Admin/PageAdminCategories.vue';
+import PageAdminGoodsCreateEdit from '~/views/Admin/PageAdminGoodsCreateEdit.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -71,6 +72,9 @@ export default function createVueRouter(Store: Store): Router {
         { path: '/admin/orders', name: 'adminOrders', component: PageAdminOrders, meta: {adminRequired: true} },
         { path: '/admin/users', name: 'adminUsers', component: PageAdminUsers, meta: {adminRequired: true} },
         { path: '/admin/globals', name: 'adminGlobals', component: PageAdminGlobals, meta: {adminRequired: true} },
+
+        { path: '/admin/goods/create', name: 'adminGoodsCreate', component: PageAdminGoodsCreateEdit, meta: {adminRequired: true} },
+        { path: '/admin/goods/:id/edit', name: 'adminGoodsEdit', component: PageAdminGoodsCreateEdit, meta: {adminRequired: true} },
       ],
     },
 

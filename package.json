@@ -42,6 +42,7 @@
     "*.{css,styl}": "npm run lint:styles:fix"
   },
   "dependencies": {
+    "@sergtyapkin/image-uploader": "^1.0.0",
     "@sergtyapkin/modals-popups": "^1.1.1",
     "@sergtyapkin/models-validator": "^1.1.6",
     "@sergtyapkin/rest-api": "^1.0.7",

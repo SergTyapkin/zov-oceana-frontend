@@ -26,7 +26,7 @@
     overflow hidden
     width 74px
     height 36px
-    margin 0 auto
+    margin 0
 
     &:before
       content counter(button-counter)
@@ -70,7 +70,7 @@
       transition 0.3s ease all
 
     .knobs:before
-      content "NO"
+      content var(--off-title)
       position absolute
       top 4px
       left 4px
@@ -96,7 +96,7 @@
 
 
     input:checked + .knobs:before
-      content "YES"
+      content var(--on-title)
       left 42px
       background-color colorEmp2
 
@@ -115,7 +115,7 @@
 </style>
 
 <template>
-  <section class="input-root" :class="{error, success}">
+  <section class="input-root" :class="{error, success}" :style='{"--off-title": `"${offStateTitle}"`, "--on-title": `"${onStateTitle}"`}'>
     <header class="title" v-if="title">{{ title }}</header>
     <p v-if="description" class="description">{{ description }}</p>
 
@@ -160,6 +160,14 @@ export default {
     modelValue: {
       type: Boolean,
       required: true,
+    },
+    offStateTitle: {
+      type: String,
+      default: 'NO',
+    },
+    onStateTitle: {
+      type: String,
+      default: 'YES',
     },
     error: Boolean,
     success: Boolean,

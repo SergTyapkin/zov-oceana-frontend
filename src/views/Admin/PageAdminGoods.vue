@@ -37,14 +37,18 @@
     display grid
     grid-template-columns repeat(6, auto)
     grid-row-gap 10px
-    align-items center
     box-shadow 0 15px 15px #00000033
     padding 40px 10px
     .row
       display contents
       > *
-        trans()
+        width 100%
+        height 100%
         padding-inline 10px
+        display flex
+        align-items center
+        text-align left
+        trans()
       &:not(.header):hover
         > *
           opacity 0.6
@@ -115,13 +119,13 @@
         <div>В продаже?</div>
       </div>
 
-      <router-link class="row" :to="{name: 'goods', params: {id: goodsOne.id}}" v-for="goodsOne in goodsFiltered" :key="goodsOne.id">
+      <router-link class="row" :to="{name: 'adminGoodsEdit', params: {id: goodsOne.id}}" v-for="goodsOne in goodsFiltered" :key="goodsOne.id">
         <div>{{ goodsOne.id }}</div>
         <div>{{ goodsOne.title }}</div>
         <div>{{ costFormatter(goodsOne.cost) }}</div>
         <div>{{ goodsOne.fromLocation }}</div>
         <div>{{ goodsOne.amountLeft }}</div>
-        <div><InputSwitch v-model="goodsOne.isOnSale" @click.prevent /></div>
+        <div><InputSwitch v-model="goodsOne.isOnSale" /></div>
       </router-link>
 
       <div/>
@@ -131,7 +135,7 @@
       <div/>
       <div/>
     </section>
-    <button class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</button>
+    <router-link :to="{name: 'adminGoodsCreate'}" class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</router-link>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -196,7 +200,7 @@ export default {
 
     async updateGoods() {
       this.goods = (
-        (await this.$request(this, this.$api.getGoodsList, [], `Не удалось получить список товаров`)) as {
+        (await this.$request(this, this.$api.getAllAdminGoodsList, [], `Не удалось получить список товаров`)) as {
           goods: Goods[];
         }
       ).goods;

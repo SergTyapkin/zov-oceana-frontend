@@ -20,7 +20,7 @@ import {
   UserOtherModel,
   UserOtherModelMockData,
 } from '~/utils/APIModels';
-import { Category, Goods, Order, User, Address, Globals, UserOther } from '~/utils/models';
+import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
@@ -135,9 +135,17 @@ export default class API extends REST_API {
 
   // Goods
   getGoodsList = () =>
+    this.#GET(`/goods/all`, {isOnSale: true}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
+  getAllAdminGoodsList = () =>
     this.#GET(`/goods/all`, {}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
   getGoods = (id: string) =>
     this.#GET(`/goods?id=${id}`, {}, GoodsModel, Response200(GoodsModelMockData)) as MyResponse<Goods>;
+  createGoods = (title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, characters: object) =>
+    this.#POST(`/goods`, {title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, characters}) as MyResponse<unknown>;
+  updateGoods = (id: string, title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, characters: object) =>
+    this.#PUT(`/goods`, {id, title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, characters}) as MyResponse<unknown>;
+  deleteGoods = (id: string) =>
+    this.#DELETE(`/goods`, {id}) as MyResponse<unknown>;
 
   // Orders
   getUserOrders = (userId: string) =>
@@ -146,6 +154,10 @@ export default class API extends REST_API {
     this.#GET(`/orders`, {orderId}, OrderModel, Response200(OrderModelMockData)) as MyResponse<Order>;
   createOrder = (userId: string, addressId: string, goods: Goods[]) =>
     this.#POST(`/orders`, {userId, addressId, goods}) as MyResponse<unknown>;
+  deleteOrder = (id: string) =>
+    this.#DELETE(`/orders`, {id}) as MyResponse<unknown>;
+  updateOrder = (id: string, number: string, addressTextCopy: string, commentTextCopy: string, status: OrderStatus, trackingCode: string) =>
+    this.#PUT(`/orders`, {id, number, addressTextCopy, commentTextCopy, status, trackingCode}) as MyResponse<unknown>;
   updateOrderStatus = (number: string, status: string) =>
     this.#PUT(`/orders`, {number, status}) as MyResponse<unknown>;
 
@@ -170,4 +182,10 @@ export default class API extends REST_API {
     this.#PUT(`/cart/goods`, {userId, goodsId, amount}, {}, Response200({})) as MyResponse<unknown>;
   removeGoodsFromCart = (userId: string, goodsId: string) =>
     this.#DELETE(`/cart/goods/many`, {userId, goodsIds: [goodsId]}, {}, Response200({})) as MyResponse<object>;
+
+  // Images
+  uploadGoodsImage = (goodsId: string, dataUrl: string) =>
+    this.#POST(`/image`, {goodsId, dataUrl}) as MyResponse<unknown>;
+  deleteImage = (id: string) =>
+    this.#DELETE(`/image`, {id}) as MyResponse<unknown>;
 }

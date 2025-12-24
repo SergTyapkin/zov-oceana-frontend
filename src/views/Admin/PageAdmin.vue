@@ -43,11 +43,12 @@
 <template>
   <div class="root-page">
     <nav class="navigation">
-      <router-link v-if="true" :to="{name: 'admin'}" style="--animation-index: 0">Товары</router-link>
-      <router-link v-if="true" :to="{name: 'adminOrders'}" style="--animation-index: 1">Заказы</router-link>
-      <router-link v-if="true" :to="{name: 'adminUsers'}" style="--animation-index: 2">Пользователи</router-link>
-      <router-link v-if="true" :to="{name: 'adminCategories'}" style="--animation-index: 3">Категории товаров</router-link>
-      <router-link v-if="true" :to="{name: 'adminGlobals'}" style="--animation-index: 4">Глобальное</router-link>
+      <router-link v-if="$user.canEditGoods" :to="{name: 'admin'}" style="--animation-index: 0">Товары</router-link>
+      <router-link v-if="$user.canEditOrders" :to="{name: 'adminOrders'}" style="--animation-index: 1">Заказы</router-link>
+      <router-link v-if="$user.canEditUsers" :to="{name: 'adminUsers'}" style="--animation-index: 2">Пользователи</router-link>
+      <router-link v-if="$user.canEditGoods" :to="{name: 'adminCategories'}" style="--animation-index: 3">Категории товаров</router-link>
+      <router-link v-if="$user.canEditGlobals" :to="{name: 'adminGlobals'}" style="--animation-index: 4">Глобальное</router-link>
+      <router-link v-if="$user.canEditPartners" :to="{name: 'adminGlobals'}" style="--animation-index: 4">Партнерство</router-link>
     </nav>
 
     <section class="admin-main" style="--animation-index: 1">
