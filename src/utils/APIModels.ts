@@ -222,6 +222,10 @@ export const GoodsModel = {
     title: String,
   }, true, []),
   characters: Type(Object, true, {}),
+  createdDate: {
+    type: Date,
+    from: 'createddate',
+  },
 };
 export const GoodsListModel = {
   goods: ArrayType(GoodsModel),
@@ -237,6 +241,7 @@ export const GoodsModelMockData = validateModel(GoodsModel, {
   isweighed: false,
   cost: 2430,
   isonsale: true,
+  createddate: (new Date()).toDateString(),
   categories: [
     {
       id: 'CATEGORY_ID_2',

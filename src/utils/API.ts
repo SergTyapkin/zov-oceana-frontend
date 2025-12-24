@@ -160,6 +160,8 @@ export default class API extends REST_API {
     this.#PUT(`/orders`, {id, number, addressTextCopy, commentTextCopy, status, trackingCode}) as MyResponse<unknown>;
   updateOrderStatus = (number: string, status: string) =>
     this.#PUT(`/orders`, {number, status}) as MyResponse<unknown>;
+  getAllAdminOrdersList = () =>
+    this.#GET(`/orders/all`, {}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
 
   // Addresses
   getUserAddresses = (userId: string) =>

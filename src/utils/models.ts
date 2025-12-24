@@ -55,6 +55,7 @@ export interface Goods {
   images: {id: string, path: string}[];
   categories: {id: string, title: string}[];
   characters?: Record<PropertyKey, string | number>;
+  createdDate: Date;
 }
 
 export interface Category {

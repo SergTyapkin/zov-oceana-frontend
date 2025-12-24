@@ -142,7 +142,6 @@
 </template>
 
 <script lang="ts">
-import GoodsCard from '~/components/GoodsCard.vue';
 import SelectList from '~/components/SelectList.vue';
 import InputSearch from '~/components/InputSearch.vue';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
@@ -151,7 +150,7 @@ import { costFormatter } from '~/utils/utils';
 import InputSwitch from '~/components/InputSwitch.vue';
 
 export default {
-  components: { InputSwitch, CircleLinesLoading, SelectList, InputSearch, GoodsCard },
+  components: { InputSwitch, CircleLinesLoading, SelectList, InputSearch },
 
   data() {
     return {
