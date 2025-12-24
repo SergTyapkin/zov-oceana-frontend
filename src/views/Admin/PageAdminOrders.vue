@@ -95,7 +95,8 @@
             value: key,
           }))
         "
-        v-model="filters.status" />
+        v-model="filters.status"
+      />
     </section>
 
     <section class="orders">
@@ -120,7 +121,7 @@
         <div>{{ order.id }}</div>
         <div>{{ order.number }}</div>
         <div>
-          {{ order.goods.reduce((acc, g) => acc + `\n${g.title} x${g.amount}${g.isWeighed ? 'кг' : 'шт'}`, '') }}
+          {{ order.goods.reduce((acc, g) => acc + `\n${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`, '') }}
         </div>
         <div class="status">{{ OrderStatuses[order.status].title }}</div>
         <div>{{ order.userGivenName }} {{ order.userFamilyName }}</div>
@@ -136,9 +137,12 @@
       <div />
       <div />
     </section>
-    <router-link :to="{ name: 'adminOrderCreate' }" class="button-plus"
-      ><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</router-link
+    <router-link
+      :to="{ name: 'adminOrderCreate' }"
+      class="button-plus"
     >
+      <img src="/static/icons/plus-thin.svg" alt="plus">Добавить
+    </router-link>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
