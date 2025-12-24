@@ -263,7 +263,11 @@ export default {
   mounted() {
     window.addEventListener('click', this.onClick);
 
-    this.selectItemByIdx(this.$props.selectedIdx, true);
+    if (this.$props.selectedIdx) {
+      this.selectItemByIdx(this.$props.selectedIdx, true);
+    } else if (this.$props.selectedId) {
+      this.selectItemById(this.$props.selectedId, true);
+    }
   },
 
   unmounted() {
@@ -346,7 +350,12 @@ export default {
         }
       }
 
-      this.selectItemByIdx(this.currentSelectedIdx, true);
+      console.log(this.$props.selectedIdx, this.$props.selectedId);
+      if (this.$props.selectedIdx) {
+        this.selectItemByIdx(this.$props.selectedIdx, true, true);
+      } else if (this.$props.selectedId) {
+        this.selectItemById(this.$props.selectedId, true, true);
+      }
     },
 
     modelValue() {

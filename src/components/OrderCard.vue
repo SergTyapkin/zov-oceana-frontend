@@ -100,11 +100,7 @@
     <div class="status-container">
       <div class="status-column">
         <div class="cost">{{ costFormatter(totalCost) }}</div>
-        <div v-if="order.status === 'created'" class="status yellow">Не оплачен</div>
-        <div v-else-if="order.status === 'paid'" class="status green">Оплачен</div>
-        <div v-else-if="order.status === 'prepared'" class="status green">Собран</div>
-        <div v-else-if="order.status === 'delivered'" class="status blue">Доставлен</div>
-        <div v-else-if="order.status === 'cancelled'" class="status red">Отменен</div>
+        <div class="status" :class="[OrderStatuses[order.status].color]">{{ OrderStatuses[order.status].title }}</div>
       </div>
 
       <button class="more-info">
@@ -118,7 +114,7 @@
 import { Order } from '~/utils/models';
 import { PropType } from 'vue';
 import { costFormatter, dateFormatter } from '~/utils/utils';
-import { IMAGES_URL_BASE_PATH } from '~/constants';
+import { IMAGES_URL_BASE_PATH, OrderStatuses } from '~/constants';
 
 export default {
   props: {
@@ -135,6 +131,9 @@ export default {
   },
 
   computed: {
+    OrderStatuses() {
+      return OrderStatuses
+    },
     totalCost() {
       return this.order.goods.reduce((acc, g) => acc + g.cost * g.amount, 0);
     }

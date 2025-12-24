@@ -1,5 +1,6 @@
 import { ArrayType, ObjectType, Type, validateModel } from '@sergtyapkin/models-validator';
 import { Category, Globals, Goods, Order } from '~/utils/models';
+import { OrderStatuses } from '~/constants';
 
 export const UserModel = {
   id: String,
@@ -131,6 +132,26 @@ export const UserOtherModelMockData = validateModel(UserOtherModel, {
   familyname: 'Тяпкин',
   joineddate: new Date('2023-04-04'),
 });
+export const UsersListModel = {
+  users: ArrayType(UserModel),
+};
+export const UsersListModelMockData = {
+  categories: [
+    Object.assign({}, UserModelMockData, {id: 'USER_ID_1', familyName: 'Первый'}),
+    Object.assign({}, UserModelMockData, {id: 'USER_ID_2', familyName: 'Второй'}),
+    Object.assign({}, UserModelMockData, {id: 'USER_ID_3', familyName: 'Третий'}),
+  ],
+};
+export const UsersOtherListModel = {
+  users: ArrayType(UserOtherModel),
+};
+export const UsersOtherListModelMockData = {
+  categories: [
+    Object.assign({}, UserOtherModelMockData, {id: 'USER_ID_1', familyName: 'Первый'}),
+    Object.assign({}, UserOtherModelMockData, {id: 'USER_ID_2', familyName: 'Второй'}),
+    Object.assign({}, UserOtherModelMockData, {id: 'USER_ID_3', familyName: 'Третий'}),
+  ],
+};
 
 
 export const CategoryModel = {
@@ -316,7 +337,7 @@ export const OrderModel = {
     type: Date,
     from: 'updateddate',
   },
-  status: new Set(['created', 'paid', 'prepared', 'delivered', 'cancelled']),
+  status: new Set(Object.keys(OrderStatuses)),
   userId: {
     type: String,
     from: 'userid',
@@ -330,6 +351,21 @@ export const OrderModel = {
   commentTextCopy: {
     type: String,
     from: 'commenttextcopy',
+    optional: true,
+  },
+  userGivenName: {
+    type: String,
+    from: 'givenname',
+    optional: true,
+  },
+  userFamilyName: {
+    type: String,
+    from: 'familyname',
+    optional: true,
+  },
+  trackingCode: {
+    type: String,
+    from: 'trackingcode',
     optional: true,
   },
 };
@@ -352,11 +388,11 @@ OrderModelMockData.goods = GoodsListModelMockData.goods as Goods[];
 
 export const OrderListModelMockData = {
   orders: [
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', cost: 1400, status: 'created'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_2', cost: 4500, status: 'cancelled'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', cost: 1250, status: 'paid'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', cost: 3502, status: 'prepared'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', cost: 2400, status: 'delivered'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', cost: 1400, status: OrderStatuses.created}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_2', cost: 4500, status: OrderStatuses.cancelled}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', cost: 1250, status: OrderStatuses.paid}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', cost: 3502, status: OrderStatuses.prepared}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', cost: 2400, status: OrderStatuses.delivered}),
   ],
 };
 

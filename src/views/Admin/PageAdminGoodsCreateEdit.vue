@@ -327,7 +327,7 @@
           </li>
         </ul>
 
-        <div class="info">Создан: {{ dateFormatter(goods.createdDate)}}</div>
+        <div class="info" v-if="goodsId">Создан: {{ dateTimeFormatter(goods.createdDate) }}</div>
       </div>
     </section>
 
@@ -349,7 +349,7 @@ import InputComponent from '~/components/InputComponent.vue';
 import InputSwitch from '~/components/InputSwitch.vue';
 import SelectList from '~/components/SelectList.vue';
 import DragNDropLoader from "@sergtyapkin/image-uploader/vue"
-import { dateFormatter } from '~/utils/utils';
+import { dateTimeFormatter } from '~/utils/utils';
 
 export default {
   components: { DragNDropLoader, SelectList, InputSwitch, InputComponent, ImageFallback, CircleLinesLoading },
@@ -385,7 +385,7 @@ export default {
   },
 
   methods: {
-    dateFormatter,
+    dateTimeFormatter,
     async updateGoods() {
       this.goods = (await this.$request(
         this,

@@ -222,7 +222,7 @@ export default {
       default: undefined,
     },
     modelValue: {
-      type: String,
+      type: String as PropType<string | number>,
       required: true,
     },
     errorText: {

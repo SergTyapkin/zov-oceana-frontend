@@ -36,19 +36,24 @@
     width 100%
     display grid
     grid-template-columns repeat(6, auto)
-    grid-row-gap 10px
     box-shadow 0 15px 15px #00000033
-    padding 40px 10px
     .row
       display contents
       > *
         width 100%
         height 100%
-        padding-inline 10px
+        padding 15px 10px
         display flex
         align-items center
         text-align left
         trans()
+        &:first-child
+          padding-left 25px
+        &:last-child
+          padding-right 25px
+      &:nth-child(2n)
+        > *
+          background mix(colorBlockBg, transparent, 30%)
       &:not(.header):hover
         > *
           opacity 0.6
@@ -131,7 +136,7 @@
       <div/>
       <div/>
       <div/>
-      <div v-if="!goodsFiltered.length" class="info">Товаров не найдено</div>
+      <div v-if="!goodsFiltered.length && !loading" class="info">Товаров не найдено</div>
       <div/>
       <div/>
     </section>

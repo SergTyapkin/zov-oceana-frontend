@@ -1,3 +1,5 @@
+import { OrderStatuses } from '~/constants';
+
 export interface User {
   id: string;
   tgUsername?: string;
@@ -80,7 +82,7 @@ export interface Address {
   comment?: string;
 }
 
-export type OrderStatus = 'created' | 'paid' | 'prepared' | 'delivered' | 'cancelled';
+export type OrderStatus = keyof typeof OrderStatuses;
 export interface Order {
   id: string;
   goods: Goods[];
@@ -93,5 +95,8 @@ export interface Order {
   address?: Address;
   addressTextCopy: string;
   commentTextCopy?: string;
+  userGivenName?: string;
+  userFamilyName?: string;
+  trackingCode?: string;
 }
 

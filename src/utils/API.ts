@@ -19,6 +19,8 @@ import {
   OrderModelMockData,
   UserOtherModel,
   UserOtherModelMockData,
+  UsersOtherListModelMockData,
+  UsersOtherListModel,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
@@ -78,6 +80,8 @@ export default class API extends REST_API {
   // User
   getUser = () =>
     this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
+  getAllUsersAdmin = () =>
+    this.#GET(`/user/all`, {}, UsersOtherListModel, Response200(UsersOtherListModelMockData)) as MyResponse<{users: UserOther[]}>;
   getOtherUser = (id: string) =>
     this.#GET(`/user`, {id}, UserOtherModel, Response200(UserOtherModelMockData)) as MyResponse<UserOther>;
     // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
@@ -154,10 +158,12 @@ export default class API extends REST_API {
     this.#GET(`/orders`, {orderId}, OrderModel, Response200(OrderModelMockData)) as MyResponse<Order>;
   createOrder = (userId: string, addressId: string, goods: Goods[]) =>
     this.#POST(`/orders`, {userId, addressId, goods}) as MyResponse<unknown>;
+  createOrderAdmin = (userId: string, goods: Goods[], status: OrderStatus, trackingCode: string, addressTextCopy: string, commentTextCopy: string) =>
+    this.#POST(`/orders/admin`, {userId, goods, status, trackingCode, addressTextCopy, commentTextCopy}) as MyResponse<unknown>;
   deleteOrder = (id: string) =>
     this.#DELETE(`/orders`, {id}) as MyResponse<unknown>;
-  updateOrder = (id: string, number: string, addressTextCopy: string, commentTextCopy: string, status: OrderStatus, trackingCode: string) =>
-    this.#PUT(`/orders`, {id, number, addressTextCopy, commentTextCopy, status, trackingCode}) as MyResponse<unknown>;
+  updateOrder = (id: string, number: number, addressTextCopy: string, commentTextCopy: string, status: OrderStatus, trackingCode: string, goods: Goods[]) =>
+    this.#PUT(`/orders`, {id, number, addressTextCopy, commentTextCopy, status, trackingCode, goods}) as MyResponse<unknown>;
   updateOrderStatus = (number: string, status: string) =>
     this.#PUT(`/orders`, {number, status}) as MyResponse<unknown>;
   getAllAdminOrdersList = () =>

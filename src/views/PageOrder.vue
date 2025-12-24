@@ -222,11 +222,7 @@
         <div v-if="order.commentTextCopy">Комментарий: {{ order.commentTextCopy }}</div>
       </div>
       <div class="order-status">
-        <div v-if="order.status === 'created'" class="status yellow">Не оплачен</div>
-        <div v-else-if="order.status === 'paid'" class="status green">Оплачен</div>
-        <div v-else-if="order.status === 'prepared'" class="status green">Собран</div>
-        <div v-else-if="order.status === 'delivered'" class="status blue">Доставлен</div>
-        <div v-else-if="order.status === 'cancelled'" class="status red">Отменен</div>
+        <div class="status" :class="OrderStatuses[order.status].color">{{ OrderStatuses[order.status].title }}</div>
       </div>
     </section>
 
@@ -277,6 +273,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter } from '~/utils/utils';
+import { OrderStatuses } from '~/constants';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
@@ -293,7 +290,11 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    OrderStatuses() {
+      return OrderStatuses
+    }
+  },
 
   mounted() {
     if (!this.orderId) {

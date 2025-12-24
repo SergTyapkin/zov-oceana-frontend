@@ -31,20 +31,25 @@
   section.orders
     width 100%
     display grid
-    grid-template-columns repeat(6, auto)
-    grid-row-gap 10px
+    grid-template-columns repeat(8, auto)
     box-shadow 0 15px 15px #00000033
-    padding 40px 10px
     .row
       display contents
       > *
         width 100%
         height 100%
-        padding-inline 10px
+        padding 15px 10px
         display flex
         align-items center
         text-align left
         trans()
+        &:first-child
+          padding-left 25px
+        &:last-child
+          padding-right 25px
+      &:nth-child(2n)
+        > *
+          background mix(colorBlockBg, transparent, 30%)
       &:not(.header):hover
         > *
           opacity 0.6
@@ -52,6 +57,18 @@
         font-bold()
         > *
           margin-bottom 10px
+
+      > .status
+        font-bold()
+        color mix(colorEmp1, transparent, 90%)
+      &.red > .status
+        color mix(colorError, transparent, 90%)
+      &.green > .status
+        color mix(colorSuccess, transparent, 90%)
+      &.yellow > .status
+        color mix(colorEmp1, transparent, 90%)
+      &.blue > .status
+        color mix(colorEmp2, transparent, 90%)
     .info
       font-small()
       color colorText5
@@ -72,14 +89,13 @@
         placeholder="Любой статус"
         can-be-null
         :list="
-          ['created', 'paid', 'prepared', 'delivered', 'cancelled']?.map?.(status => ({
-            id: status,
-            name: status,
-            value: status,
+          Object.entries(OrderStatuses)?.map?.(([key, status]) => ({
+            id: key,
+            name: status.title,
+            value: key,
           }))
         "
-        v-model="filters.status"
-      />
+        v-model="filters.status" />
     </section>
 
     <section class="orders">
@@ -90,25 +106,39 @@
         <div>Статус</div>
         <div>Пользователь</div>
         <div>Общая сумма</div>
+        <div>Создан</div>
+        <div>Обновлен</div>
       </div>
 
-      <router-link class="row" :to="{name: 'adminGoodsEdit', params: {id: order.id}}" v-for="order in ordersFiltered" :key="order.id">
+      <router-link
+        class="row"
+        :class="[OrderStatuses[order.status].color]"
+        :to="{ name: 'adminOrderEdit', params: { id: order.id } }"
+        v-for="order in ordersFiltered"
+        :key="order.id"
+      >
         <div>{{ order.id }}</div>
         <div>{{ order.number }}</div>
-        <div>{{ order.goods.reduce((acc, g) => acc + `\n${g.title} x${g.amount}`, '') }}</div>
-        <div>{{ order.status }}</div>
-        <div>{{ order.userId }}</div>
+        <div>
+          {{ order.goods.reduce((acc, g) => acc + `\n${g.title} x${g.amount}${g.isWeighed ? 'кг' : 'шт'}`, '') }}
+        </div>
+        <div class="status">{{ OrderStatuses[order.status].title }}</div>
+        <div>{{ order.userGivenName }} {{ order.userFamilyName }}</div>
         <div>{{ costFormatter(order.goods.reduce((acc, g) => acc + g.cost * g.amount!, 0)) }}</div>
+        <div>{{ dateTimeFormatter(order.createdDate) }}</div>
+        <div>{{ dateTimeFormatter(order.updatedDate) }}</div>
       </router-link>
 
-      <div/>
-      <div/>
-      <div/>
-      <div v-if="!ordersFiltered.length" class="info">Заказов не найдено</div>
-      <div/>
-      <div/>
+      <div />
+      <div />
+      <div />
+      <div v-if="!ordersFiltered.length && !loading" class="info">Заказов не найдено</div>
+      <div />
+      <div />
     </section>
-    <router-link :to="{name: 'adminGoodsCreate'}" class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</router-link>
+    <router-link :to="{ name: 'adminOrderCreate' }" class="button-plus"
+      ><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</router-link
+    >
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -119,7 +149,8 @@ import SelectList from '~/components/SelectList.vue';
 import InputSearch from '~/components/InputSearch.vue';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Order, OrderStatus } from '~/utils/models';
-import { costFormatter } from '~/utils/utils';
+import { costFormatter, dateTimeFormatter } from '~/utils/utils';
+import { OrderStatuses } from '~/constants';
 
 export default {
   components: { CircleLinesLoading, SelectList, InputSearch },
@@ -138,14 +169,16 @@ export default {
   },
 
   computed: {
+    OrderStatuses() {
+      return OrderStatuses;
+    },
     ordersFiltered() {
-      return this.orders
-        .filter(order => {
-          return (
-            (!this.filters.searchText || new RegExp(this.filters.searchText, 'i').test(String(order.number))) &&
-            (!this.filters.status || order.status === this.filters.status)
-          );
-        })
+      return this.orders.filter(order => {
+        return (
+          (!this.filters.searchText || new RegExp(this.filters.searchText, 'i').test(String(order.number))) &&
+          (!this.filters.status || order.status === this.filters.status)
+        );
+      });
     },
   },
 
@@ -154,6 +187,7 @@ export default {
   },
 
   methods: {
+    dateTimeFormatter,
     costFormatter,
 
     async updateOrders() {
@@ -165,7 +199,6 @@ export default {
     },
   },
 
-  watch: {
-  },
+  watch: {},
 };
 </script>
