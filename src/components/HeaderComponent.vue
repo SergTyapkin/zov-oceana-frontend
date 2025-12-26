@@ -346,6 +346,17 @@
             @submit="register"
           />
           <InputComponent
+            v-model="userData.city"
+            :error="errors.city"
+            title="Город"
+            placeholder="Город"
+            autocomplete="address-level2"
+            :icon="IconPlace"
+            icon-in-left
+            class="field"
+            @submit="register"
+          />
+          <InputComponent
             v-model="userData.email"
             :error="errors.email"
             title="Email"
@@ -467,6 +478,7 @@ import InputComponent from '~/components/InputComponent.vue';
 import IconProfile from '#/icons/profile.svg';
 import IconEmail from '#/icons/email.svg';
 import IconTelephone from '#/icons/phone.svg';
+import IconPlace from '#/icons/map-pin-place-dark.svg';
 import TGAuth, { TGUser } from '~/components/TGAuth.vue';
 import Validators from '~/utils/validators';
 
@@ -479,6 +491,7 @@ export default {
       IconProfile,
       IconEmail,
       IconTelephone,
+      IconPlace,
 
       userData: {
         tgId: undefined as string | undefined,
@@ -494,6 +507,7 @@ export default {
         familyName: '',
         email: '',
         tel: '',
+        city: '',
         password: '',
         passwordRepeat: '',
         emailOrTel: '',
@@ -504,6 +518,7 @@ export default {
         familyName: false,
         email: false,
         tel: false,
+        city: false,
         password: false,
         passwordRepeat: false,
         emailOrTel: false,
@@ -585,6 +600,7 @@ export default {
           this.userData.familyName,
           this.userData.email,
           this.userData.tel,
+          this.userData.city,
           this.userData.password,
 
           this.userData.tgId!,

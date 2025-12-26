@@ -10,6 +10,12 @@
 .root-page-admin-goods
   page-root()
 
+  .header-info
+    font-upper()
+    font-medium()
+    text-align center
+    margin-bottom 10px
+
   section.filters
     page-root-disable()
     animation-float()
@@ -37,6 +43,8 @@
     display grid
     grid-template-columns repeat(6, auto)
     box-shadow 0 15px 15px #00000033
+    overflow auto
+    scrollable()
     .row
       display contents
       > *
@@ -47,10 +55,13 @@
         align-items center
         text-align left
         trans()
-        &:first-child
-          padding-left 25px
-        &:last-child
-          padding-right 25px
+        @media({mobile})
+          padding 15px 3px
+        @media({desktop})
+          &:first-child
+            padding-left 25px
+          &:last-child
+            padding-right 25px
       &:nth-child(2n)
         > *
           background mix(colorBlockBg, transparent, 30%)
@@ -70,14 +81,16 @@
     button-emp2()
     margin-top 30px
     width fit-content
+    margin-bottom 100px
 </style>
 
 <template>
   <div class="root-page-admin-goods">
+    <header class="header-info">Товары</header>
     <section class="filters" style="--animation-index: 0">
       <div class="top-row">
         <div class="input-group">
-          <InputSearch class="search" placeholder="Найти продукты..." v-model="filters.searchText" />
+          <InputSearch class="search" placeholder="Найти товары..." v-model="filters.searchText" />
           <SelectList
             class="category-selector"
             placeholder="Все категории"
@@ -93,24 +106,6 @@
             v-model="filters.categoryId"
             @input="saveFilters" />
         </div>
-
-        <SelectList
-          v-model="filters.sorting"
-          :selected-idx="0"
-          :list="[
-            {
-              name: 'Название (А-Я)',
-              value: 'name',
-            },
-            {
-              name: 'Цена (сначала дешевые)',
-              value: 'cost-cheap',
-            },
-            {
-              name: 'Цена (сначала дорогие)',
-              value: 'cost-expensive',
-            },
-          ]" />
       </div>
     </section>
 
@@ -142,6 +137,9 @@
     </section>
     <router-link :to="{name: 'adminGoodsCreate'}" class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</router-link>
 
+    <header class="header-info">Категории товаров</header>
+    <PageAdminCategories />
+
     <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
@@ -153,16 +151,16 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Goods } from '~/utils/models';
 import { costFormatter } from '~/utils/utils';
 import InputSwitch from '~/components/InputSwitch.vue';
+import PageAdminCategories from '~/views/Admin/PageAdminCategories.vue';
 
 export default {
-  components: { InputSwitch, CircleLinesLoading, SelectList, InputSearch },
+  components: { PageAdminCategories, InputSwitch, CircleLinesLoading, SelectList, InputSearch },
 
   data() {
     return {
       goods: [] as Goods[],
 
       filters: {
-        sorting: null as 'name' | 'cost-cheap' | 'cost-expensive' | null,
         searchText: '',
         categoryId: this.$route.query.categoryId as string | undefined,
       },
@@ -180,17 +178,6 @@ export default {
             (!this.filters.categoryId ||
               goods.categories.findIndex(c => String(c.id) === String(this.filters.categoryId)) !== -1)
           );
-        })
-        .sort((g1, g2) => {
-          if (this.filters.sorting === 'name') {
-            return g1.title.localeCompare(g2.title);
-          } else if (this.filters.sorting === 'cost-cheap') {
-            return Number(g1.cost) - Number(g2.cost);
-          } else if (this.filters.sorting === 'cost-expensive') {
-            return Number(g2.cost) - Number(g1.cost);
-          } else {
-            return 0;
-          }
         });
     },
   },

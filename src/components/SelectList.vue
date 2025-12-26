@@ -296,10 +296,10 @@ export default {
         }
       } else {
         if (!disableUpdating) {
-          this.$emit('update:modelValue', undefined);
+          this.$emit('update:modelValue', null);
         }
         if (!disableEmitting) {
-          this.$emit('input', null, undefined);
+          this.$emit('input', null, null);
         }
       }
       this.setClose();

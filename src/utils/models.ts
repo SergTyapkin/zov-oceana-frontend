@@ -8,8 +8,9 @@ export interface User {
   familyName: string;
   middleName?: string;
   avatarUrl?: string;
+  city: string;
   email?: string;
-  tel?: string;
+  tel: string;
   joinedDate: Date;
   referrerId?: string;
   partnerStatus?: boolean;
@@ -26,6 +27,9 @@ export interface User {
 
   hasSomeAdminRights: boolean;
 
+  ordersCount?: number;
+  totalOrdersCost?: number;
+
   isSignedIn: boolean;
 }
 export interface UserOther {
@@ -34,6 +38,15 @@ export interface UserOther {
   familyName: string;
   avatarUrl?: string;
   joinedDate: Date;
+}
+export interface UserPartner {
+  id: string;
+  givenName: string;
+  familyName: string;
+  avatarUrl?: string;
+  city: string;
+  joinedDate: Date;
+  totalValue: number;
 }
 
 export interface Globals {
@@ -98,5 +111,17 @@ export interface Order {
   userGivenName?: string;
   userFamilyName?: string;
   trackingCode?: string;
+}
+
+export interface PartnerHistoryTransaction {
+  id: string;
+  userid: string;
+  avatarurl?: string;
+  givenname?: string;
+  familyname?: string;
+  fromuserid?: string;
+  comment?: string;
+  value: number;
+  date: Date;
 }
 

@@ -53,6 +53,7 @@ export default new Vuex.Store({
       state.user.tgUsername = userData.tgUsername;
       state.user.tgId = userData.tgId;
       state.user.avatarUrl = userData.avatarUrl;
+      state.user.city = userData.city;
       state.user.joinedDate = new Date(userData.joinedDate);
       state.user.referrerId = userData.referrerId;
       state.user.partnerStatus = userData.partnerStatus;

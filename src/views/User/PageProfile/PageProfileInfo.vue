@@ -79,6 +79,7 @@
       </div>
       <div class="row">
         <InputComponent title="Телефон" v-model="fields.tel" placeholder="+7 (999) 123-45-67" :error="errors.tel" />
+        <InputComponent title="Город" v-model="fields.city" placeholder="Город" :error="errors.city" />
       </div>
       <div class="row">
         <button class="button-save" @click="save" :disabled="!isEdited">Сохранить изменения</button>
@@ -110,6 +111,7 @@ export default {
         middleName: this.$user.middleName || '',
         email: this.$user.email,
         tel: this.$user.tel || '',
+        city: this.$user.city,
       },
 
       errors: {
@@ -118,6 +120,7 @@ export default {
         middleName: false,
         email: false,
         tel: false,
+        city: false,
       },
 
       isEdited: false,
@@ -137,6 +140,7 @@ export default {
       this.errors.middleName = !Validators.nameOptional.validate(this.fields.middleName);
       this.errors.email = !Validators.email.validate(this.fields.email);
       this.errors.tel = !Validators.phone.validate(this.fields.tel);
+      this.errors.city = !this.fields.city;
 
       if (Object.values(this.errors).findIndex(err => err) !== -1) {
         return;
@@ -147,6 +151,7 @@ export default {
       this.fields.middleName = Validators.nameOptional.prettifyResult(this.fields.middleName);
       this.fields.email = Validators.email.prettifyResult(this.fields.email);
       this.fields.tel = Validators.phone.prettifyResult(this.fields.tel);
+      this.fields.city = this.fields.city.trim();
 
       await this.$request(
         this,

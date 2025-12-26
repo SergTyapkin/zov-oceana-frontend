@@ -37,17 +37,14 @@
       width 100%
       height 100%
       object-fit cover
-
 </style>
 
 <template>
-  <section class="root-user-avatar" :style="{'--size': size, '--size-mobile': sizeMobile}">
+  <section class="root-user-avatar" :style="{ '--size': size, '--size-mobile': sizeMobile }">
     <div v-if="!isError" class="images-container">
-      <img :src="user.avatarUrl || ''" alt="avatar" @load="isLoaded = true" @error="isError = true">
+      <img :src="user.avatarUrl || ''" alt="avatar" @load="isLoaded = true" @error="isError = true" />
     </div>
-    <div v-else class="generated-avatar">
-      {{ user.givenName?.slice(0, 1) }}{{ user.familyName?.slice(0, 1) }}
-    </div>
+    <div v-else class="generated-avatar">{{ user.givenName?.slice(0, 1) }}{{ user.familyName?.slice(0, 1) }}</div>
   </section>
 </template>
 
@@ -76,6 +73,9 @@ export default {
       isLoaded: false,
       isError: false,
     };
+  },
+
+  mounted() {
   },
 
   methods: {

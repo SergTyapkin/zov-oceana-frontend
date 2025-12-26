@@ -327,7 +327,10 @@
           </li>
         </ul>
 
-        <div class="info" v-if="goodsId">Создан: {{ dateTimeFormatter(goods.createdDate) }}</div>
+        <div class="info" v-if="goodsId">
+          Создан: {{ dateTimeFormatter(goods.createdDate) }} <br>
+          #ID: {{ goods.id }} <br>
+        </div>
       </div>
     </section>
 

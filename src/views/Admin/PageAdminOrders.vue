@@ -33,6 +33,8 @@
     display grid
     grid-template-columns repeat(8, auto)
     box-shadow 0 15px 15px #00000033
+    overflow auto
+    scrollable()
     .row
       display contents
       > *
@@ -83,7 +85,7 @@
 <template>
   <div class="root-page-admin-orders">
     <section class="filters" style="--animation-index: 0">
-      <InputSearch class="search" placeholder="Найти заказы..." v-model="filters.searchText" />
+      <InputSearch class="search" placeholder="Номер заказа..." v-model="filters.searchText" />
       <SelectList
         class="category-selector"
         placeholder="Любой статус"
@@ -133,9 +135,8 @@
       <div />
       <div />
       <div />
+      <div />
       <div v-if="!ordersFiltered.length && !loading" class="info">Заказов не найдено</div>
-      <div />
-      <div />
     </section>
     <router-link
       :to="{ name: 'adminOrderCreate' }"

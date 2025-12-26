@@ -22,6 +22,7 @@ export const UserModel = {
     from: 'avatarurl',
     optional: true,
   },
+  city: String,
   tgUsername: {
     type: String,
     from: 'tgusername',
@@ -36,10 +37,7 @@ export const UserModel = {
     type: String,
     optional: true,
   },
-  tel: {
-    type: String,
-    optional: true,
-  },
+  tel: String,
   joinedDate: {
     type: Date,
     from: 'joineddate',
@@ -86,6 +84,16 @@ export const UserModel = {
     type: Boolean,
     from: 'caneditglobals',
   },
+  ordersCount: {
+    type: Number,
+    from: 'orderscount',
+    optional: true,
+  },
+  totalOrdersCost: {
+    type: Number,
+    from: 'totalorderscost',
+    optional: true,
+  },
 };
 export const UserOtherModel = {
   id: String,
@@ -107,6 +115,31 @@ export const UserOtherModel = {
     from: 'joineddate',
   },
 };
+export const UserPartnerModel = {
+  id: String,
+  givenName: {
+    type: String,
+    from: 'givenname',
+  },
+  familyName: {
+    type: String,
+    from: 'familyname',
+  },
+  avatarUrl: {
+    type: String,
+    from: 'avatarurl',
+    optional: true,
+  },
+  city: String,
+  joinedDate: {
+    type: Date,
+    from: 'joineddate',
+  },
+  totalValue: {
+    type: Number,
+    from: 'totalvalue',
+  },
+};
 
 export const UserModelMockData = validateModel(UserModel, {
   id: 'USER_ID',
@@ -114,6 +147,8 @@ export const UserModelMockData = validateModel(UserModel, {
   familyname: 'Тяпкин',
   middlename: 'Сергеевич',
   email: 'Tyapkin2002@mail.ru',
+  city: 'Москва',
+  tel: '+79160930930',
   isemailnotificationson: false,
   partnerbonuses: 0,
   caneditorders: false,
@@ -132,11 +167,19 @@ export const UserOtherModelMockData = validateModel(UserOtherModel, {
   familyname: 'Тяпкин',
   joineddate: new Date('2023-04-04'),
 });
+export const UserPartnerModelMockData = validateModel(UserPartnerModel, {
+  id: 'USER_ID',
+  givenname: 'Сергей',
+  familyname: 'Тяпкин',
+  city: 'Москва',
+  joineddate: new Date('2023-04-04'),
+  totalvalue: 515,
+});
 export const UsersListModel = {
   users: ArrayType(UserModel),
 };
 export const UsersListModelMockData = {
-  categories: [
+  users: [
     Object.assign({}, UserModelMockData, {id: 'USER_ID_1', familyName: 'Первый'}),
     Object.assign({}, UserModelMockData, {id: 'USER_ID_2', familyName: 'Второй'}),
     Object.assign({}, UserModelMockData, {id: 'USER_ID_3', familyName: 'Третий'}),
@@ -146,10 +189,20 @@ export const UsersOtherListModel = {
   users: ArrayType(UserOtherModel),
 };
 export const UsersOtherListModelMockData = {
-  categories: [
+  users: [
     Object.assign({}, UserOtherModelMockData, {id: 'USER_ID_1', familyName: 'Первый'}),
     Object.assign({}, UserOtherModelMockData, {id: 'USER_ID_2', familyName: 'Второй'}),
     Object.assign({}, UserOtherModelMockData, {id: 'USER_ID_3', familyName: 'Третий'}),
+  ],
+};
+export const UserPartnerListModel = {
+  partners: ArrayType(UserPartnerModel),
+};
+export const UserPartnerListModelMockData = {
+  partners: [
+    Object.assign({}, UserPartnerModelMockData, {id: 'USER_ID_1', familyName: 'Первый'}),
+    Object.assign({}, UserPartnerModelMockData, {id: 'USER_ID_2', familyName: 'Второй'}),
+    Object.assign({}, UserPartnerModelMockData, {id: 'USER_ID_3', familyName: 'Третий'}),
   ],
 };
 

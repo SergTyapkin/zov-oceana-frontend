@@ -110,6 +110,8 @@
 
     <section class="orders" @input="onInput">
       <div class="left-column">
+        <InputComponent v-model="order.id" disabled title="#ID" />
+
         <SelectList
           v-model="order.userId"
           :list="
@@ -207,7 +209,10 @@
           <div>{{ costFormatter(order?.goods?.reduce?.((acc, g) => acc + g.cost * g.amount, 0)) }}</div>
         </section>
 
-        <div class="info" v-if="orderId">Создан: {{ dateTimeFormatter(order.createdDate) }}</div>
+        <div class="info" v-if="orderId">
+          Создан: {{ dateTimeFormatter(order.createdDate) }} <br>
+          #ID: {{ order.id }} <br>
+        </div>
       </div>
     </section>
 
@@ -243,13 +248,9 @@ export default {
       newGoodsCost: undefined as undefined | number,
 
       loading: false,
-    };
-  },
 
-  computed: {
-    OrderStatuses() {
-      return OrderStatuses
-    }
+      OrderStatuses,
+    };
   },
 
   async mounted() {
@@ -291,12 +292,12 @@ export default {
     },
 
     async updateOrderData() {
-      console.log(this.order.goods);
       await this.$request(
         this,
         this.$api.updateOrder,
         [
           this.order.id,
+          this.order.userId,
           this.order.number,
           this.order.addressTextCopy,
           this.order.commentTextCopy!,

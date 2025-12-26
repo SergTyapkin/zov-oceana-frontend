@@ -297,3 +297,11 @@ export function addressFormatter(address: Address, defaultTitle = '', addFullDes
 export function costFormatter(cost: number) {
   return '₽' + Math.round(cost * 100) / 100;
 }
+
+export function telFormatter(tel: string) {
+  tel = tel.trim().replace(/^8/, '+7').replace('-()', '');
+  if (tel.length < 12) {
+    return tel;
+  }
+  return `${tel.slice(0, 2)} ${tel.slice(2, 5)} ${tel.slice(5, 8)}-${tel.slice(8, 10)}-${tel.slice(10)}`;
+}

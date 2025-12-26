@@ -137,6 +137,7 @@ export default {
         data.vk,
         data.email,
         data.phone,
+        data.city,
         data.password,
         detectBrowser(),
         detectOS(),

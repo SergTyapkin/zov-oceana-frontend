@@ -19,10 +19,12 @@ import {
   OrderModelMockData,
   UserOtherModel,
   UserOtherModelMockData,
-  UsersOtherListModelMockData,
-  UsersOtherListModel,
+  UsersListModelMockData,
+  UsersListModel,
+  UserPartnerListModel,
+  UserPartnerListModelMockData,
 } from '~/utils/APIModels';
-import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus } from '~/utils/models';
+import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus, UserPartner } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
@@ -80,22 +82,26 @@ export default class API extends REST_API {
   // User
   getUser = () =>
     this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
+  getOtherUserAdmin = (id: string) =>
+    this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   getAllUsersAdmin = () =>
-    this.#GET(`/user/all`, {}, UsersOtherListModel, Response200(UsersOtherListModelMockData)) as MyResponse<{users: UserOther[]}>;
+    this.#GET(`/user/all`, {}, UsersListModel, Response200(UsersListModelMockData)) as MyResponse<{users: User[]}>;
   getOtherUser = (id: string) =>
     this.#GET(`/user`, {id}, UserOtherModel, Response200(UserOtherModelMockData)) as MyResponse<UserOther>;
     // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
-  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, password?: string, isEmailNotificationsOn?: boolean }) =>
+  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, city?: string, password?: string, isEmailNotificationsOn?: boolean }) =>
     this.#PUT(`/user`, Object.assign({id}, profileData), UserModel) as MyResponse<User>;
+  updateProfileAdmin = (id: string, givenName: string, familyName: string, middleName: string, email: string, avatarUrl: string, tel: string, city: string, partnerStatus: string, isEmailNotificationsOn: string, tgUsername: string, tgId: string, referrerId: string) =>
+    this.#PUT(`/user`, {id, givenName, familyName, middleName, email, avatarUrl, tel, city, partnerStatus, isEmailNotificationsOn, tgUsername, tgId, referrerId}, UserModel) as MyResponse<User>;
   updateProfilePassword = (id: string, oldPassword: string, newPassword: string) =>
     this.#PUT(`/user/password`, {id, oldPassword, newPassword}) as MyResponse<unknown>;
   register = (
-    givenName: string, middleName: string, familyName: string, email: string, tel: string, password: string,
+    givenName: string, middleName: string, familyName: string, email: string, tel: string, city: string, password: string,
     tgId: string, tgUsername: string, tgHash: string, tgAuthDate: string, tgPhotoUrl: string, tgFirstName: string, tgLastName: string,
     referrerId: string,
   ) =>
     this.#POST(`/user`, {
-      givenName, middleName, familyName, email, tel, password,
+      givenName, middleName, familyName, email, tel, city, password,
       tgId, tgUsername, tgHash, tgAuthDate, tgPhotoUrl, tgFirstName, tgLastName,
       referrerId,
       clientBrowser: detectBrowser(), clientOS: detectOS(),
@@ -121,7 +127,9 @@ export default class API extends REST_API {
   getUserBonusesHistoryMonthly = (userId: string) =>
     this.#GET(`/partner/history/monthly`, {userId}) as MyResponse<unknown>;
   getAllPartnerUsers = (userId: string) =>
-    this.#GET(`/partner/users/bonuses/monthly`, {userId}) as MyResponse<unknown>;
+    this.#GET(`/partner/users/bonuses/monthly`, {userId}, UserPartnerListModel, Response200(UserPartnerListModelMockData)) as MyResponse<{users: UserPartner[]}>;
+  createHistoryBonusesRecord = (userId: string, value: number, comment: string) =>
+    this.#POST(`/partner/history`, {userId, value, comment}) as MyResponse<unknown>;
 
   // Globals
   getGlobals = () =>
@@ -162,8 +170,8 @@ export default class API extends REST_API {
     this.#POST(`/orders/admin`, {userId, goods, status, trackingCode, addressTextCopy, commentTextCopy}) as MyResponse<unknown>;
   deleteOrder = (id: string) =>
     this.#DELETE(`/orders`, {id}) as MyResponse<unknown>;
-  updateOrder = (id: string, number: number, addressTextCopy: string, commentTextCopy: string, status: OrderStatus, trackingCode: string, goods: Goods[]) =>
-    this.#PUT(`/orders`, {id, number, addressTextCopy, commentTextCopy, status, trackingCode, goods}) as MyResponse<unknown>;
+  updateOrder = (id: string, userId: string, number: number, addressTextCopy: string, commentTextCopy: string, status: OrderStatus, trackingCode: string, goods: Goods[]) =>
+    this.#PUT(`/orders`, {id, userId, number, addressTextCopy, commentTextCopy, status, trackingCode, goods}) as MyResponse<unknown>;
   updateOrderStatus = (number: string, status: string) =>
     this.#PUT(`/orders`, {number, status}) as MyResponse<unknown>;
   getAllAdminOrdersList = () =>

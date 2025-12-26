@@ -7,8 +7,8 @@
 @import '../../styles/animations.styl'
 @import '../../styles/scrollbars.styl'
 
-.root-page-admin-goods
-  page-root()
+.root-page-admin-categories
+  //page-root()
 
   section.filters
     page-root-disable()
@@ -40,11 +40,15 @@
     align-items center
     box-shadow 0 15px 15px #00000033
     padding 40px 10px
+    overflow auto
+    scrollable()
     .row
       display contents
       > *
         trans()
         padding-inline 10px
+        @media({mobile})
+          padding-inline 3px
         &.button
           button-no-fill()
           width min-content
@@ -67,7 +71,7 @@
 </style>
 
 <template>
-  <div class="root-page-admin-goods">
+  <div class="root-page-admin-categories">
     <section class="goods">
       <div class="row header">
         <div>#</div>
