@@ -139,7 +139,7 @@
         @keydown.enter="$emit('submit')" />
       <textarea
         v-model="value"
-        rows="4"
+        :rows="rows"
         v-else
         :placeholder="placeholder"
         :readonly="readonly"
@@ -228,6 +228,10 @@ export default {
     errorText: {
       type: String,
       default: '',
+    },
+    rows: {
+      type: Number,
+      default: 4,
     },
     error: String as boolean | string,
     success: Boolean,

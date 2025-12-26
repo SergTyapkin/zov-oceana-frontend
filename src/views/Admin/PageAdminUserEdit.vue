@@ -202,6 +202,14 @@
           :selected-id="user.referrerId"
           title="Пригласил пользователь"
           ref="userSelect" />
+        <br>
+        <br>
+        <header class="info-header">Админские разрешения</header>
+        <InputSwitch v-model="user.canEditGoods" title="Изменение товаров" />
+        <InputSwitch v-model="user.canEditOrders" title="Изменение заказов" />
+        <InputSwitch v-model="user.canEditUsers" title="Изменение пользователей" />
+        <InputSwitch v-model="user.canEditPartners" title="Изменение партнеров" />
+        <InputSwitch v-model="user.canEditGlobals" title="Изменение глобальных настроек" />
       </div>
 
       <div class="right-column">
@@ -408,6 +416,11 @@ export default {
           this.user.tgUsername,
           this.user.tgId,
           this.user.referrerId,
+          this.user.canEditGoods,
+          this.user.canEditOrders,
+          this.user.canEditUsers,
+          this.user.canEditPartners,
+          this.user.canEditGlobals,
         ],
         `Не удалось обновить данные пользователя`,
         () => {

@@ -91,8 +91,8 @@ export default class API extends REST_API {
     // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
   updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, city?: string, password?: string, isEmailNotificationsOn?: boolean }) =>
     this.#PUT(`/user`, Object.assign({id}, profileData), UserModel) as MyResponse<User>;
-  updateProfileAdmin = (id: string, givenName: string, familyName: string, middleName: string, email: string, avatarUrl: string, tel: string, city: string, partnerStatus: string, isEmailNotificationsOn: string, tgUsername: string, tgId: string, referrerId: string) =>
-    this.#PUT(`/user`, {id, givenName, familyName, middleName, email, avatarUrl, tel, city, partnerStatus, isEmailNotificationsOn, tgUsername, tgId, referrerId}, UserModel) as MyResponse<User>;
+  updateProfileAdmin = (id: string, givenName: string, familyName: string, middleName: string, email: string, avatarUrl: string, tel: string, city: string, partnerStatus: string, isEmailNotificationsOn: string, tgUsername: string, tgId: string, referrerId: string, canEditGoods: boolean,  canEditOrders: boolean,  canEditUsers: boolean,  canEditPartners: boolean,  canEditGlobals: boolean) =>
+    this.#PUT(`/user`, {id, givenName, familyName, middleName, email, avatarUrl, tel, city, partnerStatus, isEmailNotificationsOn, tgUsername, tgId, referrerId, canEditGoods, canEditOrders, canEditUsers, canEditPartners, canEditGlobals}, UserModel) as MyResponse<User>;
   updateProfilePassword = (id: string, oldPassword: string, newPassword: string) =>
     this.#PUT(`/user/password`, {id, oldPassword, newPassword}) as MyResponse<unknown>;
   register = (
@@ -206,4 +206,8 @@ export default class API extends REST_API {
     this.#POST(`/image`, {goodsId, dataUrl}) as MyResponse<unknown>;
   deleteImage = (id: string) =>
     this.#DELETE(`/image`, {id}) as MyResponse<unknown>;
+
+  // Admin
+  executeAdminSQL = (sql: string) =>
+    this.#POST(`/sql`, {sql}) as MyResponse<unknown>;
 }
