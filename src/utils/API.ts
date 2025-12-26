@@ -134,6 +134,8 @@ export default class API extends REST_API {
   // Globals
   getGlobals = () =>
     this.#GET(`/globals`, {}, GlobalsModel, Response200(GlobalsModelMockData)) as MyResponse<Globals>;
+  updateGlobals = (isOnMaintenance: boolean, goodsIdsOnLanding: string[]) =>
+    this.#PUT(`/globals`, {isOnMaintenance, goodsIdsOnLanding}) as MyResponse<unknown>;
 
   // Categories
   getCategories = () =>

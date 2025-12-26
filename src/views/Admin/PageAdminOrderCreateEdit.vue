@@ -178,7 +178,6 @@
               class="button-add"
               @click="
                 () => {
-                  $log(newGoods)
                   const existingIdx = order.goods.findIndex(g => g.id === newGoods?.id);
                   if (newGoods === undefined || existingIdx !== -1) {
                     newGoods = undefined;
@@ -267,6 +266,7 @@ export default {
   methods: {
     dateTimeFormatter,
     costFormatter,
+
     async updateOrder() {
       this.order = (await this.$request(
         this,

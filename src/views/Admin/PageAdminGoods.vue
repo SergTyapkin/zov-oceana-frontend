@@ -137,9 +137,6 @@
     </section>
     <router-link :to="{name: 'adminGoodsCreate'}" class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</router-link>
 
-    <header class="header-info">Категории товаров</header>
-    <PageAdminCategories />
-
     <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>

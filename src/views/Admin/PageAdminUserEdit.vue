@@ -276,8 +276,7 @@
       </div>
     </section>
 
-    <button class="button-save" v-if="userId !== undefined" @click="updateUserData">Сохранить изменения</button>
-    <button class="button-save" v-else @click="createUser">Создать пользователь</button>
+    <button class="button-save" @click="updateUserData">Сохранить изменения</button>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>

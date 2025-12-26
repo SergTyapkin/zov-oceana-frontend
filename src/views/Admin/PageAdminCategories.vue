@@ -38,8 +38,7 @@
     grid-template-columns auto auto 1fr auto auto
     grid-row-gap 10px
     align-items center
-    box-shadow 0 15px 15px #00000033
-    padding 40px 10px
+    padding 40px 10px 0 10px
     overflow auto
     scrollable()
     .row
