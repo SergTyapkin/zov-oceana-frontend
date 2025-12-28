@@ -222,7 +222,7 @@
         <div v-if="order.commentTextCopy">Комментарий: {{ order.commentTextCopy }}</div>
       </div>
       <div class="order-status">
-        <div class="status" :class="OrderStatuses[order.status].color">{{ OrderStatuses[order.status].title }}</div>
+        <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status].title }}</div>
       </div>
     </section>
 

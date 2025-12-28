@@ -115,7 +115,7 @@
 
       <router-link
         class="row"
-        :class="[OrderStatuses[order.status].color]"
+        :class="[OrderStatuses[order.status]?.color]"
         :to="{ name: 'adminOrderEdit', params: { id: order.id } }"
         v-for="order in ordersFiltered"
         :key="order.id"
@@ -125,7 +125,7 @@
         <div>
           {{ order.goods.reduce((acc, g) => acc + `\n${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`, '') }}
         </div>
-        <div class="status">{{ OrderStatuses[order.status].title }}</div>
+        <div class="status">{{ OrderStatuses[order.status]?.title }}</div>
         <div>{{ order.userGivenName }} {{ order.userFamilyName }}</div>
         <div>{{ costFormatter(order.goods.reduce((acc, g) => acc + g.cost * g.amount!, 0)) }}</div>
         <div>{{ dateTimeFormatter(order.createdDate) }}</div>
