@@ -100,7 +100,7 @@
     <div class="status-container">
       <div class="status-column">
         <div class="cost">{{ costFormatter(totalCost) }}</div>
-        <div class="status" :class="[OrderStatuses[order.status]?.color]">{{ OrderStatuses[order.status].title }}</div>
+        <div class="status" :class="[OrderStatuses[order.status]?.color]">{{ OrderStatuses[order.status]?.title }}</div>
       </div>
 
       <button class="more-info">

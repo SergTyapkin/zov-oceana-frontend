@@ -40,6 +40,12 @@
       animation-float(0.5s, -20px, 0, left)
     .order-status
       animation-float(0.5s, -20px, 0, left)
+      display flex
+      align-items center
+      gap 10px
+      .date
+        font-small-extra()
+        color colorTextInvert4
       .status
         font-small-extra()
 
@@ -222,7 +228,8 @@
         <div v-if="order.commentTextCopy">Комментарий: {{ order.commentTextCopy }}</div>
       </div>
       <div class="order-status">
-        <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status].title }}</div>
+        <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status]?.title }}</div>
+        <div class="date">изменено {{ dateTimeFormatter(order.updatedDate) }}</div>
       </div>
     </section>
 
@@ -235,8 +242,7 @@
           class="goods"
           :goods="goods"
           no-amount-selectors
-          no-delete-button
-        />
+          no-delete-button />
       </ul>
 
       <section class="order-controls" style="--animation-index: 1">
@@ -246,7 +252,9 @@
           <ul class="costs-list">
             <li class="cost-container">
               <p class="title">Стоимость товаров</p>
-              <div class="cost">{{ costFormatter(order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
+              <div class="cost">
+                {{ costFormatter(order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0)) }}
+              </div>
             </li>
             <li class="cost-container">
               <p class="title">Стоимость Доставки</p>
@@ -256,7 +264,9 @@
 
           <div class="cost-total-container">
             <p class="title">Всего</p>
-            <div class="cost">{{ costFormatter(order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0)) }}</div>
+            <div class="cost">
+              {{ costFormatter(order.goods?.reduce?.((total, g) => total + g.cost * (g.amount || 0), 0)) }}
+            </div>
           </div>
         </article>
       </section>
@@ -272,7 +282,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
-import { costFormatter } from '~/utils/utils';
+import { costFormatter, dateFormatter, dateTimeFormatter } from '~/utils/utils';
 import { OrderStatuses } from '~/constants';
 
 export default {
@@ -292,8 +302,8 @@ export default {
 
   computed: {
     OrderStatuses() {
-      return OrderStatuses
-    }
+      return OrderStatuses;
+    },
   },
 
   mounted() {
@@ -306,6 +316,8 @@ export default {
   },
 
   methods: {
+    dateTimeFormatter,
+    dateFormatter,
     costFormatter,
     async updateOrder() {
       this.order = (await this.$request(
