@@ -80,6 +80,7 @@
     "jest-html-reporter": "^4.3.0",
     "jest-junit": "^16.0.0",
     "lint-staged": "^16.1.5",
+    "picocolors": "^1.1.1",
     "postcss": "^8.5.6",
     "pre-commit": "^1.2.2",
     "prettier": "^3.3.3",

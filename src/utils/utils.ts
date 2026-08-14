@@ -1,6 +1,7 @@
 import swAPI from '~/serviceWorker/swAPI';
 import routes from '~/routes';
 import { Address } from '~/utils/models';
+import { TBANK_PAYMENT_SCRIPT_URL } from '~/constants';
 
 export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
   popupsError: (title: string, desc: string) => any,
@@ -12,7 +13,7 @@ export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
     errorText: string,
     callback?: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any,
     toFallbackValue?: Fallback,
-    errorCallbacks?: {[key: number]: () => any},
+    errorCallbacks?: { [key: number]: () => any },
   ) => {
     context.loading = true;
     try {
@@ -49,7 +50,7 @@ export function getCookie(name: string) {
 export function setCookie(
   name: string,
   value: string,
-  options: { path?: string; expires?: Date | string; 'max-age'?: number; [key: string]: any } = {},
+  options: { path?: string; expires?: Date | string; 'max-age'?: number;[key: string]: any } = {},
 ) {
   options = {
     path: '/',
@@ -81,7 +82,7 @@ export function deleteCookie(name: string) {
 }
 
 export function toDebounced(callee: (...args: unknown[]) => unknown, timeoutMs: number) {
-  return function perform(this: {lastCall: number, lastCallTimer: ReturnType<typeof setTimeout>}, ...args: unknown[]) {
+  return function perform(this: { lastCall: number, lastCallTimer: ReturnType<typeof setTimeout> }, ...args: unknown[]) {
     const previousCall = this.lastCall;
 
     this.lastCall = Date.now();
@@ -176,6 +177,12 @@ export function timeFormatter(d: Date | null, style: DateTypeStyle | any = 'shor
   return d.toLocaleTimeString('ru-RU', { timeStyle: style });
 }
 
+export function timeMinutesFormatter(d: Date | null) {
+  const str = timeFormatter(d, 'medium');
+  const idx = str.indexOf(':');
+  return str.slice(idx + 1);
+}
+
 export function dateTimeFormatter(
   d: Date | null,
   dateStyle: DateTypeStyle | any = 'medium',
@@ -209,7 +216,7 @@ export function costFormatterWorded(val: number): string {
 }
 
 export async function saveAllAssetsByServiceWorker(
-  callbackEach?: (data: {current: string, progress: number, total: number}) => void,
+  callbackEach?: (data: { current: string, progress: number, total: number }) => void,
   callbackFinish?: () => void,
   callbackError?: (errUrl: string | null) => void,
 ) {
@@ -217,9 +224,9 @@ export async function saveAllAssetsByServiceWorker(
   try {
     const module = await import(/* @vite-ignore */ `${'/assetsList.js'}`);
     allCachableResources = module.default; // list of all cachable resources urls
-    console.log('Imported assetsList.js:', allCachableResources );
+    console.log('Imported assetsList.js:', allCachableResources);
   } catch {
-    console.warn('Cannot find assetsList.js. Nothing to cache. Maybe we are in develompent mode' )
+    console.warn('Cannot find assetsList.js. Nothing to cache. Maybe we are in develompent mode')
   }
 
   async function saveAllSite() {
@@ -249,7 +256,7 @@ export async function saveAllAssetsByServiceWorker(
     const word = '[\\w-~!*\'()<>"{}|^`]+';
     const baseUrl = `(http(s)?://${word}(\\.${word})+)`;
     const anyEnding = `([?/].*)?`;
-    const regexps = {} as {[key: string]: string};
+    const regexps = {} as { [key: string]: string };
     Object.keys(routes).forEach(route => {
       if (route.includes('pathMatch')) {
         return;
@@ -290,7 +297,7 @@ export function setSmoothScrollOnThisPage() {
 
 export function addressFormatter(address: Address, defaultTitle = '', addFullDescription = false) {
   const fullAddress = `г. ${address.city}, ул. ${address.street}, д. ${address.house}`;
-  const title = defaultTitle || address.title;
+  const title = address.title || defaultTitle;
   return title ? (addFullDescription ? `${title} (${fullAddress})` : title) : fullAddress;
 }
 
@@ -304,4 +311,62 @@ export function telFormatter(tel: string) {
     return tel;
   }
   return `${tel.slice(0, 2)} ${tel.slice(2, 5)} ${tel.slice(5, 8)}-${tel.slice(8, 10)}-${tel.slice(10)}`;
+}
+
+
+export async function loadES5JsScript(url: string) {
+  return new Promise((resolve, reject) => {
+    // Проверяем, не загружен ли уже скрипт
+    const existingScript = document.querySelector(`script[src="${url}"]`);
+    if (existingScript) {
+      // Если скрипт уже есть, проверяем его состояние
+      if (existingScript.hasAttribute('data-loaded')) {
+        // Скрипт уже загружен
+        resolve(null);
+      } else {
+        // Скрипт добавлен, но еще не загружен - ждем его загрузки
+        existingScript.addEventListener('load', () => resolve(null));
+        existingScript.addEventListener('error', () => reject());
+      }
+      return;
+    }
+
+    const element = document.createElement('script');
+    element.src = url;
+    element.type = 'text/javascript';
+    element.async = true;
+    
+    element.onload = () => {
+      element.setAttribute('data-loaded', 'true');
+      resolve(null);
+    };
+    element.onerror = () => reject();
+    
+    document.body.appendChild(element);
+  });
+}
+
+export interface IntegrationInitConfig {
+  terminalKey: string;
+  product: 'eacq';
+  features?:  {
+    addcardIframe?: {
+      container?: HTMLElement | null;
+      paymentStartCallback?: () => unknown;
+    };
+    iframe?: {
+      container?: HTMLElement | null;
+      paymentStartCallback?: () => unknown;
+    };
+    payment?: {
+      container?: HTMLElement | null;
+      paymentStartCallback?: () => unknown;
+    };
+  };
+}
+export async function initPaymentWidget(initConfig: IntegrationInitConfig) {
+  await loadES5JsScript(TBANK_PAYMENT_SCRIPT_URL);
+
+  // @ts-expect-error PaymentIntegration is ES5 object from imported script
+  return await PaymentIntegration.init(initConfig);
 }

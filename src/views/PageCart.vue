@@ -124,7 +124,7 @@
   <div class="root-page">
     <section class="title">
       <router-link :to="{ name: 'market' }" class="title-button-back" style="--animation-index: 0">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
+        <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Назад к каталогу
       </router-link>
       <header class="header" style="--animation-index: 1">Корзина</header>
@@ -178,17 +178,23 @@
             v-else
             :disabled="!$cart.length || loading"
             title="Выберите адрес доставки"
-            :list="addresses.map(a => ({ name: addressFormatter(a, '', true), value: a.id }))"
+            :list="[
+              ...(addresses.map(a => ({ name: addressFormatter(a, '', true), value: a.id })) as {name: string, value: string | symbol}[]),
+              {name: '+ Добавить адрес', value: CREATE_NEW_ADDRESS_SYMBOL},
+            ]"
             v-model="selectedAddressId"
             error-text="Не выбрано"
-            :error="errors.address" />
+            :error="errors.address"
+            @input="onChangeAddress"
+          />
         </section>
 
         <button
           v-if="!isTakeOrderBlockShown"
           :disabled="!selectedAddressId || !$cart.length || loading"
           class="button-confirm-order"
-          @click="takeOrder">
+          @click="takeOrder"
+        >
           Оформить заказ
         </button>
       </section>
@@ -207,6 +213,8 @@ import { addressFormatter, costFormatter, toDebounced } from '~/utils/utils';
 import SelectList from '~/components/SelectList.vue';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 
+const CREATE_NEW_ADDRESS_SYMBOL = Symbol('Create new address item');
+
 export default {
   components: { GoodsInfoCard, SelectList, CircleLinesLoading },
 
@@ -214,7 +222,7 @@ export default {
     return {
       isTakeOrderBlockShown: false,
 
-      selectedAddressId: null as string | null,
+      selectedAddressId: null as string | null | symbol,
       addresses: [] as Address[],
       errors: {
         address: false,
@@ -223,6 +231,7 @@ export default {
       loading: false,
 
       DEFAULT_GOODS_IMAGE,
+      CREATE_NEW_ADDRESS_SYMBOL,
     };
   },
 
@@ -306,20 +315,30 @@ export default {
       await this.$request(
         this,
         this.$api.createOrder,
-        [this.$user.id, this.selectedAddressId, this.$cart],
+        [this.$user.id, this.selectedAddressId as string, this.$cart],
         `Не удалось оформить заказ`,
-        () => {
-          this.$request(
+        async (orderData: {id: string}) => {
+          // Если заказ оформился - сбрасываем корзину
+          await this.$request(
             this,
             this.$api.setGoodsInCart,
             [this.$user.id, []],
             `Не удалось сбросить товары в корзине`,
           );
           this.$store.dispatch('CLEAR_CART');
-          this.$router.push({ name: 'profileOrders' });
+
+          // Переводим на страницу оплаты
+          this.$router.push({ name: 'paymentOrders', params: {id: orderData.id} });
         },
       );
     },
+
+    onChangeAddress() {
+      if (this.selectedAddressId === CREATE_NEW_ADDRESS_SYMBOL) {
+        this.$router.push({name: 'profileAddresses'});
+        return;
+      }
+    }
   },
 };
 </script>

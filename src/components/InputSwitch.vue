@@ -20,6 +20,9 @@
     font-style italic
     color colorText4
     trans()
+    &.link
+      color colorEmp2
+      text-decoration underline
 
   .input-container
     position relative
@@ -112,12 +115,28 @@
 
     .bottom-description
       min-width 0
+
+  &.error
+    .title
+    .description
+    .bottom-description
+      color colorError
 </style>
 
 <template>
-  <section class="input-root" :class="{error, success}" :style='{"--off-title": `"${offStateTitle}"`, "--on-title": `"${onStateTitle}"`}'>
+  <section 
+    class="input-root" 
+    :class="{error, success}"
+    :style="{
+      &quot;--off-title&quot;: `&quot;${offStateTitle}&quot;`,
+      &quot;--on-title&quot;: `&quot;${onStateTitle}&quot;`
+    }"
+  >
     <header class="title" v-if="title">{{ title }}</header>
-    <p v-if="description" class="description">{{ description }}</p>
+    <p v-if="description" class="description" :class="{link: href}">
+      <router-link v-if="href" :to="href">{{ description }}</router-link>
+      <span v-else>{{ description }}</span>
+    </p>
 
     <div
       class="input-container"
@@ -168,6 +187,10 @@ export default {
     onStateTitle: {
       type: String,
       default: 'YES',
+    },
+    href: {
+      type: Object,
+      default: null,
     },
     error: Boolean,
     success: Boolean,

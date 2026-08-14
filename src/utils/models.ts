@@ -67,6 +67,7 @@ export interface Goods {
   cost: number;
   isOnSale: boolean;
   isWeighed: boolean;
+  isDelicates: boolean;
   images: {id: string, path: string}[];
   categories: {id: string, title: string}[];
   characters?: Record<PropertyKey, string | number>;

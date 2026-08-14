@@ -117,6 +117,11 @@ export default {
           validationRegExp: Validators.password.regExp,
           prettifyResult: Validators.password.prettifyResult,
         },
+        allowPolitics: {
+          title: 'Согласие не обработку персональных данных',
+          name: 'politics',
+          type: 'checkbox',
+        },
       },
       loading: false,
     };
@@ -124,6 +129,11 @@ export default {
 
   methods: {
     async register(data) {
+      if (!data.allowPolitics) {
+        this.$refs.form.setError([this.fields.allowPolitics], 'Необходимо отметить согласие');
+        return;
+      }
+
       if (data.password !== data.passwordAgain) {
         this.$refs.form.setError([this.fields.password, this.fields.passwordAgain], 'Пароли не совпадают');
         return;

@@ -204,8 +204,8 @@
   <header class="root-header">
     <div class="row-inner">
       <router-link :to="{ name: 'default' }" class="left-group" style="--animation-index: 0">
-        <img class="logo" src="/static/images/logo-small.png" alt="logo" />
-        <span class="text">Зов океана</span>
+        <img class="logo" src="/static/images/logo-small.png" alt="logo">
+        <span class="text">{{ COMPANY_TITLE }}</span>
       </router-link>
 
       <div class="center-group" style="--animation-index: 1">
@@ -217,11 +217,11 @@
 
       <div class="right-group" style="--animation-index: 3">
         <router-link v-if="$store.state.user.hasSomeAdminRights" :to="{ name: 'admin' }" class="admin">
-          <img src="/static/icons/admin.svg" alt="admin" />
+          <img src="/static/icons/admin.svg" alt="admin">
         </router-link>
 
         <router-link :to="{ name: 'cart' }" class="cart" @click="isOverlayMenuShown = false">
-          <img src="/static/icons/cart-dark.svg" alt="cart" />
+          <img src="/static/icons/cart-dark.svg" alt="cart">
           <div class="goods-number" v-if="$store.state.cart.length">{{ $store.state.cart.length }}</div>
         </router-link>
 
@@ -229,15 +229,16 @@
           v-if="$store.state.user.isSignedIn"
           :to="{ name: 'profile' }"
           class="profile"
-          @click="isOverlayMenuShown = false">
-          <img src="/static/icons/profile.svg" alt="profile" />
+          @click="isOverlayMenuShown = false"
+        >
+          <img src="/static/icons/profile.svg" alt="profile">
         </router-link>
         <button v-else @click="showSignInModal()" class="profile">
-          <img src="/static/icons/profile.svg" alt="profile" />
+          <img src="/static/icons/profile.svg" alt="profile">
         </button>
 
         <button class="menu" @click="isOverlayMenuShown = true" style="--animation-index: 4">
-          <img src="/static/icons/menu.svg" alt="menu" />
+          <img src="/static/icons/menu.svg" alt="menu">
         </button>
       </div>
     </div>
@@ -245,7 +246,7 @@
     <section class="overlay-menu" :class="{ hidden: !isOverlayMenuShown }">
       <div class="bg" @click="isOverlayMenuShown = false" />
 
-      <header class="header"><img src="/static/images/logo-big.png" alt="logo" />Зов океана</header>
+      <header class="header"><img src="/static/images/logo-big.png" alt="logo">{{ COMPANY_TITLE }}</header>
 
       <nav v-if="$store.state.user.hasSomeAdminRights" class="nav">
         <header class="header">Администрирование</header>
@@ -265,14 +266,16 @@
             @click="
               showSignInModal();
               isOverlayMenuShown = false;
-            ">
+            "
+          >
             Войти
           </button>
           <button
             @click="
               showRegisterModal();
               isOverlayMenuShown = false;
-            ">
+            "
+          >
             Регистрация
           </button>
         </div>
@@ -286,13 +289,14 @@
           v-for="category in $globals?.categories"
           :to="{ name: 'market', query: { categoryId: category.id } }"
           :key="category.id"
-          @click="isOverlayMenuShown = false">
+          @click="isOverlayMenuShown = false"
+        >
           {{ category.title }}
         </router-link>
       </nav>
 
       <button class="button-close" @click="isOverlayMenuShown = false">
-        <img src="/static/icons/cross.svg" alt="close" />
+        <img src="/static/icons/cross.svg" alt="close">
       </button>
     </section>
 
@@ -301,11 +305,11 @@
         <header class="header">Регистрация</header>
         <main class="main">
           <transition name="opacity" mode="out-in">
-<!--            <div v-if="!userData.tgId">-->
-<!--              <TGAuth @login="onTGSignIn" class="tg-auth" />-->
+            <!--            <div v-if="!userData.tgId">-->
+            <!--              <TGAuth @login="onTGSignIn" class="tg-auth" />-->
 
-<!--              <div class="desc">или</div>-->
-<!--            </div>-->
+            <!--              <div class="desc">или</div>-->
+            <!--            </div>-->
             <div v-if="userData.tgId">
               Вы успешно авторизованы через Telegram: @{{ userData.tgUsername }}<br>
               Заполните данные ниже для завершения регистрации
@@ -399,11 +403,34 @@
             class="field"
             @submit="register"
           />
+          <InputSwitch
+            v-model="userData.isAllowOffer"
+            :error="!!errors.isAllowOffer"
+            on-state-title="ДА"
+            off-state-title=""
+            description="Я принимаю условия договора публичной оферты"
+            :href="{name: 'offer'}"
+            :bottom-description="errors.isAllowOffer ? 'Необходимо отметить согласие' : ''"
+            class="field" 
+            @submit="register"
+          />
+          <InputSwitch
+            v-model="userData.isAllowPolitics"
+            :error="!!errors.isAllowPolitics"
+            on-state-title="ДА"
+            off-state-title=""
+            description="Я принимаю условия обработки персональных данных и использования cookies"
+            :href="{name: 'politics'}"
+            :bottom-description="errors.isAllowPolitics ? 'Необходимо отметить согласие' : ''"
+            class="field" 
+            @submit="register"
+          />
 
           <button
             class="submit"
             :disabled="loading"
-            @click="register">
+            @click="register"
+          >
             Зарегистрироваться
           </button>
           <button
@@ -411,7 +438,8 @@
             @click="
               showSignInModal();
               hideRegisterModal();
-            ">
+            "
+          >
             Войти
           </button>
         </main>
@@ -454,7 +482,8 @@
           <button
             class="submit"
             :disabled="loading"
-            @click="signIn">
+            @click="signIn"
+          >
             Войти
           </button>
           <button
@@ -462,7 +491,8 @@
             @click="
               hideSignInModal();
               showRegisterModal();
-            ">
+            "
+          >
             Зарегистрироваться
           </button>
         </main>
@@ -474,6 +504,7 @@
 <script lang="ts">
 import ModalsExpandable from '~/components/ModalsExpandable.vue';
 import InputComponent from '~/components/InputComponent.vue';
+import InputSwitch from '~/components/InputSwitch.vue';
 
 import IconProfile from '#/icons/profile.svg';
 import IconEmail from '#/icons/email.svg';
@@ -481,9 +512,10 @@ import IconTelephone from '#/icons/phone.svg';
 import IconPlace from '#/icons/map-pin-place-dark.svg';
 import TGAuth, { TGUser } from '~/components/TGAuth.vue';
 import Validators from '~/utils/validators';
+import { COMPANY_TITLE } from '~/constants';
 
 export default {
-  components: { TGAuth, InputComponent, ModalsExpandable },
+  components: { TGAuth, InputComponent, InputSwitch, ModalsExpandable },
   data() {
     return {
       isOverlayMenuShown: false,
@@ -511,6 +543,9 @@ export default {
         password: '',
         passwordRepeat: '',
         emailOrTel: '',
+
+        isAllowOffer: false,
+        isAllowPolitics: false,
       },
       errors: {
         givenName: false,
@@ -522,9 +557,13 @@ export default {
         password: false,
         passwordRepeat: false,
         emailOrTel: false,
+        isAllowOffer: false,
+        isAllowPolitics: false,
       } as Record<PropertyKey, boolean | string>,
 
       loading: false,
+
+      COMPANY_TITLE,
     };
   },
 
@@ -572,8 +611,11 @@ export default {
     async register() {
       Object.keys(this.errors).forEach(key => (this.errors[key] = false));
 
+      this.errors.isAllowOffer = !this.userData.isAllowOffer;
+      this.errors.isAllowPolitics = !this.userData.isAllowPolitics;
+
       this.errors.givenName = !Validators.name.validate(this.userData.givenName);
-      this.errors.middleName = !Validators.name.validate(this.userData.middleName);
+      this.errors.middleName = !Validators.nameOptional.validate(this.userData.middleName);
       this.errors.familyName = !Validators.name.validate(this.userData.familyName);
       this.errors.email = !Validators.email.validate(this.userData.email);
       this.errors.tel = !Validators.phone.validate(this.userData.tel);
@@ -585,7 +627,7 @@ export default {
       }
 
       this.userData.givenName = Validators.name.prettifyResult(this.userData.givenName);
-      this.userData.middleName = Validators.name.prettifyResult(this.userData.middleName);
+      this.userData.middleName = Validators.nameOptional.prettifyResult(this.userData.middleName);
       this.userData.familyName = Validators.name.prettifyResult(this.userData.familyName);
       this.userData.email = Validators.email.prettifyResult(this.userData.email);
       this.userData.tel = Validators.phone.prettifyResult(this.userData.tel);

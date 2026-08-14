@@ -37,6 +37,7 @@
     scrollable()
     .row
       display contents
+      white-space pre-wrap
       > *
         width 100%
         height 100%
@@ -123,7 +124,7 @@
         <div>{{ order.id }}</div>
         <div>{{ order.number }}</div>
         <div>
-          {{ order.goods.reduce((acc, g) => acc + `\n${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`, '') }}
+          {{ order.goods.map((g) => `${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`).join('\n\n') }}
         </div>
         <div class="status">{{ OrderStatuses[order.status]?.title }}</div>
         <div>{{ order.userGivenName }} {{ order.userFamilyName }}</div>

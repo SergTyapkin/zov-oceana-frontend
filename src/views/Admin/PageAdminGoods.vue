@@ -104,7 +104,8 @@
             "
             :selected-id="filters.categoryId"
             v-model="filters.categoryId"
-            @input="saveFilters" />
+            @input="saveFilters"
+          />
         </div>
       </div>
     </section>
@@ -125,17 +126,24 @@
         <div>{{ costFormatter(goodsOne.cost) }}</div>
         <div>{{ goodsOne.fromLocation }}</div>
         <div>{{ goodsOne.amountLeft }}</div>
-        <div><InputSwitch v-model="goodsOne.isOnSale" /></div>
+        <div>
+          <InputSwitch 
+            v-model="goodsOne.isOnSale"
+            on-state-title="ДА"
+            off-state-title="НЕТ"
+            @click="(e) => {e.preventDefault(); onToggleProductOnSale(goodsOne)}"
+          />
+        </div>
       </router-link>
 
-      <div/>
-      <div/>
-      <div/>
+      <div />
+      <div />
+      <div />
       <div v-if="!goodsFiltered.length && !loading" class="info">Товаров не найдено</div>
-      <div/>
-      <div/>
+      <div />
+      <div />
     </section>
-    <router-link :to="{name: 'adminGoodsCreate'}" class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</router-link>
+    <router-link :to="{name: 'adminGoodsCreate'}" class="button-plus"><img src="/static/icons/plus-thin.svg" alt="plus">Добавить</router-link>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -148,10 +156,9 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Goods } from '~/utils/models';
 import { costFormatter } from '~/utils/utils';
 import InputSwitch from '~/components/InputSwitch.vue';
-import PageAdminCategories from '~/views/Admin/PageAdminCategories.vue';
 
 export default {
-  components: { PageAdminCategories, InputSwitch, CircleLinesLoading, SelectList, InputSearch },
+  components: { InputSwitch, CircleLinesLoading, SelectList, InputSearch },
 
   data() {
     return {
@@ -175,7 +182,8 @@ export default {
             (!this.filters.categoryId ||
               goods.categories.findIndex(c => String(c.id) === String(this.filters.categoryId)) !== -1)
           );
-        });
+        })
+        .sort((a, b) => a.title.localeCompare(b));
     },
   },
 
@@ -196,6 +204,16 @@ export default {
 
     saveFilters() {
       this.$router.replace({ name: 'admin', query: { categoryId: this.filters.categoryId } });
+    },
+
+    async onToggleProductOnSale(goods: Goods) {
+      await this.$request(
+        this,
+        this.$api.updateGoodsIsOnSale,
+        [goods.id, !goods.isOnSale],
+        `Не удалось обновить состояние товара`,
+        () => {goods.isOnSale = !goods.isOnSale},
+      );
     },
   },
 

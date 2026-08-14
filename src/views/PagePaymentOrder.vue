@@ -69,6 +69,17 @@
       margin-bottom 30px
       color colorTextInvert2
 
+    .order-payment
+      animation-float(0.5s, -20px, 0, left)
+      font-small-extra()
+      margin-top 10px
+      padding 5px 10px
+      color colorText1
+      text-align center
+      background mix(colorEmp1, transparent, 90%)
+      width min-content
+      white-space nowrap
+
   section.cart
     display flex
     flex-wrap wrap
@@ -218,18 +229,18 @@
 <template>
   <div class="root-page">
     <section class="title">
-      <router-link :to="{ name: 'profileOrders' }" class="title-button-back" style="--animation-index: 0">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left">
-        Назад к заказам
-      </router-link>
-      <header class="header" style="--animation-index: 1">Заказ №{{ order.number }}</header>
+      <header class="header" style="--animation-index: 1">Оплата заказа №{{ order.number }}</header>
       <div class="address-info">
         <div>Доставляется по адресу: {{ order.addressTextCopy }}</div>
         <div v-if="order.commentTextCopy">Комментарий: {{ order.commentTextCopy }}</div>
       </div>
       <div class="order-status">
         <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status]?.title }}</div>
-        <div class="date">изменено {{ dateTimeFormatter(order.updatedDate) }}</div>
+        <div v-if="order.status === 'created' && !isPaymentTimeOver" class="status yellow">
+          Осталось {{
+            timeMinutesFormatter(new Date(paymentTimeSpent)) }}
+        </div>
+        <div v-else-if="order.status === 'created'" class="status red">Время на оплату вышло</div>
       </div>
     </section>
 
@@ -273,6 +284,10 @@
       </section>
     </section>
 
+    <section class="payment">
+      <div id="payment-widget-target" />
+    </section>
+
     <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
@@ -282,41 +297,106 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
-import { costFormatter, dateFormatter, dateTimeFormatter } from '~/utils/utils';
-import { OrderStatuses } from '~/constants';
+import { costFormatter, dateFormatter, dateTimeFormatter, initPaymentWidget, timeMinutesFormatter } from '~/utils/utils';
+import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS } from '~/constants';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
 
   data() {
     return {
-      orderId: this.$route.params.id,
+      orderId: this.$route.params.id as string,
+
+      paymentTimeSpent: 0,
+      updatingInterval: null as ReturnType<typeof setInterval> | null,
 
       order: {} as Order,
 
       loading: false,
+
+      OrderStatuses,
     };
   },
 
   computed: {
-    OrderStatuses() {
-      return OrderStatuses;
+    isPaymentTimeOver() {
+      const res = this.paymentTimeSpent > PAYMENT_TIME_TO_BE_PAYED_MS;
+      // Перестаем обновлять, если время вышло
+      if (res && this.updatingInterval) {
+        clearInterval(this.updatingInterval);
+      }
+      return res;
     },
   },
 
-  mounted() {
+  async mounted() {
     if (!this.orderId) {
       this.$popups.error('id заказа не задан', 'В url нет id заказа');
       this.$router.push({ name: 'profileOrders' });
       return;
     }
     this.updateOrder();
+
+    this.updatingInterval = setInterval(this.updatePaymentTimeLeft, 1000);
+
+    try {
+      // 1. Инициализируем виджет
+      const integration = await initPaymentWidget({
+        terminalKey: '1781187421158DEMO', // Значение TerminalKey из личного кабинета
+        product: 'eacq',
+        features: {
+          payment: {
+            container: document.getElementById('payment-widget-target'),
+            paymentStartCallback: async () => {
+              // Запрос к бэкенду для создания платежа и получения ссылки на оплату
+              const response = await this.$request(
+                this,
+                this.$api.createPayment,
+                [this.orderId],
+                'Не удалось создать платеж на сервере'
+              );
+
+              console.log("GOTTEN RES", response);
+
+              // Возвращаем URL для оплаты
+              if (!response.ok) {
+                return null;
+              }
+              return response.data.paymentUrl;
+            },
+          },
+        },
+      });
+
+      const mainPaymentIntegration = await integration.payments.get('main-integration'); // Получение интеграции. При интеграции «Все доступные способы оплаты» присваивается имя "main-integration"
+
+      console.log('Виджет оплаты успешно инициализирован', mainPaymentIntegration);
+    } catch (error) {
+      console.error('Ошибка инициализации виджета:', error);
+      this.$popups.error('Ошибка', 'Не удалось загрузить платежный виджет');
+    }
+  },
+
+  unmounted() {
+    if (this.updatingInterval) {
+      clearInterval(this.updatingInterval);
+    }
   },
 
   methods: {
     dateTimeFormatter,
     dateFormatter,
     costFormatter,
+    timeMinutesFormatter,
+
+    updatePaymentTimeLeft() {
+      if (!this.order.id) {
+        this.paymentTimeSpent = 0;
+        return;
+      }
+      this.paymentTimeSpent = Number(new Date()) - Number(this.order.createdDate);
+    },
+
     async updateOrder() {
       this.order = (await this.$request(
         this,
@@ -324,6 +404,8 @@ export default {
         [this.orderId],
         `Не удалось получить данные заказа`,
       )) as Order;
+
+      this.updatePaymentTimeLeft();
     },
   },
 };

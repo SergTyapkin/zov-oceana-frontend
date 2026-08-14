@@ -91,7 +91,7 @@
       <router-link :to="{ name: 'default' }" class="column logo-column">
         <div class="logo-container">
           <img class="logo" src="/static/images/logo-small.png" alt="logo">
-          Зов океана
+          {{ COMPANY_TITLE }}
         </div>
         <div class="desc">Премиальное по доступным ценам</div>
       </router-link>
@@ -101,13 +101,16 @@
         <router-link :to="{ name: 'default' }">Главная</router-link>
         <router-link :to="{ name: 'market' }">Магазин</router-link>
         <router-link :to="{ name: 'profile' }">Профиль</router-link>
+        <br>
+        <router-link :to="{ name: 'delivery' }">Доставка</router-link>
+        <router-link :to="{ name: 'refund' }">Возврат</router-link>
       </section>
 
       <section class="column">
         <header>Категории</header>
         <router-link
           v-for="category in $globals?.categories"
-          :to="{ name: 'market', query: {categoryId: category.id} }"
+          :to="{ name: 'market', query: { categoryId: category.id } }"
           :key="category.id"
         >
           {{ category.title }}
@@ -115,15 +118,24 @@
       </section>
 
       <section class="column">
-        <header>Контакты</header>
-        <a href="mailto:support@zov-oceana.ru" target="_blank">support@zov-oceana.ru</a>
-        <a href="tel:88001234567" target="_blank">8-800-123-4567</a>
-        <span>Пн-Пт 9:00-18:00 МСК</span>
+        <header><router-link :to="{ name: 'contacts' }">Контакты</router-link></header>
+        <a href="mailto:support@zov-oceana.ru" target="_blank">{{ COMPANY_EMAIL }}</a>
+        <a :href="`tel:${COMPANY_PHONE_RAW}`" target="_blank">{{ COMPANY_PHONE }}</a>
+        <span>{{ COMPANY_WORK_PLAN }}</span>
+        <router-link :to="{ name: 'contacts' }">О компании</router-link>
+        
+        <br>
+        <br>
+
+        <header>Документы</header>
+
+        <router-link :to="{ name: 'offer' }">Договор оферты</router-link>
+        <router-link :to="{ name: 'politics' }">Согласие на обработку ПД</router-link>
       </section>
     </section>
 
     <section class="bottom-row">
-      <div class="info">© 2025 Зов океана. Все права защищены.</div>
+      <div class="info">© {{ COMPANY_DATA_UPDATED_YEAR }} {{ COMPANY_TITLE }}. Все права защищены.</div>
       <!--      <div class="bottom-row-bottom">-->
       <!--        <router-link :to="{ name: 'default' }">Политика конфиденциальности</router-link>-->
       <!--        <router-link :to="{ name: 'default' }">Настройка файлов cookie</router-link>-->
@@ -133,12 +145,21 @@
 </template>
 
 <script lang="ts">
+import { COMPANY_DATA_UPDATED_YEAR, COMPANY_EMAIL, COMPANY_PHONE, COMPANY_PHONE_RAW, COMPANY_TITLE, COMPANY_WORK_PLAN } from '~/constants';
+
 export default {
   data() {
-    return {};
+    return {
+      COMPANY_PHONE,
+      COMPANY_PHONE_RAW,
+      COMPANY_EMAIL,
+      COMPANY_WORK_PLAN,
+      COMPANY_TITLE,
+      COMPANY_DATA_UPDATED_YEAR,
+    };
   },
 
-  mounted() {},
+  mounted() { },
 
   methods: {},
 };

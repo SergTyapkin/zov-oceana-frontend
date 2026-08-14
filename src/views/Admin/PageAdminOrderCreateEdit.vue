@@ -52,7 +52,7 @@
     .left-column
       display flex
       flex-direction column
-      gap 10px
+      gap 15px
 
     .left-column
     .right-column
@@ -77,7 +77,7 @@
 
         display flex
         flex-direction column
-        gap 5px
+        gap 15px
         .goods-one-container
           display flex
           justify-content space-between
@@ -103,7 +103,7 @@
   <div class="root-page">
     <router-link :to="{ name: 'adminOrders' }">
       <section class="page-title">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
+        <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Ко всем заказам
       </section>
     </router-link>
@@ -143,7 +143,8 @@
         <InputComponent
           v-model="order.addressTextCopy"
           title="Полный адрес"
-          placeholder="г. Москва, ул. Красная, д. 1к1, п. 2, кв. 15" />
+          placeholder="г. Москва, ул. Красная, д. 1к1, п. 2, кв. 15"
+        />
         <InputComponent v-model="order.commentTextCopy" title="Комментарий" placeholder="Комментарий текстом" />
         <InputComponent v-model="order.secretCode" title="Код получения заказа" disabled />
       </div>
@@ -157,7 +158,7 @@
             <div class="amount">{{ goodsOne.amount }} {{ goodsOne.isWeighed ? 'кг' : 'шт' }}</div>
             <div class="cost">{{ costFormatter(goodsOne.cost * goodsOne.amount) }}</div>
             <button class="button-delete" @click="order.goods.splice(idx, 1)">
-              <img src="/static/icons/trashbox.svg" alt="delete" />
+              <img src="/static/icons/trashbox.svg" alt="delete">
             </button>
           </li>
           <li class="goods-one-container">
@@ -197,8 +198,9 @@
                   newGoodsAmount = undefined;
                   newGoodsCost = undefined;
                 }
-              ">
-              <img src="/static/icons/plus-thin.svg" alt="add" />
+              "
+            >
+              <img src="/static/icons/plus-thin.svg" alt="add">
             </button>
           </li>
         </ul>

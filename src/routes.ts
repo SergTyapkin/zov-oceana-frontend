@@ -18,6 +18,18 @@ export default {
   '/partnership': true,
   '/admin': false,
 
+  // Payment
+  '/payment/order/:id': false,
+  '/payment/takeout': false,
+
+  // Documents
+  '/documents': false,
+  '/documents/politics': true,
+  '/documents/offer': true,
+  '/documents/contacts': true,
+  '/documents/delivery': true,
+  '/documents/refund': true,
+
   // Page 404
   '/:pathMatch(.*)*': false,
 };

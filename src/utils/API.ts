@@ -23,6 +23,8 @@ import {
   UsersListModel,
   UserPartnerListModel,
   UserPartnerListModelMockData,
+  PaymentInfoModel,
+  PaymentInfoModelMockData,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus, UserPartner } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
@@ -154,10 +156,12 @@ export default class API extends REST_API {
     this.#GET(`/goods/all`, {}, GoodsListModel, Response200(GoodsListModelMockData)) as MyResponse<{goods: Goods[]}>;
   getGoods = (id: string) =>
     this.#GET(`/goods?id=${id}`, {}, GoodsModel, Response200(GoodsModelMockData)) as MyResponse<Goods>;
-  createGoods = (title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, characters: object) =>
-    this.#POST(`/goods`, {title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, characters}) as MyResponse<unknown>;
-  updateGoods = (id: string, title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, characters: object) =>
-    this.#PUT(`/goods`, {id, title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, characters}) as MyResponse<unknown>;
+  createGoods = (title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, isDelicates: boolean, characters: object) =>
+    this.#POST(`/goods`, {title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, isDelicates, characters}) as MyResponse<unknown>;
+  updateGoods = (id: string, title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, isDelicates: boolean, characters: object) =>
+    this.#PUT(`/goods`, {id, title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, isDelicates, characters}) as MyResponse<unknown>;
+  updateGoodsIsOnSale = (id: string, isOnSale: boolean) =>
+    this.#PUT(`/goods`, {id, isOnSale}) as MyResponse<unknown>;
   deleteGoods = (id: string) =>
     this.#DELETE(`/goods`, {id}) as MyResponse<unknown>;
 
@@ -167,7 +171,7 @@ export default class API extends REST_API {
   getOrder = (orderId: string) =>
     this.#GET(`/orders`, {orderId}, OrderModel, Response200(OrderModelMockData)) as MyResponse<Order>;
   createOrder = (userId: string, addressId: string, goods: Goods[]) =>
-    this.#POST(`/orders`, {userId, addressId, goods}) as MyResponse<unknown>;
+    this.#POST(`/orders`, {userId, addressId, goods}, OrderModel, Response200(OrderModelMockData)) as MyResponse<{id: string}>;
   createOrderAdmin = (userId: string, goods: Goods[], status: OrderStatus, trackingCode: string, addressTextCopy: string, commentTextCopy: string) =>
     this.#POST(`/orders/admin`, {userId, goods, status, trackingCode, addressTextCopy, commentTextCopy}) as MyResponse<unknown>;
   deleteOrder = (id: string) =>
@@ -178,6 +182,10 @@ export default class API extends REST_API {
     this.#PUT(`/orders`, {number, status}) as MyResponse<unknown>;
   getAllAdminOrdersList = () =>
     this.#GET(`/orders/all`, {}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
+
+  // Payments
+  createPayment = (orderId: string) =>
+    this.#POST(`/payments`, {orderId}, PaymentInfoModel, Response200(PaymentInfoModelMockData)) as MyResponse<{paymentUrl: string}>;
 
   // Addresses
   getUserAddresses = (userId: string) =>

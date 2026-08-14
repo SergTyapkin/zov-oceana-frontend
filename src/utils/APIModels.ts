@@ -287,6 +287,10 @@ export const GoodsModel = {
     type: Boolean,
     from: 'isonsale',
   },
+  isDelicates: {
+    type: Boolean,
+    from: 'isdelicates',
+  },
   cost: {
     type: Number,
     optional: true,
@@ -315,6 +319,7 @@ export const GoodsModelMockData = validateModel(GoodsModel, {
   isweighed: false,
   cost: 2430,
   isonsale: true,
+  isdelicates: false,
   createddate: (new Date()).toDateString(),
   categories: [
     {
@@ -428,8 +433,8 @@ export const OrderListModel = {
 export const OrderModelMockData = validateModel(OrderModel, {
   id: 'ORDER_ID',
   goods: [],
-  createddate: '2025-03-18',
-  updateddate: '2025-04-20',
+  createddate: '2028-03-18',
+  updateddate: '2028-04-20',
   status: 'created',
   number: 123543,
   secretcode: 'OS8DS2X',
@@ -441,11 +446,11 @@ OrderModelMockData.goods = GoodsListModelMockData.goods as Goods[];
 
 export const OrderListModelMockData = {
   orders: [
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', cost: 1400, status: OrderStatuses.created}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_2', cost: 4500, status: OrderStatuses.cancelled}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', cost: 1250, status: OrderStatuses.paid}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', cost: 3502, status: OrderStatuses.prepared}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', cost: 2400, status: OrderStatuses.delivered}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', status: 'created'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_2', status: 'cancelled'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', status: 'paid'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', status: 'prepared'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', status: 'delivered'}),
   ],
 };
 
@@ -473,3 +478,14 @@ export const GlobalsModelMockData = validateModel(GlobalsModel, {
 }) as Globals;
 GlobalsModelMockData.goodsOnLanding = GoodsListModelMockData.goods as Goods[];
 GlobalsModelMockData.categories = CategoriesListModelMockData.categories as Category[];
+
+
+export const PaymentInfoModel = {
+  paymentUrl: {
+    type: String,
+    from: 'PaymentUrl',
+  },
+};
+export const PaymentInfoModelMockData = {
+  paymenturl: 'some.link.for.tests',
+};

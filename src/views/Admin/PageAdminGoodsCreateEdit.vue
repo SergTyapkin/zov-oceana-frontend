@@ -196,7 +196,7 @@
   <div class="root-page">
     <router-link :to="{ name: 'admin' }">
       <section class="page-title">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
+        <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Ко всем товарам
       </section>
     </router-link>
@@ -208,29 +208,35 @@
         <InputComponent
           v-model="goods.fromLocation"
           title="Место происхождения"
-          placeholder="Страна / регион / город" />
+          placeholder="Страна / регион / город"
+        />
         <InputSwitch v-model="goods.isWeighed" title="Штучный или весовой" on-state-title="КГ" off-state-title="ШТ" />
         <InputComponent
           v-model="goods.amountMin"
           :title="`Минимальный заказ в ${goods.isWeighed ? 'кг' : 'шт'}`"
           placeholder="1"
-          type="number" />
+          type="number"
+        />
         <InputComponent
           v-model="goods.amountStep"
           :title="`Минимальный шаг заказа в ${goods.isWeighed ? 'кг' : 'шт'}`"
           placeholder="1"
-          type="number" />
+          type="number"
+        />
         <InputComponent
           v-model="goods.amountLeft"
           :title="`Имеется на складе, ${goods.isWeighed ? 'кг' : 'шт'}`"
           placeholder="120"
-          type="number" />
+          type="number"
+        />
         <InputComponent
           v-model="goods.cost"
           :title="`Цена за ${goods.isWeighed ? 'кг' : 'шт'}`"
           placeholder="1000"
-          type="number" />
+          type="number"
+        />
         <InputSwitch v-model="goods.isOnSale" title="В продаже?" on-state-title="ДА" off-state-title="НЕТ" />
+        <InputComponent v-model="goods.isDelicates" title="Деликатес?" on-state-title="ДА" off-state-title="НЕТ" />
       </div>
 
       <div class="right-column">
@@ -244,9 +250,10 @@
                 class="image"
                 :src="`${IMAGES_URL_BASE_PATH}${image.path}`"
                 :fallback-src="DEFAULT_GOODS_IMAGE"
-                alt="preview" />
-              <button class="button-delete" @click="deleteGoodsImage(idx)" >
-                <img src="/static/icons/trashbox.svg" alt="delete" />
+                alt="preview"
+              />
+              <button class="button-delete" @click="deleteGoodsImage(idx)">
+                <img src="/static/icons/trashbox.svg" alt="delete">
               </button>
             </li>
             <li class="image-container button-plus">
@@ -257,7 +264,7 @@
                 class="drag-n-drop-loader"
               >
                 <div class="image">
-                  <img src="/static/icons/plus-thin.svg" alt="plus" />
+                  <img src="/static/icons/plus-thin.svg" alt="plus">
                 </div>
               </DragNDropLoader>
             </li>
@@ -270,7 +277,7 @@
           <li class="category-container" v-for="(category, idx) in goods.categories">
             <div class="title">{{ category.title }}</div>
             <button class="button-delete" @click="goods.categories.splice(idx, 1)">
-              <img src="/static/icons/trashbox.svg" alt="delete" />
+              <img src="/static/icons/trashbox.svg" alt="delete">
             </button>
           </li>
           <li class="category-container">
@@ -282,7 +289,8 @@
                   name: category.title,
                   value: category.id,
                 }))
-              " />
+              "
+            />
             <button
               class="button-add"
               @click="
@@ -297,8 +305,9 @@
                   });
                   newCategoryId = undefined;
                 }
-              ">
-              <img src="/static/icons/plus-thin.svg" alt="add" />
+              "
+            >
+              <img src="/static/icons/plus-thin.svg" alt="add">
             </button>
           </li>
         </ul>
@@ -309,7 +318,7 @@
             <p class="title">{{ characterName }}</p>
             <p class="value">{{ characterValue }}</p>
             <button class="button-delete" @click="delete goods.characters[characterName]">
-              <img src="/static/icons/trashbox.svg" alt="delete" />
+              <img src="/static/icons/trashbox.svg" alt="delete">
             </button>
           </li>
           <li class="character">
@@ -321,8 +330,9 @@
                 goods.characters[newCharacter.title] = newCharacter.value;
                 newCharacter.title = '';
                 newCharacter.value = '';
-              ">
-              <img src="/static/icons/plus-thin.svg" alt="add" />
+              "
+            >
+              <img src="/static/icons/plus-thin.svg" alt="add">
             </button>
           </li>
         </ul>
@@ -413,6 +423,7 @@ export default {
           this.goods.isWeighed,
           this.goods.cost,
           this.goods.isOnSale,
+          this.goods.isDelicates,
           this.goods.characters!,
         ],
         `Не удалось обновить данные товара`,
@@ -437,6 +448,7 @@ export default {
           this.goods.isWeighed,
           this.goods.cost,
           this.goods.isOnSale,
+          this.goods.isDelicates,
           this.goods.characters!,
         ],
         `Не удалось создать товар`,

@@ -100,7 +100,9 @@
     <div class="status-container">
       <div class="status-column">
         <div class="cost">{{ costFormatter(totalCost) }}</div>
-        <div class="status" :class="[OrderStatuses[order.status]?.color]">{{ OrderStatuses[order.status]?.title }}</div>
+        <div class="status" :class="[OrderStatuses[order.status]?.color]">
+          {{ OrderStatuses[order.status]?.title }}
+        </div>
       </div>
 
       <button class="more-info">
@@ -135,7 +137,7 @@ export default {
       return OrderStatuses
     },
     totalCost() {
-      return this.order.goods.reduce((acc, g) => acc + g.cost * g.amount, 0);
+      return this.order.goods.reduce((acc, g) => acc + g.cost * (g.amount ?? 0), 0);
     }
   },
 
