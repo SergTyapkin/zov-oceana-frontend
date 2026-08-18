@@ -71,6 +71,8 @@
         color mix(colorEmp1, transparent, 90%)
       &.blue > .status
         color mix(colorEmp2, transparent, 90%)
+      &.gray > .status
+        color mix(colorTextInvert4, transparent, 90%)
     .info
       font-small()
       color colorText5

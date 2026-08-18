@@ -63,6 +63,13 @@
           background mix(colorEmp1, transparent, 90%)
         &.blue
           background mix(colorEmp2, transparent, 90%)
+        &.gray
+          background mix(colorTextInvert2, transparent, 90%)
+    .payment-button
+      animation-float(0.5s, -20px, 0, left)
+      margin-top 30px
+      width fit-content
+      button-emp2()
     .address-info
       animation-float(0.5s, -20px, 0, left)
       font-small()
@@ -229,8 +236,10 @@
       </div>
       <div class="order-status">
         <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status]?.title }}</div>
+        <div class="status" :class="PaymentStatuses[order.paymentStatus]?.color">{{ PaymentStatuses[order.paymentStatus]?.title }}</div>
         <div class="date">изменено {{ dateTimeFormatter(order.updatedDate) }}</div>
       </div>
+      <router-link v-if="['new', 'expired', 'rejected'].includes(order.paymentStatus)" :to="{ name: 'paymentOrder', params: {id: orderId}}" class="payment-button">Оплатить заказ</router-link>
     </section>
 
     <section class="cart">
@@ -283,7 +292,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter, dateFormatter, dateTimeFormatter } from '~/utils/utils';
-import { OrderStatuses } from '~/constants';
+import { OrderStatuses, PaymentStatuses } from '~/constants';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
@@ -295,13 +304,10 @@ export default {
       order: {} as Order,
 
       loading: false,
-    };
-  },
 
-  computed: {
-    OrderStatuses() {
-      return OrderStatuses;
-    },
+      OrderStatuses,
+      PaymentStatuses,
+    };
   },
 
   mounted() {

@@ -177,7 +177,7 @@
   <div class="root-page">
     <router-link :to="{ name: 'market' }">
       <section class="title">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
+        <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Назад к каталогу
       </section>
     </router-link>
@@ -205,12 +205,13 @@
           <router-link
             v-for="category in goods.categories"
             :to="{ name: 'market', query: { categoryId: category.id } }"
-            :key="category.id">
+            :key="category.id"
+          >
             <li class="category">{{ category.title }}</li>
           </router-link>
         </ul>
         <header class="header">{{ goods.title }}</header>
-        <p class="location"><img src="/static/icons/location-dark.svg" alt="location" />{{ goods.fromLocation }}</p>
+        <p class="location"><img src="/static/icons/location-dark.svg" alt="location">{{ goods.fromLocation }}</p>
 
         <p class="info">Цена за {{ goods.isWeighed ? 'кг' : 'шт' }}</p>
         <p class="cost">{{ costFormatter(goods.cost) }}</p>
@@ -244,11 +245,11 @@
           </div>
 
           <button @click="addToCart" v-if="$cart.findIndex(g => String(g.id) === String(goods.id)) === -1" class="button-add-to-cart">
-            <img src="/static/icons/cart.svg" alt="cart" />
+            <img src="/static/icons/cart.svg" alt="cart">
             Добавить в корзину
           </button>
           <button @click="removeFromCart" v-else class="button-add-to-cart">
-            <img src="/static/icons/remove.svg" alt="remove" />
+            <img src="/static/icons/remove.svg" alt="remove">
             Убрать из корзины
           </button>
         </section>
@@ -342,6 +343,8 @@ export default {
         this.$api.updateGoodsInCartAmount,
         [this.$user.id, goods.id, this.currentAmount],
         `Не удалось обновить количество товаров`,
+        undefined,
+        () => {},
       );
     },
   },

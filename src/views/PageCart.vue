@@ -297,6 +297,8 @@ export default {
         this.$api.updateGoodsInCartAmount,
         [this.$user.id, goods.id, goods.amount],
         `Не удалось обновить количество товаров`,
+        undefined,
+        () => {},
       );
     },
 
@@ -328,7 +330,7 @@ export default {
           this.$store.dispatch('CLEAR_CART');
 
           // Переводим на страницу оплаты
-          this.$router.push({ name: 'paymentOrders', params: {id: orderData.id} });
+          this.$router.push({ name: 'paymentOrder', params: {id: orderData.id} });
         },
       );
     },

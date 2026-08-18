@@ -12,12 +12,12 @@ export const QUERY_PARAM_REFERRER_ID = 'referrerId';
 
 export const OrderStatuses = {
   created: {
-    title: 'Не оплачен',
-    color: 'yellow',
+    title: 'Ожидает подтверждения',
+    color: 'gray',
   },
-  paid: {
-    title: 'Оплачен',
-    color: 'green',
+  accepted: {
+    title: 'Принят',
+    color: 'yellow',
   },
   prepared: {
     title: 'Собран',
@@ -30,6 +30,32 @@ export const OrderStatuses = {
   cancelled: {
     title: 'Отменен',
     color: 'red',
+  },
+};
+export const PaymentStatuses = {
+  new: {
+    title: 'Не оплачен',
+    color: 'yellow',
+  },
+  authorized: {
+    title: 'Оплачен',
+    color: 'green',
+  },
+  expired: {
+    title: 'Истек срок оплаты',
+    color: 'red',
+  },
+  rejected: {
+    title: 'Отклонен банком',
+    color: 'red',
+  },
+  refunded: {
+    title: 'Средства возвращены',
+    color: 'blue',
+  },
+  cancelled: {
+    title: 'Отменен',
+    color: 'gray',
   },
 };
 

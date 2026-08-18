@@ -1,11 +1,11 @@
 <style scoped lang="stylus">
-@import '../styles/constants.styl'
-@import '../styles/components.styl'
-@import '../styles/buttons.styl'
-@import '../styles/fonts.styl'
-@import '../styles/utils.styl'
-@import '../styles/animations.styl'
-@import '../styles/scrollbars.styl'
+@import '../../styles/constants.styl'
+@import '../../styles/components.styl'
+@import '../../styles/buttons.styl'
+@import '../../styles/fonts.styl'
+@import '../../styles/utils.styl'
+@import '../../styles/animations.styl'
+@import '../../styles/scrollbars.styl'
 
 .root-page
   page-root()
@@ -63,6 +63,8 @@
           background mix(colorEmp1, transparent, 90%)
         &.blue
           background mix(colorEmp2, transparent, 90%)
+        &.gray
+          background mix(colorTextInvert2, transparent, 90%)
     .address-info
       animation-float(0.5s, -20px, 0, left)
       font-small()
@@ -79,6 +81,14 @@
       background mix(colorEmp1, transparent, 90%)
       width min-content
       white-space nowrap
+    
+    section.payment
+      margin-top 30px
+      padding 20px
+      width fit-content
+      background colorEmp2
+      .button-continue-payment
+        button-emp2()
 
   section.cart
     display flex
@@ -235,13 +245,30 @@
         <div v-if="order.commentTextCopy">Комментарий: {{ order.commentTextCopy }}</div>
       </div>
       <div class="order-status">
-        <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status]?.title }}</div>
-        <div v-if="order.status === 'created' && !isPaymentTimeOver" class="status yellow">
-          Осталось {{
-            timeMinutesFormatter(new Date(paymentTimeSpent)) }}
+        <!-- <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status]?.title }}</div> -->
+        <div class="status" :class="PaymentStatuses[order.paymentStatus]?.color">{{ PaymentStatuses[order.paymentStatus]?.title }}</div>
+        
+        <div v-if="!order.paymentCreatedDate" class="" />
+        <div v-else-if="order.status === 'created' && !isPaymentTimeOver" class="status yellow">
+          Осталось {{ timeMinutesFormatter(new Date(paymentTimeLeft)) }}
         </div>
         <div v-else-if="order.status === 'created'" class="status red">Время на оплату вышло</div>
       </div>
+
+      <!-- Платёжный виджет -->
+      <section class="payment">
+        <CircleLinesLoading v-if="widgetLoading" />
+        <div v-else-if="isWidgetLoadingError">Ошибка загрузки виджета оплаты. Проверьте возможные проблемы с соединением</div>
+        <a 
+          v-else-if="order.paymentUrl && !isPaymentTimeOver" 
+          :href="order.paymentUrl" 
+          class="button-continue-payment"
+        >
+          Продолжить оплату <img src="/static/icons/external-link.svg" alt="link">
+        </a>
+
+        <div v-show="!isWidgetLoadingError && !(order.paymentUrl && !isPaymentTimeOver)" id="payment-widget-target" />
+      </section>
     </section>
 
     <section class="cart">
@@ -284,10 +311,6 @@
       </section>
     </section>
 
-    <section class="payment">
-      <div id="payment-widget-target" />
-    </section>
-
     <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
@@ -298,7 +321,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter, dateFormatter, dateTimeFormatter, initPaymentWidget, timeMinutesFormatter } from '~/utils/utils';
-import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS } from '~/constants';
+import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS, PaymentStatuses } from '~/constants';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
@@ -307,20 +330,24 @@ export default {
     return {
       orderId: this.$route.params.id as string,
 
-      paymentTimeSpent: 0,
+      paymentTimeLeft: 0,
       updatingInterval: null as ReturnType<typeof setInterval> | null,
 
       order: {} as Order,
 
       loading: false,
+      widgetLoading: false,
+      isWidgetLoadingError: false,
 
       OrderStatuses,
+      PaymentStatuses,
+      PAYMENT_TIME_TO_BE_PAYED_MS,
     };
   },
 
   computed: {
     isPaymentTimeOver() {
-      const res = this.paymentTimeSpent > PAYMENT_TIME_TO_BE_PAYED_MS;
+      const res = this.paymentTimeLeft <= 0;
       // Перестаем обновлять, если время вышло
       if (res && this.updatingInterval) {
         clearInterval(this.updatingInterval);
@@ -339,6 +366,7 @@ export default {
 
     this.updatingInterval = setInterval(this.updatePaymentTimeLeft, 1000);
 
+    this.widgetLoading = true;
     try {
       // 1. Инициализируем виджет
       const integration = await initPaymentWidget({
@@ -371,10 +399,13 @@ export default {
       const mainPaymentIntegration = await integration.payments.get('main-integration'); // Получение интеграции. При интеграции «Все доступные способы оплаты» присваивается имя "main-integration"
 
       console.log('Виджет оплаты успешно инициализирован', mainPaymentIntegration);
+      this.isWidgetLoadingError = false;
     } catch (error) {
       console.error('Ошибка инициализации виджета:', error);
       this.$popups.error('Ошибка', 'Не удалось загрузить платежный виджет');
+      this.isWidgetLoadingError = true;
     }
+    this.widgetLoading = false;
   },
 
   unmounted() {
@@ -391,10 +422,11 @@ export default {
 
     updatePaymentTimeLeft() {
       if (!this.order.id) {
-        this.paymentTimeSpent = 0;
+        this.paymentTimeLeft = 0;
         return;
       }
-      this.paymentTimeSpent = Number(new Date()) - Number(this.order.createdDate);
+      const paymentTimeSpent = Number(new Date()) - Number(this.order.paymentCreatedDate);
+      this.paymentTimeLeft = PAYMENT_TIME_TO_BE_PAYED_MS - paymentTimeSpent;
     },
 
     async updateOrder() {

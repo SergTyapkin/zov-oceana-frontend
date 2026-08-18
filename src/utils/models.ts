@@ -1,4 +1,4 @@
-import { OrderStatuses } from '~/constants';
+import { OrderStatuses, PaymentStatuses } from '~/constants';
 
 export interface User {
   id: string;
@@ -97,6 +97,7 @@ export interface Address {
 }
 
 export type OrderStatus = keyof typeof OrderStatuses;
+export type PaymentStatus = keyof typeof PaymentStatuses;
 export interface Order {
   id: string;
   goods: Goods[];
@@ -112,6 +113,10 @@ export interface Order {
   userGivenName?: string;
   userFamilyName?: string;
   trackingCode?: string;
+  paymentId?: string;
+  paymentUrl?: string;
+  paymentStatus: PaymentStatus;
+  paymentCreatedDate?: Date;
 }
 
 export interface PartnerHistoryTransaction {

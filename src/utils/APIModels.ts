@@ -1,6 +1,6 @@
 import { ArrayType, ObjectType, Type, validateModel } from '@sergtyapkin/models-validator';
 import { Category, Globals, Goods, Order } from '~/utils/models';
-import { OrderStatuses } from '~/constants';
+import { OrderStatuses, PaymentStatuses } from '~/constants';
 
 export const UserModel = {
   id: String,
@@ -426,6 +426,27 @@ export const OrderModel = {
     from: 'trackingcode',
     optional: true,
   },
+  paymentId: {
+    type: String,
+    from: 'paymentId',
+    optional: true,
+  },
+  paymentUrl: {
+    type: String,
+    from: 'paymenturl',
+    optional: true,
+  },
+  paymentStatus: {
+    type: new Set(Object.keys(PaymentStatuses)),
+    from: 'paymentstatus',
+    optional: true,
+    default: 'new',
+  },
+  paymentCreatedDate: {
+    type: Date,
+    from: 'paymentcreateddate',
+    optional: true,
+  },
 };
 export const OrderListModel = {
   orders: ArrayType(OrderModel),
@@ -441,6 +462,10 @@ export const OrderModelMockData = validateModel(OrderModel, {
   userid: 'USER_ID_1',
   addresstextcopy: 'г. Москва, ул. Кировоградского, д. 7, эт. 9, кв. 150, Код: В123В12312',
   commenttextcopy: 'Ну наааадо, ну пожааалуйста!',
+  paymentid: 'PAYMENT_ID_1',
+  paymenturl: 'https://ya.ru',
+  paymentstatus: 'new',
+  paymentcreateddate: '2028-04-20',
 }) as Order;
 OrderModelMockData.goods = GoodsListModelMockData.goods as Goods[];
 

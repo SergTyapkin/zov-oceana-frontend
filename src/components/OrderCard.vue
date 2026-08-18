@@ -65,6 +65,8 @@
           background colorEmp1
         &.blue
           background colorEmp2
+        &.gray
+          background colorTextInvert2
 
     .more-info
       button-no-styles()
@@ -103,6 +105,9 @@
         <div class="status" :class="[OrderStatuses[order.status]?.color]">
           {{ OrderStatuses[order.status]?.title }}
         </div>
+        <div class="status" :class="[PaymentStatuses[order.paymentStatus]?.color]">
+          {{ PaymentStatuses[order.paymentStatus]?.title }}
+        </div>
       </div>
 
       <button class="more-info">
@@ -116,7 +121,7 @@
 import { Order } from '~/utils/models';
 import { PropType } from 'vue';
 import { costFormatter, dateFormatter } from '~/utils/utils';
-import { IMAGES_URL_BASE_PATH, OrderStatuses } from '~/constants';
+import { IMAGES_URL_BASE_PATH, OrderStatuses, PaymentStatuses } from '~/constants';
 
 export default {
   props: {
@@ -129,13 +134,13 @@ export default {
   data() {
     return {
       IMAGES_URL_BASE_PATH,
+
+      OrderStatuses,
+      PaymentStatuses,
     };
   },
 
   computed: {
-    OrderStatuses() {
-      return OrderStatuses
-    },
     totalCost() {
       return this.order.goods.reduce((acc, g) => acc + g.cost * (g.amount ?? 0), 0);
     }

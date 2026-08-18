@@ -37,13 +37,15 @@ import PageAdminGoodsCreateEdit from '~/views/Admin/PageAdminGoodsCreateEdit.vue
 import PageAdminOrderCreateEdit from '~/views/Admin/PageAdminOrderCreateEdit.vue';
 import PageAdminUserEdit from '~/views/Admin/PageAdminUserEdit.vue';
 import PageAdminExecuteSQL from '~/views/Admin/PageAdminExecuteSQL.vue';
-import PagePaymentOrder from '~/views/PagePaymentOrder.vue';
 import PageDocs from '~/views/Docs/PageDocs.vue';
 import PageDocsOffer from '~/views/Docs/PageDocsOffer.vue';
 import PageDocsPolitics from '~/views/Docs/PageDocsPolitics.vue';
 import PageDocsContacts from '~/views/Docs/PageDocsContacts.vue';
 import PageDocsRefund from '~/views/Docs/PageDocsRefund.vue';
 import PageDocsDelivery from '~/views/Docs/PageDocsDelivery.vue';
+import PagePaymentOrder from '~/views/Payment/PagePaymentOrder.vue';
+import PagePaymentSuccess from './views/Payment/PagePaymentSuccess.vue';
+import PagePaymentFail from './views/Payment/PagePaymentFail.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -62,7 +64,9 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/order/:id', name: 'order', component: PageOrder },
     { path: '/partnership', name: 'partnership', component: PagePartnership },
 
-    { path: '/payment/order/:id', name: 'paymentOrders', component: PagePaymentOrder, meta: { loginRequired: true } },
+    { path: '/payment/order/:id', name: 'paymentOrder', component: PagePaymentOrder, meta: { loginRequired: true } },
+    { path: '/payment/success', name: 'paymentSuccess', component: PagePaymentSuccess },
+    { path: '/payment/fail', name: 'paymentFail', component: PagePaymentFail },
     { path: '/payment/takeout', name: 'paymentTakeout', component: PagePaymentOrder, meta: { loginRequired: true } },
 
     {
