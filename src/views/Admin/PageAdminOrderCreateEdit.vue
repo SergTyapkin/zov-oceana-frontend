@@ -208,6 +208,29 @@
         <section class="total">
           <header class="info-header">Общая сумма</header>
           <div>{{ costFormatter(order?.goods?.reduce?.((acc, g) => acc + g.cost * g.amount, 0)) }}</div>
+
+          <br>
+          
+          <div v-if="order.paymentCreatedDate">
+            <SelectList
+              v-model="order.paymentStatus"
+              :selected-id="order.paymentStatus"
+              title="Статус оплаты"
+              :list="
+                Object.entries(PaymentStatuses).map(([key, status]) => ({
+                  id: key,
+                  name: status.title,
+                  value: key,
+                }))
+              "
+              ref="statusSelect"
+              disabled
+            />
+            <InputComponent v-model="order.paymentId" title="ID оплаты банка" placeholder="Идентификатор оплаты" disabled />
+            <InputComponent v-model="order.paymentUrl" title="Ссылка для оплаты банка" placeholder="https://..." disabled />
+            <div>Оплата начата: {{ dateTimeFormatter(order.paymentCreatedDate) }}</div>
+          </div>
+          <div v-else>Оплата в банке пользователем ещё не производилась</div>
         </section>
 
         <div class="info" v-if="orderId">
@@ -230,7 +253,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import SelectList from '~/components/SelectList.vue';
 import { costFormatter, dateTimeFormatter } from '~/utils/utils';
-import { OrderStatuses } from '~/constants';
+import { OrderStatuses, PaymentStatuses } from '~/constants';
 import { nextTick } from 'vue';
 
 export default {
@@ -251,6 +274,7 @@ export default {
       loading: false,
 
       OrderStatuses,
+      PaymentStatuses,
     };
   },
 
