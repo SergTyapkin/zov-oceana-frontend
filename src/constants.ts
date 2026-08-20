@@ -38,7 +38,11 @@ export const PaymentStatuses = {
     color: 'yellow',
   },
   authorized: {
-    title: 'Оплачен',
+    title: 'Оплата подтверждена',
+    color: 'green',
+  },
+  confirmed: {
+    title: 'Полностью оплачен',
     color: 'green',
   },
   expired: {

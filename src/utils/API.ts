@@ -186,6 +186,10 @@ export default class API extends REST_API {
   // Payments
   createPayment = (orderId: string) =>
     this.#POST(`/payments`, {orderId}, PaymentInfoModel, Response200(PaymentInfoModelMockData)) as MyResponse<{paymentUrl: string}>;
+  confirmPayment = (orderId: string) =>
+    this.#POST(`/payments/confirm`, {orderId}, {}, Response200({})) as MyResponse<unknown>;
+  cancelPayment = (orderId: string) =>
+    this.#POST(`/payments/cancel`, {orderId}, {}, Response200({})) as MyResponse<unknown>;
 
   // Addresses
   getUserAddresses = (userId: string) =>

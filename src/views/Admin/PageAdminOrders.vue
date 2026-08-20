@@ -110,6 +110,7 @@
         <div>Номер</div>
         <div>Товары</div>
         <div>Статус</div>
+        <div>Оплата</div>
         <div>Пользователь</div>
         <div>Общая сумма</div>
         <div>Создан</div>
@@ -128,7 +129,8 @@
         <div>
           {{ order.goods.map((g) => `${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`).join('\n\n') }}
         </div>
-        <div class="status">{{ OrderStatuses[order.status]?.title }}</div>
+        <div class="status" :class="OrderStatuses[order.status]?.color">{{ OrderStatuses[order.status]?.title }}</div>
+        <div class="status" :class="PaymentStatuses[order.paymentStatus]?.color">{{ PaymentStatuses[order.paymentStatus]?.title }}</div>
         <div>{{ order.userGivenName }} {{ order.userFamilyName }}</div>
         <div>{{ costFormatter(order.goods.reduce((acc, g) => acc + g.cost * g.amount!, 0)) }}</div>
         <div>{{ dateTimeFormatter(order.createdDate) }}</div>
@@ -158,7 +160,7 @@ import InputSearch from '~/components/InputSearch.vue';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Order, OrderStatus } from '~/utils/models';
 import { costFormatter, dateTimeFormatter } from '~/utils/utils';
-import { OrderStatuses } from '~/constants';
+import { OrderStatuses, PaymentStatuses } from '~/constants';
 
 export default {
   components: { CircleLinesLoading, SelectList, InputSearch },
@@ -173,13 +175,13 @@ export default {
       },
 
       loading: false,
+
+      OrderStatuses,
+      PaymentStatuses,
     };
   },
 
   computed: {
-    OrderStatuses() {
-      return OrderStatuses;
-    },
     ordersFiltered() {
       return this.orders.filter(order => {
         return (

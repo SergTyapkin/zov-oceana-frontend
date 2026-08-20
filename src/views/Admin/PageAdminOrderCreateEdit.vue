@@ -93,6 +93,17 @@
             img
               margin 0
 
+      .payment-container
+        .buttons
+          .info
+            font-small()
+            color colorText4
+            text-align center
+          .button-confirm
+            button-success()
+          .button-cancel
+            button-error()
+
   .button-save
     button-emp2()
     centered-margin()
@@ -205,7 +216,7 @@
           </li>
         </ul>
 
-        <section class="total">
+        <section class="payment-container">
           <header class="info-header">Общая сумма</header>
           <div>{{ costFormatter(order?.goods?.reduce?.((acc, g) => acc + g.cost * g.amount, 0)) }}</div>
 
@@ -230,6 +241,20 @@
             <InputComponent v-model="order.paymentUrl" title="Ссылка для оплаты банка" placeholder="https://..." disabled />
             <InputComponent v-model="order.paymentQrData" title="Ссылка внутри QR-кода СБП" placeholder="https://..." disabled />
             <div>Оплата начата: {{ dateTimeFormatter(order.paymentCreatedDate) }}</div>
+
+            <section v-if="order.paymentStatus === 'authorized'" class="buttons">
+              <div class="info">Сейчас деньги у клиента заморожены, но не списаны!</div>
+              <button class="button-confirm" @click="confirmPayment">Подтвердить списание</button>
+              <button class="button-cancel" @click="cancelPayment">Вернуть оплату</button>
+            </section>
+            <section v-else-if="order.paymentStatus === 'new'" class="buttons">
+              <div class="info">Сейчас клиент начал, но не завершил оплату</div>
+              <button class="button-cancel" @click="cancelPayment">Прервать оплату</button>
+            </section>
+            <section v-else-if="order.paymentStatus === 'confirmed'" class="buttons">
+              <div class="info">Оплата полностью списана у клиента</div>
+              <button class="button-cancel" @click="refundPayment">Вернуть оплату</button>
+            </section>
           </div>
           <div v-else>Оплата в банке пользователем ещё не производилась</div>
         </section>
@@ -355,6 +380,57 @@ export default {
         `Не удалось создать заказ`,
         () => {
           window.onbeforeunload = null;
+          this.$router.push({ name: 'adminOrders' });
+        },
+      );
+    },
+
+    async confirmPayment() {
+      if (!(await this.$modals.confirm("Списываем оплату?", "После подтверждения деньги поступят на счет магазина, и будет уплачена комиссия банку"))) {
+        return;
+      }
+
+      await this.$request(
+        this,
+        this.$api.confirmPayment,
+        [this.order.id],
+        `Не удалось подтвердить оплату`,
+        () => {
+          this.$popups.success("Оплата списана", "Средства уже на счете магазина");
+          this.$router.push({ name: 'adminOrders' });
+        },
+      );
+    },
+
+    async cancelPayment() {
+      if (!(await this.$modals.confirm("Отменяем оплату клиента?", "Деньги, замороженные на счете клиента, вернутся к нему"))) {
+        return;
+      }
+
+      await this.$request(
+        this,
+        this.$api.cancelPayment,
+        [this.order.id],
+        `Не удалось отменить оплату`,
+        () => {
+          this.$popups.success("Оплата отменена", "Средства на счете клиента разморожены или возвращены, если уже были списаны");
+          this.$router.push({ name: 'adminOrders' });
+        },
+      );
+    },
+
+    async refundPayment() {
+      if (!(await this.$modals.confirm("Возвращаем оплату за заказ?", "Деньги вернутся клиенту и отменить это не получится. После получения денег и возврата в итоге вы теряете комиссию банка за перевод от суммы заказа"))) {
+        return;
+      }
+
+      await this.$request(
+        this,
+        this.$api.cancelPayment,
+        [this.order.id],
+        `Не удалось провести возврат`,
+        () => {
+          this.$popups.success("Возврат проведен", "Средства вернутся на счет клиента");
           this.$router.push({ name: 'adminOrders' });
         },
       );
