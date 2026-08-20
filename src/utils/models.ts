@@ -115,6 +115,7 @@ export interface Order {
   trackingCode?: string;
   paymentId?: string;
   paymentUrl?: string;
+  paymentQrData?: string;
   paymentStatus: PaymentStatus;
   paymentCreatedDate?: Date;
 }

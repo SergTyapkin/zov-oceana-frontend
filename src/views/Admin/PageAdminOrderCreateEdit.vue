@@ -228,6 +228,7 @@
             />
             <InputComponent v-model="order.paymentId" title="ID оплаты банка" placeholder="Идентификатор оплаты" disabled />
             <InputComponent v-model="order.paymentUrl" title="Ссылка для оплаты банка" placeholder="https://..." disabled />
+            <InputComponent v-model="order.paymentQrData" title="Ссылка внутри QR-кода СБП" placeholder="https://..." disabled />
             <div>Оплата начата: {{ dateTimeFormatter(order.paymentCreatedDate) }}</div>
           </div>
           <div v-else>Оплата в банке пользователем ещё не производилась</div>

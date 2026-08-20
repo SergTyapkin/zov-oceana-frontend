@@ -436,6 +436,11 @@ export const OrderModel = {
     from: 'paymenturl',
     optional: true,
   },
+  paymentQrData: {
+    type: String,
+    from: 'paymentqrdata',
+    optional: true,
+  },
   paymentStatus: {
     type: new Set(Object.keys(PaymentStatuses)),
     from: 'paymentstatus',
@@ -463,7 +468,8 @@ export const OrderModelMockData = validateModel(OrderModel, {
   addresstextcopy: 'г. Москва, ул. Кировоградского, д. 7, эт. 9, кв. 150, Код: В123В12312',
   commenttextcopy: 'Ну наааадо, ну пожааалуйста!',
   paymentid: 'PAYMENT_ID_1',
-  paymenturl: 'https://ya.ru',
+  paymenturl: 'https://ya.ru/PAYMENT',
+  paymentqrdata: 'https://ya.ru/SPB_CODE',
   paymentstatus: 'new',
   paymentcreateddate: '2028-04-20',
 }) as Order;

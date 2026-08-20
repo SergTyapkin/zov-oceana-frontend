@@ -268,6 +268,8 @@
         </a>
 
         <div v-show="!isWidgetLoadingError && !(order.paymentUrl && !isPaymentTimeOver)" id="payment-widget-target" />
+
+        <img class="img-qr-code" :src="qrCodeDataUrl" alt="SBP payment QR Code">
       </section>
     </section>
 
@@ -316,12 +318,13 @@
 </template>
 
 <script lang="ts">
-import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
+import QRCode from 'qrcode';
 
-import { Order } from '~/utils/models';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter, dateFormatter, dateTimeFormatter, initPaymentWidget, timeMinutesFormatter } from '~/utils/utils';
 import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS, PaymentStatuses } from '~/constants';
+import { Order } from '~/utils/models';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
@@ -330,6 +333,7 @@ export default {
     return {
       orderId: this.$route.params.id as string,
 
+      qrCodeDataUrl: '',
       paymentTimeLeft: 0,
       updatingInterval: null as ReturnType<typeof setInterval> | null,
 
@@ -419,6 +423,25 @@ export default {
     dateFormatter,
     costFormatter,
     timeMinutesFormatter,
+    
+    async updatePaymentQRCode() {
+      try {
+        this.qrCodeDataUrl = await QRCode.toDataURL(
+          this.order.paymentQrData,
+          {
+            width: 400,
+            margin: 2,
+            color: {
+              dark: '#000000',
+              light: '#ffffff',
+            },
+            errorCorrectionLevel: 'M',
+          }
+        );
+      } catch (err) {
+        this.$popups.error('Не удалось сгенерировать QR код СБП', err);
+      }
+    },
 
     updatePaymentTimeLeft() {
       if (!this.order.id) {
@@ -438,6 +461,8 @@ export default {
       )) as Order;
 
       this.updatePaymentTimeLeft();
+
+      this.updatePaymentQRCode();
     },
   },
 };
