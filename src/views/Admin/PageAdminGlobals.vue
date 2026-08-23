@@ -9,6 +9,7 @@
 
 .root-page
   page-root()
+
   display flex
   flex-direction column
   gap 30px
@@ -16,6 +17,7 @@
   .header-info
     font-upper()
     font-medium()
+
     margin-bottom 10px
 
   .block
@@ -25,22 +27,24 @@
 
   .goods-container
     list-no-styles()
-    padding 10px
 
     display flex
     flex-direction column
     gap 5px
+    padding 10px
     .goods-one-container
       display flex
-      justify-content space-between
-      align-items center
       gap 10px
+      align-items center
+      justify-content space-between
       .title
         font-medium()
+
         flex 1
       .button-add
       .button-delete
         button-no-fill()
+
         padding 5px
         img
           margin 0
@@ -48,6 +52,7 @@
   .button-save
     button-emp2()
     centered-margin()
+
     width fit-content
 </style>
 
@@ -57,7 +62,8 @@
       v-model="isOnMaintenance"
       title="Сайт на техобслуживании?"
       description="В режиме техобслуживания на сайт не сможет зайти вообще никто"
-      class="block" />
+      class="block"
+    />
 
     <ul class="goods-container block">
       <header class="header-info">Товары на главной странице сайта</header>
@@ -65,7 +71,7 @@
       <li class="goods-one-container" v-for="(goodsOne, idx) in goodsOnLanding">
         <div class="title">{{ goodsOne.title }}</div>
         <button class="button-delete" @click="goodsOnLanding.splice(idx, 1)">
-          <img src="/static/icons/trashbox.svg" alt="delete" />
+          <img src="/static/icons/trashbox.svg" alt="delete">
         </button>
       </li>
       <li class="goods-one-container">
@@ -77,7 +83,8 @@
               name: goodsOne.title,
               value: goodsOne,
             }))
-          " />
+          "
+        />
         <button
           class="button-add"
           @click="
@@ -90,8 +97,9 @@
               goodsOnLanding.push(newGoods);
               newGoods = undefined;
             }
-          ">
-          <img src="/static/icons/plus-thin.svg" alt="add" />
+          "
+        >
+          <img src="/static/icons/plus-thin.svg" alt="add">
         </button>
       </li>
     </ul>

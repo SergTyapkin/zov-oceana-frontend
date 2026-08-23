@@ -27,8 +27,8 @@
 
     pointer-events none
     position absolute
-    inset 0
     z-index -1
+    inset 0
     object-fit cover
     trans()
 
@@ -96,7 +96,7 @@
 
     <section class="overlay">
       <div class="location" v-if="goods.fromLocation">
-        <img src="/static/icons/location.svg" alt="location" />
+        <img src="/static/icons/location.svg" alt="location">
         <span>{{ goods.fromLocation }}</span>
       </div>
       <div class="title">{{ goods.title }}</div>
@@ -107,7 +107,7 @@
           <div class="value">{{ costFormatter(goods.cost) }}</div>
         </div>
         <button class="button-to-cart">
-          <img src="/static/icons/cart.svg" alt="cart" />
+          <img src="/static/icons/cart.svg" alt="cart">
           В корзину
         </button>
       </div>
@@ -124,7 +124,6 @@ import { IMAGES_URL_BASE_PATH } from '~/constants';
 import { costFormatter } from '~/utils/utils';
 
 export default {
-  methods: { costFormatter },
   components: { ImageFallback },
   props: {
     goods: {
@@ -141,5 +140,6 @@ export default {
       DEFAULT_GOODS_IMAGE,
     };
   },
+  methods: { costFormatter },
 };
 </script>

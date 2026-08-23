@@ -23,6 +23,7 @@
     background colorBgDark
     img
       img-size(1lh)
+
       margin-right 5px
     button.delete
       button-error()
@@ -34,18 +35,19 @@
         img-size(20px)
   .main
     display flex
-    justify-content space-between
-    gap 20px
     flex-wrap wrap
+    gap 20px
+    justify-content space-between
     padding 20px
     font-small()
     font-thin()
     .row
-      flex 1
       display flex
+      flex 1
       flex-direction column
       .name
         font-normal()
+
         white-space nowrap
       .value
         font-small-extra()

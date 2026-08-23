@@ -26,6 +26,7 @@
       font-semibold()
       font-upper()
       animation-float(0.5s, -20px, 0, left)
+
       text-align center
 
   section.info
@@ -33,16 +34,19 @@
     .button-submit
       button-emp2()
       centered-margin()
+
       width fit-content
       margin-top 50px
     .text
       centered-margin()
+
       max-width 600px
-      background colorBlockBg
-      padding 30px
       margin-top 30px
+      padding 30px
+      background colorBlockBg
       mark
         font-semibold()
+
         background none
 </style>
 
@@ -56,7 +60,7 @@
       <p class="text">
         Станьте нашим партнером, получайте проценты за ваши продажи, привлекайте новых партнёров и получайте прибыль от
         их продаж.
-        <br />
+        <br>
         <mark>Станьте получать доход прямо сейчас!</mark>
       </p>
 

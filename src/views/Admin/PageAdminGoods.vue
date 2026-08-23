@@ -13,16 +13,12 @@
   .header-info
     font-upper()
     font-medium()
-    text-align center
+
     margin-bottom 10px
+    text-align center
 
   section.filters
-    page-root-disable()
-    animation-float()
-
     margin-inline 0
-    @media({mobile})
-      margin-inline 0
 
     .top-row
       display flex
@@ -38,26 +34,33 @@
         .category-selector
           min-width 150px
 
+    @media ({mobile})
+      margin-inline 0
+    page-root-disable()
+    animation-float()
+
   section.goods
-    width 100%
+    overflow auto
     display grid
     grid-template-columns repeat(6, auto)
+    width 100%
     box-shadow 0 15px 15px #00000033
-    overflow auto
     scrollable()
     .row
       display contents
       > *
+        display flex
+        align-items center
         width 100%
         height 100%
         padding 15px 10px
-        display flex
-        align-items center
         text-align left
         trans()
-        @media({mobile})
+
+        @media ({mobile})
           padding 15px 3px
-        @media({desktop})
+
+        @media ({desktop})
           &:first-child
             padding-left 25px
           &:last-child
@@ -74,13 +77,15 @@
           margin-bottom 10px
     .info
       font-small()
+
       color colorText5
 
   .button-plus
     centered-margin()
     button-emp2()
-    margin-top 30px
+
     width fit-content
+    margin-top 30px
     margin-bottom 100px
 </style>
 

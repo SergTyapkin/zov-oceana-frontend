@@ -30,15 +30,13 @@
       font-small-extra()
       font-spaced()
       font-normal()
-
+      trans()
+      
       width 100%
       margin-bottom 3px
       padding 10px
       color colorText1
       background colorBlockBg
-      trans()
-      &.icon-in-left
-        padding-left 40px
 
       &::placeholder
         font-spaced()
@@ -47,6 +45,8 @@
 
         font-style italic
         color colorText5
+      &.icon-in-left
+        padding-left 40px
 
     textarea
       resize none
@@ -62,12 +62,13 @@
       .image
         img-size(1lh)
       .image-hidden
+        img-size(1lh)
+        trans()
+
         cursor pointer
         box-sizing content-box
         height 0.8em
         padding-block calc(10px + 0.1em)
-        img-size(1lh)
-        trans()
 
         &:hover
           opacity 0.6
@@ -96,8 +97,9 @@
     .error
       font-small-extra()
       trans()
-      text-align left
+
       color colorError
+      text-align left
       opacity 0
 
   &.error
@@ -124,7 +126,7 @@
 
     <section class="input-container" :class="{ hideable }" @input="onInput">
       <div class="images-container left">
-        <img v-if="icon && iconInLeft" :src="icon" class="image" :alt="title" />
+        <img v-if="icon && iconInLeft" :src="icon" class="image" :alt="title">
       </div>
 
       <input
@@ -136,7 +138,8 @@
         :class="{ 'icon-in-left': icon && iconInLeft }"
         :readonly="readonly"
         :disabled="disabled"
-        @keydown.enter="$emit('submit')" />
+        @keydown.enter="$emit('submit')"
+      >
       <textarea
         v-model="value"
         :rows="rows"
@@ -148,27 +151,30 @@
       />
 
       <div class="images-container">
-        <img v-if="icon && !iconInLeft" :src="icon" class="image" :alt="title" />
+        <img v-if="icon && !iconInLeft" :src="icon" class="image" :alt="title">
 
         <img
           v-if="hideable && !isHidden"
           @click="isHidden = !isHidden"
           src="/static/icons/hidden.svg"
           class="image-hidden"
-          alt="hide" />
+          alt="hide"
+        >
         <img
           v-else-if="hideable && isHidden"
           @click="isHidden = !isHidden"
           src="/static/icons/visible.svg"
           class="image-hidden"
-          alt="show" />
+          alt="show"
+        >
 
         <img
           v-if="copyable"
           @click="copyToClipboard"
           src="/static/icons/copy.svg"
           class="image-hidden"
-          alt="copy" />
+          alt="copy"
+        >
       </div>
     </section>
 

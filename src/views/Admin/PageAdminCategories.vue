@@ -8,15 +8,10 @@
 @import '../../styles/scrollbars.styl'
 
 .root-page-admin-categories
-  //page-root()
+  // page-root()
 
   section.filters
-    page-root-disable()
-    animation-float()
-
     margin-inline 0
-    @media({mobile})
-      margin-inline 0
 
     .top-row
       display flex
@@ -32,41 +27,50 @@
         .category-selector
           min-width 150px
 
+    @media ({mobile})
+      margin-inline 0
+    page-root-disable()
+    animation-float()
+
   section.goods
-    width 100%
-    display grid
-    grid-template-columns auto auto 1fr auto auto
-    grid-row-gap 10px
-    align-items center
-    padding 40px 10px 0 10px
     overflow auto
+    display grid
+    grid-row-gap 10px
+    grid-template-columns auto auto 1fr auto auto
+    align-items center
+    width 100%
+    padding 40px 10px 0 10px
     scrollable()
     .row
       display contents
       > *
-        trans()
         padding-inline 10px
-        @media({mobile})
-          padding-inline 3px
         &.button
           button-no-fill()
+
           width min-content
           padding-inline 10px
           img
             margin 0
+
+        @media ({mobile})
+          padding-inline 3px
+        trans()
       &.header
         font-bold()
         > *
           margin-bottom 10px
     .info
       font-small()
+
       color colorText5
 
   .button-plus
     centered-margin()
     button-emp2()
-    margin-top 30px
+
     width fit-content
+    margin-top 30px
 </style>
 
 <template>
@@ -76,21 +80,21 @@
         <div>#</div>
         <div>Категория</div>
         <div>Описание</div>
-        <div></div>
-        <div></div>
+        <div />
+        <div />
       </div>
 
       <div class="row" v-for="category in $globals.categories" :key="category.id">
         <div>{{ category.id }}</div>
         <div>{{ category.title }}</div>
         <div>{{ category.description }}</div>
-        <button class="button" @click="renameCategory(category)"><img src="/static/icons/edit.svg" alt="edit"/></button>
-        <button class="button" @click="deleteCategory(category)"><img src="/static/icons/trashbox.svg" alt="delete"/></button>
+        <button class="button" @click="renameCategory(category)"><img src="/static/icons/edit.svg" alt="edit"></button>
+        <button class="button" @click="deleteCategory(category)"><img src="/static/icons/trashbox.svg" alt="delete"></button>
       </div>
 
       <div v-if="!$globals.categories.length" class="info">Категорий нет</div>
     </section>
-    <button class="button-plus" @click="createCategory()"><img src="/static/icons/plus-thin.svg" alt="plus" />Добавить</button>
+    <button class="button-plus" @click="createCategory()"><img src="/static/icons/plus-thin.svg" alt="plus">Добавить</button>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>

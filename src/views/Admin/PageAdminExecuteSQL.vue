@@ -9,6 +9,7 @@
 
 .root-page
   page-root()
+
   display flex
   flex-direction column
   gap 30px
@@ -19,6 +20,7 @@
   .button-save
     button-emp2()
     centered-margin()
+
     width fit-content
 </style>
 

@@ -10,21 +10,26 @@
 
 .root-transactions-history
   centered-flex-container()
+
   flex-direction column
   gap 15px
   .arrow
     img-size(30px)
+
     transform rotate(180deg)
     opacity 0.2
   .user-container
     centered-flex-container()
+
     flex-direction column
     .name
       font-small-extra()
+
       color colorText4
       text-align center
     .bottom-row
       centered-flex-container()
+
       gap 10px
     &.you
       .bottom-row
@@ -32,8 +37,8 @@
           font-semibold()
   .partners-list
     display flex
-    gap 10px
     flex-wrap wrap
+    gap 10px
     justify-content space-evenly
 </style>
 
@@ -46,7 +51,7 @@
       </div>
     </div>
 
-    <img v-if="headUser" class="arrow" src="/static/icons/arrow-single.svg" alt="arrow-down" />
+    <img v-if="headUser" class="arrow" src="/static/icons/arrow-single.svg" alt="arrow-down">
 
     <div class="user-container you">
       <div class="name" v-if="showAsMe">Я ({{ user.givenName }} {{ user.familyName }})</div>
@@ -57,7 +62,7 @@
       </div>
     </div>
 
-    <img v-if="partners.length" class="arrow" src="/static/icons/arrow-much.svg" alt="arrow-down" />
+    <img v-if="partners.length" class="arrow" src="/static/icons/arrow-much.svg" alt="arrow-down">
 
     <div v-if="partners.length" class="partners-list">
       <div v-for="partner in partners" class="user-container partner">

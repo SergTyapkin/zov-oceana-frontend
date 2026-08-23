@@ -146,6 +146,7 @@
           centered-margin()
           button-no-styles()
           font-medium()
+
           display block
           padding 5px 10px
     .button-close
@@ -160,27 +161,25 @@
 
   .modal-inside
     width 70vw
-    max-width 600px
     min-width 450px
-    @media({mobile})
-      width calc(100vw - 40px)
-      min-width unset
+    max-width 600px
     .header
       font-large()
       font-spaced()
 
-      background colorBgDark
+      padding 30px
       color colorTextInvert1
-      padding 30px
       text-align center
+      background colorBgDark
     .main
-      background colorBgLight
       padding 30px
+      background colorBgLight
       .tg-auth
         centered-margin()
       .desc
         font-small()
         font-spaced()
+
         margin-block 10px
         text-align center
       .field
@@ -188,6 +187,7 @@
       .submit
         button-emp2()
         centered-margin()
+
         width fit-content
         margin-top 40px
       .button-different-signin
@@ -195,9 +195,14 @@
         font-lower()
         font-small-extra()
         centered-margin()
-        color colorText1
+
         width fit-content
         margin-top 10px
+        color colorText1
+
+    @media ({mobile})
+      width calc(100vw - 40px)
+      min-width unset
 </style>
 
 <template>

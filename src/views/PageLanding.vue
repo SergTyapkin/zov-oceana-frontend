@@ -114,13 +114,13 @@
       scroll-snap-type x mandatory
       scroll-snap-align start
       scroll-snap-stop normal
+      z-index 0
       overflow-x auto
       display flex
       gap 20px
       align-items center
       justify-content space-evenly
       width 100vw
-      z-index 0
       .goods
         flex 1
 

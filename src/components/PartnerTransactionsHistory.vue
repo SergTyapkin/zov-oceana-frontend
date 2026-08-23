@@ -14,15 +14,16 @@
     padding-block 5px
     .date
       font-small-extra()
+
       color colorText5
     .users-transactions-container
       list-no-styles()
       .transaction
         display flex
+        gap 10px
         align-items center
         justify-content space-between
         padding-block 5px
-        gap 10px
         .name
           flex 1
 </style>

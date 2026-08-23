@@ -34,12 +34,12 @@
         margin-left 5px
 
   section.goods
-    width 100%
-    padding-top 50px
-    padding-bottom 100px
     display flex
     flex-wrap wrap
     gap 20px
+    width 100%
+    padding-top 50px
+    padding-bottom 100px
 
     .right-column
       display flex
@@ -61,6 +61,7 @@
       .info-header
         font-medium()
         font-upper()
+
         margin-bottom 10px
       .info
         font-upper()
@@ -73,58 +74,62 @@
       .images-container
         .images-list
           list-no-styles()
+
           display flex
           flex-wrap wrap
           gap 5px
           .image-container
+            position relative
             width 30%
             min-width 150px
             max-width 250px
-            position relative
             .image
               img-size(100%)
             .button-delete
               button-no-styles()
               svg-inside(40px, 0, 0)
               centered-absolute-transform()
-              opacity 0
+
               pointer-events none
               padding-top 10px
+              opacity 0
               trans()
             &:hover > .button-delete
-              opacity 1
               pointer-events unset
               padding-top 0
+              opacity 1
             &.button-plus
+              min-height 100px
               border 1px dashed black
               hover-effect()
-              min-height 100px
               .drag-n-drop-loader
                 width 100%
                 height 100%
                 .image
                   position absolute
                   centered-absolute-transform()
+
                   width unset
                   height unset
 
       .categories-container
         list-no-styles()
-        padding 10px
 
         display flex
         flex-direction column
         gap 5px
+        padding 10px
         .category-container
           display flex
-          justify-content space-between
-          align-items center
           gap 10px
+          align-items center
+          justify-content space-between
           .title
             font-medium()
           .button-add
           .button-delete
             button-no-fill()
+
             padding 5px
             img
               margin 0
@@ -151,14 +156,15 @@
       .desc
         font-small()
         font-thin()
+
         margin-bottom 80px
 
       .characters-container
         list-no-styles()
-        padding 10px
 
         display flex
         flex-direction column
+        padding 10px
         .character
           display flex
           gap 10px
@@ -178,10 +184,12 @@
           .value
             font-small-extra()
             font-semibold()
+
             text-align right
           .button-add
           .button-delete
             button-no-fill()
+
             padding 5px
             img
               margin 0
@@ -189,6 +197,7 @@
   .button-save
     button-emp2()
     centered-margin()
+
     width fit-content
 </style>
 

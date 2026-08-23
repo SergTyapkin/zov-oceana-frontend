@@ -11,16 +11,11 @@
   page-root()
 
   section.filters
-    page-root-disable()
-    animation-float()
-
     display flex
     flex-wrap wrap
     gap 10px
     justify-content space-between
     margin-inline 0
-    @media({mobile})
-      margin-inline 0
 
     .search
       flex 1
@@ -28,21 +23,26 @@
     .category-selector
       min-width 150px
 
+    @media ({mobile})
+      margin-inline 0
+    page-root-disable()
+    animation-float()
+
   section.users
-    width 100%
+    overflow auto
     display grid
     grid-template-columns repeat(7, auto)
+    width 100%
     box-shadow 0 15px 15px #00000033
-    overflow auto
     scrollable()
     .row
       display contents
       > *
+        display flex
+        align-items center
         width 100%
         height 100%
         padding 15px 10px
-        display flex
-        align-items center
         text-align left
         trans()
         &:first-child
@@ -62,6 +62,7 @@
 
       > .status
         font-bold()
+
         color mix(colorEmp1, transparent, 90%)
       &.red > .status
         color mix(colorError, transparent, 90%)
@@ -75,13 +76,15 @@
         color mix(colorTextInvert4, transparent, 90%)
     .info
       font-small()
+
       color colorText5
 
   .button-plus
     centered-margin()
     button-emp2()
-    margin-top 30px
+
     width fit-content
+    margin-top 30px
 </style>
 
 <template>

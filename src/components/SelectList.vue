@@ -46,6 +46,7 @@ field()
 
   .error-text
     font-small()
+
     color colorError
     opacity 0
     trans()
@@ -228,7 +229,7 @@ export default {
     opened: Boolean,
     canBeNull: Boolean,
 
-    // eslint-disable-next-line vue/no-unused-properties
+     
     modelValue: {
       type: null as any,
       default: null,

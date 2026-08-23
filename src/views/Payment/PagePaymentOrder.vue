@@ -120,8 +120,7 @@
             gap 10px
             align-items center
             > img
-              width 50px
-              height 50px
+              img-size(50px)
         .info
           font-small-extra()
 
