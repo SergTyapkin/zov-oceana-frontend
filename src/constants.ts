@@ -1,4 +1,4 @@
-export const IMAGES_URL_BASE_PATH = '/images/';
+export const IMAGES_URL_BASE_PATH = '/image/';
 
 export const TBANK_PAYMENT_SCRIPT_URL = 'https://integrationjs.tbank.ru/integration.js';
 

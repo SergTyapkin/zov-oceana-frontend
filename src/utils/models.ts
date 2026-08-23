@@ -68,7 +68,7 @@ export interface Goods {
   isOnSale: boolean;
   isWeighed: boolean;
   isDelicates: boolean;
-  images: {id: string, path: string}[];
+  images: {id: string, path: string, sortingKey: number}[];
   categories: {id: string, title: string}[];
   characters?: Record<PropertyKey, string | number>;
   createdDate: Date;
@@ -78,7 +78,7 @@ export interface Category {
   id: string;
   title: string;
   description?: string;
-  previewUrl?: string;
+  imagePath?: string;
   goodsCount?: number;
 }
 

@@ -34,12 +34,12 @@
         margin-left 5px
 
   section.users
-    width 100%
-    padding-top 50px
-    padding-bottom 100px
     display flex
     flex-wrap wrap
     gap 20px
+    width 100%
+    padding-top 50px
+    padding-bottom 100px
 
     .right-column
       display flex
@@ -61,6 +61,7 @@
       .info-header
         font-medium()
         font-upper()
+
         margin-bottom 10px
       .info
         font-upper()
@@ -73,26 +74,26 @@
       .addresses-big-container
       .orders-big-container
       .partners
-        max-height 700px
         overflow auto
-        padding 10px
-
         display flex
         flex-direction column
+        max-height 700px
+        padding 10px
         scrollable()
         .orders-container
           list-no-styles()
+
+          overflow auto
           display grid
           grid-template-columns repeat(4, auto)
-          overflow auto
           scrollable()
           .orders-one-container
             display contents
             &.header
               font-semibold()
               > *
-                text-align center
                 justify-content center
+                text-align center
             &:not(.header):hover
               > *
                 opacity 0.6
@@ -100,19 +101,21 @@
               display flex
               align-items center
               justify-content flex-end
-              text-align right
-              padding 10px 5px
               width 100%
               height 100%
+              padding 10px 5px
+              text-align right
               trans()
             &:nth-child(2n) > *
               background mix(colorBlockBg, transparent, 30%)
             .title
               font-medium()
+
               flex 1
             .button-add
             .button-delete
               button-no-fill()
+
               padding 5px
               img
                 margin 0
@@ -132,13 +135,15 @@
             flex 1
           .button-submit
             button-emp2()
+
             flex 0
             padding-inline 5px
-            //height min-content
+            // height min-content
 
   .button-save
     button-emp2()
     centered-margin()
+
     width fit-content
 </style>
 

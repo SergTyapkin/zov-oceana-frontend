@@ -156,8 +156,8 @@ export default class API extends REST_API {
     this.#GET(`/goods?id=${id}`, {}, GoodsModel, Response200(GoodsModelMockData)) as MyResponse<Goods>;
   createGoods = (title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, isDelicates: boolean, characters: object) =>
     this.#POST(`/goods`, {title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, isDelicates, characters}) as MyResponse<unknown>;
-  updateGoods = (id: string, title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, isDelicates: boolean, characters: object) =>
-    this.#PUT(`/goods`, {id, title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, isDelicates, characters}) as MyResponse<unknown>;
+  updateGoods = (id: string, title: string, description: string, fromLocation: string, amountLeft: number, amountStep: number, amountMin: number, isWeighed: boolean, cost: number, isOnSale: boolean, isDelicates: boolean, characters: object, images: object[]) =>
+    this.#PUT(`/goods`, {id, title, description, fromLocation, amountLeft, amountStep, amountMin, isWeighed, cost, isOnSale, isDelicates, characters, images}) as MyResponse<unknown>;
   updateGoodsIsOnSale = (id: string, isOnSale: boolean) =>
     this.#PUT(`/goods`, {id, isOnSale}) as MyResponse<unknown>;
   deleteGoods = (id: string) =>

@@ -214,9 +214,9 @@ export const CategoryModel = {
     type: String,
     optional: true,
   },
-  previewUrl: {
+  imagePath: {
     type: String,
-    from: 'previewurl',
+    from: 'imagepath',
     optional: true,
   },
   goodsCount: {
@@ -255,6 +255,10 @@ export const GoodsModel = {
   images: ArrayType({
     id: String,
     path: String,
+    sortingKey: {
+      type: Number,
+      from: 'sortingkey',
+    },
   }, true, []),
   fromLocation: {
     type: String,

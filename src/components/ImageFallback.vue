@@ -17,7 +17,7 @@
 
 <template>
   <section class="root-image-fallback">
-    <img v-if="!isLoaded && !isError" :src="src" :alt="alt" @load="isLoaded = true" @error="isError = true">
+    <img v-if="!isError" :src="src" :alt="alt" @load="isLoaded = true" @error="isError = true">
     <img v-else :src="fallbackSrc" :alt="alt" @load="isLoaded = true">
   </section>
 </template>

@@ -88,7 +88,7 @@
 <template>
   <router-link :to="{ name: 'goods', params: { id: goods.id } }" class="root-goods-card" :class="{ small }">
     <ImageFallback
-      :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]}`"
+      :src="`${IMAGES_URL_BASE_PATH}${goods.images?.[0]?.path}`"
       :fallback-src="DEFAULT_GOODS_IMAGE"
       alt="preview"
       class="background"

@@ -3,47 +3,47 @@ close-btn-size = 20px
 
 .modal
   position fixed
+  z-index 999
   top 0
   left 0
   width 100%
   height 100vh
-  z-index 999
-  backdrop-filter blur(10px)
   opacity 1
+  backdrop-filter blur(10px)
   transition opacity 0.2s ease
 
   .modal-background
     position fixed
-    left 0
     top 0
+    left 0
     width 100%
     height 100vh
-    background-color black
     opacity 0.6
+    background-color black
   .form
     position fixed
     top 50%
     left 50%
     transform translate(-50%, -50%)
+    overflow auto
     max-width calc(100vw - 40px)
     max-height calc(100vh - 40px)
-    overflow auto
 
     .close-btn
+      cursor pointer
       position absolute
-      color #ffffffff
-      right 10px
       top 10px
+      right 10px
       width close-btn-size
       height close-btn-size
+      color #ffffffff
       transition all 0.2s ease
-      cursor pointer
       &:hover
         opacity 0.5
 
   &.hidden
-    opacity 0
     pointer-events none
+    opacity 0
 </style>
 
 <template>

@@ -69,7 +69,7 @@
 <template>
   <router-link class="root-category-card" :to="{ name: 'market', query: { categoryId: category.id } }">
     <ImageFallback
-      :src="`${IMAGES_URL_BASE_PATH}${category.previewUrl}`"
+      :src="`${IMAGES_URL_BASE_PATH}${category.imagePath}`"
       :fallback-src="DEFAULT_CATEGORIES_IMAGE"
       alt="preview"
       class="background"

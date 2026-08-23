@@ -98,6 +98,16 @@
               pointer-events unset
               padding-top 0
               opacity 1
+
+            // === ДОБАВЛЕНО: стили для drag-n-drop ===
+            &.dragging
+              opacity 0.5
+              transform scale(0.95)
+            
+            &.drag-over
+              border 2px solid colorEmp1
+              background colorBlockBg
+
             &.button-plus
               min-height 100px
               border 1px dashed black
@@ -254,7 +264,23 @@
           <p class="info">Сохраняются сразу, без нажатия на кнопку "сохранить"!</p>
 
           <ul class="images-list">
-            <li v-for="(image, idx) in goods.images" :key="image.id" class="image-container">
+            <!-- === ИЗМЕНЕНО: добавлены draggable атрибуты и обработчики === -->
+            <li 
+              v-for="(image, idx) in goods.images" 
+              :key="image.id" 
+              class="image-container"
+              draggable="true"
+              :class="{ 
+                dragging: draggedImage?.id === image.id,
+                'drag-over': dragOverTarget?.id === image.id
+              }"
+              @dragstart="handleDragStart($event, image)"
+              @dragend="handleDragEnd"
+              @dragover.prevent
+              @dragenter="handleDragEnter(image)"
+              @dragleave="handleDragLeave"
+              @drop="handleDrop($event, image)"
+            >
               <ImageFallback
                 class="image"
                 :src="`${IMAGES_URL_BASE_PATH}${image.path}`"
@@ -391,6 +417,10 @@ export default {
 
       DEFAULT_GOODS_IMAGE,
       IMAGES_URL_BASE_PATH,
+
+      // === ДОБАВЛЕНО: состояние для drag-n-drop ===
+      draggedImage: null as null | { id: string; sortingKey: string },
+      dragOverTarget: null as null | { id: string; sortingKey: string },
     };
   },
 
@@ -434,6 +464,7 @@ export default {
           this.goods.isOnSale,
           this.goods.isDelicates,
           this.goods.characters!,
+          this.goods.images,
         ],
         `Не удалось обновить данные товара`,
         () => {
@@ -469,6 +500,8 @@ export default {
     },
 
     async uploadGoodsImage(dataUrl: string) {
+      if (!dataUrl) return;
+      
       await this.$request(
         this,
         this.$api.uploadGoodsImage,
@@ -497,6 +530,57 @@ export default {
 
     onInput() {
       window.onbeforeunload = () => {};
+    },
+
+    // === Методы для drag-n-drop перетаскивания картинок ===
+    handleDragStart(event: DragEvent, image: { id: string; sortingKey: string }) {
+      this.draggedImage = image;
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+      }
+    },
+
+    handleDragEnd() {
+      this.draggedImage = null;
+      this.dragOverTarget = null;
+    },
+
+    handleDragEnter(image: { id: string; sortingKey: string }) {
+      if (this.draggedImage && this.draggedImage.id !== image.id) {
+        this.dragOverTarget = image;
+      }
+    },
+
+    handleDragLeave() {
+      this.dragOverTarget = null;
+    },
+
+    handleDrop(event: DragEvent, targetImage: { id: string; sortingKey: string }) {
+      event.preventDefault();
+      this.dragOverTarget = null;
+
+      if (!this.draggedImage || this.draggedImage.id === targetImage.id) {
+        return;
+      }
+
+      const images = this.goods.images;
+      const currentIndex = images.findIndex(img => img.id === this.draggedImage!.id);
+      const targetIndex = images.findIndex(img => img.id === targetImage.id);
+
+      if (currentIndex === -1 || targetIndex === -1) {
+        return;
+      }
+
+      // Перемещаем элемент
+      const [removed] = images.splice(currentIndex, 1);
+      images.splice(targetIndex, 0, removed);
+
+      // Обновляем sortingKey для всех изображений
+      images.forEach((img, index) => {
+        img.sortingKey = index;
+      });
+
+      this.draggedImage = null;
     },
   },
 };
