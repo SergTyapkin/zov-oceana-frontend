@@ -34,12 +34,12 @@
         margin-left 5px
 
   section.orders
-    width 100%
-    padding-top 50px
-    padding-bottom 100px
     display flex
     flex-wrap wrap
     gap 20px
+    width 100%
+    padding-top 50px
+    padding-bottom 100px
 
     .right-column
       display flex
@@ -61,52 +61,56 @@
       .info-header
         font-medium()
         font-upper()
+
         margin-bottom 10px
-      .info
-        font-upper()
-        font-small-extra()
-        font-thin()
-        font-spaced()
-
-        color colorText3
-
 
       .goods-container
         list-no-styles()
-        padding 10px
 
         display flex
         flex-direction column
         gap 15px
+        padding 10px
         .goods-one-container
           display flex
-          justify-content space-between
-          align-items center
           gap 10px
+          align-items center
+          justify-content space-between
           .title
             font-medium()
+
             flex 1
           .button-add
           .button-delete
             button-no-fill()
+
             padding 5px
             img
               margin 0
 
       .payment-container
         .buttons
+          margin-top 30px
           .info
             font-small()
-            color colorText4
+            font-normal()
+            font-bold()
+
+            color colorText1
             text-align center
-          .button-confirm
-            button-success()
-          .button-cancel
-            button-error()
+          .buttons-container
+            display flex
+            .button-confirm
+              flex 1
+              button-success()
+            .button-cancel
+              flex 1
+              button-error()
 
   .button-save
     button-emp2()
     centered-margin()
+
     width fit-content
 </style>
 
@@ -243,17 +247,23 @@
             <div>Оплата начата: {{ dateTimeFormatter(order.paymentCreatedDate) }}</div>
 
             <section v-if="order.paymentStatus === 'authorized'" class="buttons">
-              <div class="info">Сейчас деньги у клиента заморожены, но не списаны!</div>
-              <button class="button-confirm" @click="confirmPayment">Подтвердить списание</button>
-              <button class="button-cancel" @click="cancelPayment">Вернуть оплату</button>
+              <div class="info">Сейчас деньги у клиента заморожены, но не списаны. Через неделю после оплаты они вернутся обратно</div>
+              <div class="buttons-container">
+                <button class="button-confirm" @click="confirmPayment">Подтвердить списание</button>
+                <button class="button-cancel" @click="cancelPayment">Вернуть оплату</button>
+              </div>
             </section>
             <section v-else-if="order.paymentStatus === 'new'" class="buttons">
               <div class="info">Сейчас клиент начал, но не завершил оплату</div>
-              <button class="button-cancel" @click="cancelPayment">Прервать оплату</button>
+              <div class="buttons-container">
+                <button class="button-cancel" @click="cancelPayment">Прервать оплату</button>
+              </div>
             </section>
             <section v-else-if="order.paymentStatus === 'confirmed'" class="buttons">
               <div class="info">Оплата полностью списана у клиента</div>
-              <button class="button-cancel" @click="refundPayment">Вернуть оплату</button>
+              <div class="buttons-container">
+                <button class="button-cancel" @click="refundPayment">Вернуть оплату</button>
+              </div>
             </section>
           </div>
           <div v-else>Оплата в банке пользователем ещё не производилась</div>
@@ -386,7 +396,10 @@ export default {
     },
 
     async confirmPayment() {
-      if (!(await this.$modals.confirm("Списываем оплату?", "После подтверждения деньги поступят на счет магазина, и будет уплачена комиссия банку"))) {
+      if (!(await this.$modals.confirm(
+        "Списываем оплату?", 
+        "После подтверждения деньги поступят на счет магазина, и будет уплачена комиссия банку"
+      ))) {
         return;
       }
 
@@ -396,7 +409,7 @@ export default {
         [this.order.id],
         `Не удалось подтвердить оплату`,
         () => {
-          this.$popups.success("Оплата списана", "Средства уже на счете магазина");
+          this.$popups.success("Оплата списана", "Средства перечислены на счет магазина");
           this.$router.push({ name: 'adminOrders' });
         },
       );
@@ -420,7 +433,11 @@ export default {
     },
 
     async refundPayment() {
-      if (!(await this.$modals.confirm("Возвращаем оплату за заказ?", "Деньги вернутся клиенту и отменить это не получится. После получения денег и возврата в итоге вы теряете комиссию банка за перевод от суммы заказа"))) {
+      if (!(await this.$modals.confirm(
+        "Возвращаем оплату за заказ?", 
+        "Деньги вернутся клиенту, и отменить это не получится. \
+После получения денег и возврата в итоге вы теряете комиссию банка за перевод от суммы заказа"
+      ))) {
         return;
       }
 

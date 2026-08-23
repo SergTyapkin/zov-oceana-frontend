@@ -42,10 +42,11 @@
         button-emp2()
       .button-logout
         button-error()
+
         margin-top 20px
-        background colorBgLight
         border solid 1px colorError
         color colorError
+        background colorBgLight
         img
           trans()
         &:hover
@@ -66,13 +67,15 @@
           title="Фамилия"
           v-model="fields.familyName"
           placeholder="Ваша фамилия"
-          :error="errors.familyName" />
+          :error="errors.familyName"
+        />
         <InputComponent title="Имя" v-model="fields.givenName" placeholder="Ваше имя" :error="errors.givenName" />
         <InputComponent
           title="Отчество"
           v-model="fields.middleName"
           placeholder="Ваше отчество"
-          :error="errors.middleName" />
+          :error="errors.middleName"
+        />
       </div>
       <div class="row">
         <InputComponent title="Email" v-model="fields.email" placeholder="your@email.ru" :error="errors.email" />
@@ -85,7 +88,7 @@
         <button class="button-save" @click="save" :disabled="!isEdited">Сохранить изменения</button>
       </div>
       <div class="row">
-        <button @click="logout" class="button-logout"><img src="/static/icons/signin.svg" alt="logout" />Выйти</button>
+        <button @click="logout" class="button-logout"><img src="/static/icons/signin.svg" alt="logout">Выйти</button>
       </div>
     </main>
 

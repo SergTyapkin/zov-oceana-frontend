@@ -40,20 +40,22 @@
       animation-float(0.5s, -20px, 0, left)
     .order-status
       animation-float(0.5s, -20px, 0, left)
+
       display flex
-      align-items center
       gap 10px
+      align-items center
       .date
         font-small-extra()
+
         color colorTextInvert4
       .status
         font-small-extra()
 
         width min-content
-        white-space nowrap
         padding 5px 10px
         color colorText1
         text-align center
+        white-space nowrap
         background mix(colorEmp1, transparent, 90%)
         &.red
           background mix(colorError, transparent, 90%)
@@ -67,12 +69,14 @@
           background mix(colorTextInvert2, transparent, 90%)
     .payment-button
       animation-float(0.5s, -20px, 0, left)
-      margin-top 30px
+
       width fit-content
+      margin-top 30px
       button-emp2()
     .address-info
       animation-float(0.5s, -20px, 0, left)
       font-small()
+
       margin-bottom 30px
       color colorTextInvert2
 
@@ -83,8 +87,6 @@
     width 100%
     padding-top 50px
     padding-bottom 100px
-    @media({mobile})
-      flex-direction column
     .goods-list
       display flex
       flex 3
@@ -220,6 +222,9 @@
 
         width 100%
         margin-top 20px
+
+    @media ({mobile})
+      flex-direction column
 </style>
 
 <template>
@@ -239,7 +244,13 @@
         <div class="status" :class="PaymentStatuses[order.paymentStatus]?.color">{{ PaymentStatuses[order.paymentStatus]?.title }}</div>
         <div class="date">изменено {{ dateTimeFormatter(order.updatedDate) }}</div>
       </div>
-      <router-link v-if="['new', 'expired', 'rejected'].includes(order.paymentStatus)" :to="{ name: 'paymentOrder', params: {id: orderId}}" class="payment-button">Оплатить заказ</router-link>
+      <button 
+        v-if="['new', 'expired', 'rejected'].includes(order.paymentStatus)"
+        class="payment-button"
+        @click="startPayment"
+      >
+        Оплатить заказ
+      </button>
     </section>
 
     <section class="cart">
@@ -292,14 +303,14 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter, dateFormatter, dateTimeFormatter } from '~/utils/utils';
-import { OrderStatuses, PaymentStatuses } from '~/constants';
+import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS, PaymentStatuses } from '~/constants';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
 
   data() {
     return {
-      orderId: this.$route.params.id,
+      orderId: this.$route.params.id as string,
 
       order: {} as Order,
 
@@ -329,8 +340,39 @@ export default {
         this.$api.getOrder,
         [this.orderId],
         `Не удалось получить данные заказа`,
+        undefined,
+        undefined,
+        {
+          404: () => this.$router.push({name: 'profileOrders'}),
+        },
       )) as Order;
     },
+
+    async startPayment() {
+      // Если не один из этих статусов - выходим сразу
+      if (!['new', 'cancelled', 'rejected', 'expired'].includes(this.order.paymentStatus)) return;
+
+      if (
+        this.order.paymentId && 
+        this.order.paymentStatus === 'new' && 
+        (this.order.paymentCreatedDate && ((Date.now() - this.order.paymentCreatedDate.getTime()) < PAYMENT_TIME_TO_BE_PAYED_MS))
+      ) {
+        // Оплата уже создана и ещё не истекла
+        this.$router.push({ name: 'paymentOrder', params: {id: this.orderId}});
+        return;
+      }
+      
+      // Нужно создать оплату на бэке
+      await this.$request(
+        this,
+        this.$api.createPayment,
+        [this.orderId],
+        'Не удалось создать платеж на сервере',
+        () => {
+          this.$router.push({ name: 'paymentOrder', params: {id: this.orderId}});
+        },
+      );
+    }
   },
 };
 </script>

@@ -26,9 +26,10 @@
     .desc
       font-small()
       font-spaced()
-      text-align center
-      color colorText5
+
       margin-bottom 20px
+      color colorText5
+      text-align center
     .addresses-list
       list-no-styles()
 
@@ -55,25 +56,23 @@
 
   .modal
     width 70vw
-    max-width 600px
     min-width 450px
-    @media({mobile})
-      width calc(100vw - 40px)
-      min-width unset
+    max-width 600px
     .header
       font-large()
       font-spaced()
 
-      background colorBgDark
+      padding 30px
       color colorTextInvert1
-      padding 30px
       text-align center
+      background colorBgDark
     .main
-      background colorBgLight
       padding 30px
+      background colorBgLight
       .desc
         font-small()
         font-spaced()
+
         margin-block 10px
         text-align center
       .field
@@ -84,6 +83,7 @@
         margin-top 40px
         .submit
           button-emp2()
+
           flex 1
         .cancel
           button-error()
@@ -92,9 +92,14 @@
         font-lower()
         font-small-extra()
         centered-margin()
-        color colorText1In
+
         width fit-content
         margin-top 10px
+        color colorText1In
+
+    @media ({mobile})
+      width calc(100vw - 40px)
+      min-width unset
 </style>
 
 <template>
@@ -112,10 +117,11 @@
           :address="address"
           :key="address.id"
           @edit="startEditAddress(address)"
-          @delete="deleteAddress(address)" />
+          @delete="deleteAddress(address)"
+        />
 
         <button @click="$refs.addAddressModal.showModal()" class="add-address-button">
-          <img src="/static/icons/plus-thin.svg" alt="plus" />
+          <img src="/static/icons/plus-thin.svg" alt="plus">
           Добавить адрес
         </button>
       </ul>
@@ -131,7 +137,8 @@
             title="Название"
             placeholder="Мой дом"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.city"
             :error="errors.city"
@@ -140,7 +147,8 @@
             autocomplete="address-level2"
             placeholder="Москва"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.street"
             :error="errors.street"
@@ -149,7 +157,8 @@
             title="Улица"
             placeholder="Улица"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.house"
             :error="errors.house"
@@ -158,7 +167,8 @@
             title="Дом"
             placeholder="1к11"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.entrance"
             :error="errors.entrance"
@@ -166,7 +176,8 @@
             title="Подъезд"
             placeholder="4"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.floor"
             :error="errors.floor"
@@ -174,7 +185,8 @@
             title="Этаж"
             placeholder="10"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.apartment"
             :error="errors.apartment"
@@ -182,7 +194,8 @@
             title="Квартира"
             placeholder="103"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.code"
             :error="errors.code"
@@ -190,7 +203,8 @@
             title="Код домофона"
             placeholder="В103В9999"
             class="field"
-            @submit="addAddress" />
+            @submit="addAddress"
+          />
           <InputComponent
             v-model="addressData.comment"
             :error="errors.comment"
@@ -198,7 +212,8 @@
             textarea
             title="Комментарий"
             placeholder="Ваши пояснения"
-            class="field" />
+            class="field"
+          />
 
           <div class="buttons-container">
             <button class="submit" @click="addAddress">Добавить</button>
@@ -218,7 +233,8 @@
             title="Название"
             placeholder="Мой дом"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.city"
             :error="errors.city"
@@ -226,7 +242,8 @@
             title="Город"
             placeholder="Москва"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.street"
             :error="errors.street"
@@ -234,7 +251,8 @@
             title="Улица"
             placeholder="Улица"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.house"
             :error="errors.house"
@@ -242,35 +260,40 @@
             title="Дом"
             placeholder="1к11"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.entrance"
             :error="errors.entrance"
             title="Подъезд"
             placeholder="4"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.floor"
             :error="errors.floor"
             title="Этаж"
             placeholder="10"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.apartment"
             :error="errors.apartment"
             title="Квартира"
             placeholder="103"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.code"
             :error="errors.code"
             title="Код домофона"
             placeholder="В103В9999"
             class="field"
-            @submit="editAddress" />
+            @submit="editAddress"
+          />
           <InputComponent
             v-model="addressData.comment"
             :error="errors.comment"
@@ -278,7 +301,8 @@
             textarea
             title="Комментарий"
             placeholder="Ваши пояснения"
-            class="field" />
+            class="field"
+          />
 
           <div class="buttons-container">
             <button class="submit" @click="editAddress">Изменить</button>

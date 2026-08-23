@@ -52,8 +52,6 @@
     width 100%
     padding-top 50px
     padding-bottom 100px
-    @media({mobile})
-      flex-direction column
     .goods-list
       display flex
       flex 3
@@ -116,8 +114,12 @@
       margin-top 20px
       .info-link
         button-emp2()
+
         width 100%
         text-align center
+
+    @media ({mobile})
+      flex-direction column
 </style>
 
 <template>
@@ -207,7 +209,6 @@
 <script lang="ts">
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
-import DEFAULT_GOODS_IMAGE from '#/images/ocean-bg.jpg';
 import { Address, Goods } from '~/utils/models';
 import { addressFormatter, costFormatter, toDebounced } from '~/utils/utils';
 import SelectList from '~/components/SelectList.vue';
@@ -230,7 +231,6 @@ export default {
 
       loading: false,
 
-      DEFAULT_GOODS_IMAGE,
       CREATE_NEW_ADDRESS_SYMBOL,
     };
   },
@@ -329,8 +329,8 @@ export default {
           );
           this.$store.dispatch('CLEAR_CART');
 
-          // Переводим на страницу оплаты
-          this.$router.push({ name: 'paymentOrder', params: {id: orderData.id} });
+          // Переводим на страницу заказа
+          this.$router.push({ name: 'order', params: {id: orderData.id} });
         },
       );
     },

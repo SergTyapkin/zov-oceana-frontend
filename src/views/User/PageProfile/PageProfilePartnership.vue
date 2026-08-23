@@ -11,38 +11,38 @@
   .page-header
     font-large()
     font-upper()
+
     display flex
     justify-content space-between
     .withdraw-container
       display flex
       flex-direction column
-      centered-flex-container()
-      background colorBgDark
-      color colorTextInvert1
-      font-medium()
       padding-top 10px
+      color colorTextInvert1
+      background colorBgDark
+      centered-flex-container()
+      font-medium()
       .main
         font-large()
       .button-withdraw
         button-emp2()
-        padding-block 5px
+
         margin-top 5px
+        padding-block 5px
 
 
   .cards-container
-    list-no-styles()
     display grid
     grid-template-columns 1fr 1fr
-    @media({mobile})
-      grid-template-columns 1fr
     gap 20px
     margin-top 30px
     .card
-      box-shadow 0 0 10px colorShadow
       max-width 100%
+      box-shadow 0 0 10px colorShadow
       .header
         font-medium()
         font-upper()
+
         padding 20px
         color colorTextInvert1
         background colorBgDark
@@ -50,16 +50,23 @@
 
       .main
         scrollable()
-        padding 30px 20px
-        max-height 500px
+
         overflow-y auto
+        max-height 500px
+        padding 30px 20px
 
         .qr
           centered-margin()
-          max-width 300px
+
           width 100%
-          @media({mobile})
+          max-width 300px
+
+          @media ({mobile})
             max-width 200px
+
+    @media ({mobile})
+      grid-template-columns 1fr
+    list-no-styles()
 </style>
 
 <template>
@@ -76,7 +83,7 @@
     <ul class="cards-container">
       <li class="card">
         <header class="header">
-          <img src="/static/icons/numbers-list.svg" alt="" />
+          <img src="/static/icons/numbers-list.svg" alt="">
           Все ваши бонусы от продаж
         </header>
 
@@ -87,7 +94,7 @@
 
       <li class="card">
         <header class="header">
-          <img src="/static/icons/graph.svg" alt="" />
+          <img src="/static/icons/graph.svg" alt="">
           Продажи партнеров
         </header>
 
@@ -102,7 +109,7 @@
 
       <li class="card">
         <header class="header">
-          <img src="/static/icons/invite.svg" alt="" />
+          <img src="/static/icons/invite.svg" alt="">
           Реферальная ссылка
         </header>
 
@@ -120,7 +127,6 @@
 
 <script lang="ts">
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
-import UserAvatar from '~/components/UserAvatar.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import QRGenerator from '~/components/QRGenerator.vue';
 import { costFormatter } from '~/utils/utils';
@@ -130,7 +136,7 @@ import PartnersGraph from '~/components/PartnersGraph.vue';
 import PartnerTransactionsHistory from '~/components/PartnerTransactionsHistory.vue';
 
 export default {
-  components: { PartnerTransactionsHistory, PartnersGraph, QRGenerator, InputComponent, UserAvatar, CircleLinesLoading },
+  components: { PartnerTransactionsHistory, PartnersGraph, QRGenerator, InputComponent, CircleLinesLoading },
 
   data() {
     return {

@@ -41,21 +41,20 @@
     padding-top 50px
     padding-bottom 100px
     .images-container
-      flex 1
       display flex
+      flex 1
       flex-direction column
       gap 30px
       min-width 200px
       max-width 400px
       > img
         width 100%
-
         object-fit contain
         object-position top
       .images-small-container
+        overflow-x auto
         display flex
         gap 10px
-        overflow-x auto
         > img
           width 50%
 
@@ -103,6 +102,7 @@
       .desc
         font-small()
         font-thin()
+
         margin-bottom 80px
 
       .info-header
@@ -131,6 +131,7 @@
           .value
             font-small-extra()
             font-semibold()
+
             text-align right
 
       .amount-selector
@@ -304,6 +305,11 @@ export default {
         this.$api.getGoods,
         [this.goodsId],
         `Не удалось получить список товаров`,
+        undefined,
+        undefined,
+        {
+          404: () => this.$router.push({name: 'market'}),
+        },
       )) as Goods;
     },
 

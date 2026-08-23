@@ -428,7 +428,7 @@ export const OrderModel = {
   },
   paymentId: {
     type: String,
-    from: 'paymentId',
+    from: 'paymentid',
     optional: true,
   },
   paymentUrl: {
@@ -450,6 +450,16 @@ export const OrderModel = {
   paymentCreatedDate: {
     type: Date,
     from: 'paymentcreateddate',
+    optional: true,
+  },
+  paymentRoute: {
+    type: String,
+    from: 'paymentroute',
+    optional: true,
+  },
+  paymentSource: {
+    type: String,
+    from: 'paymentsource',
     optional: true,
   },
 };
@@ -509,14 +519,3 @@ export const GlobalsModelMockData = validateModel(GlobalsModel, {
 }) as Globals;
 GlobalsModelMockData.goodsOnLanding = GoodsListModelMockData.goods as Goods[];
 GlobalsModelMockData.categories = CategoriesListModelMockData.categories as Category[];
-
-
-export const PaymentInfoModel = {
-  paymentUrl: {
-    type: String,
-    from: 'PaymentUrl',
-  },
-};
-export const PaymentInfoModelMockData = {
-  paymenturl: 'some.link.for.tests',
-};

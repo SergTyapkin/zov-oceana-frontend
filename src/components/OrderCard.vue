@@ -66,7 +66,7 @@
         &.blue
           background colorEmp2
         &.gray
-          background colorTextInvert2
+          background colorTextInvert4
 
     .more-info
       button-no-styles()

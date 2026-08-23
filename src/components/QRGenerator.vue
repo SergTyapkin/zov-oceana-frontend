@@ -83,8 +83,8 @@ thumb-size = 15px
       max-width slider-length
       height slider-width
       margin 10px
-      background colorBlockBg
       border-radius thumb-size
+      background colorBlockBg
       outline none
       box-shadow inset 0 0 5px colorEmp1
 
@@ -96,10 +96,10 @@ thumb-size = 15px
       cursor pointer
       width thumb-size
       height thumb-size
-      -webkit-appearance none
-      background empColor2
       border 4px solid #333
       border-radius 50%
+      -webkit-appearance none
+      background empColor2
       box-shadow (- slider-length - 5px) 0 0 (slider-length) mix(colorEmp1, transparent, 30%)
 
     .range-labels
@@ -156,7 +156,8 @@ thumb-size = 15px
 </template>
 
 <script lang="ts">
-import QRCode from 'qrcode-generator-es6';
+import QRCode from 'qrcode';
+
 
 export default {
   components: {},

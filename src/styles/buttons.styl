@@ -3,7 +3,7 @@
 @import 'utils.styl'
 
 
-button()
+button(marginLeft=0px, marginRight=10px)
   cursor pointer
   user-select none
   box-sizing border-box
@@ -29,7 +29,7 @@ button()
   font-spaced()
   font-normal()
   font-upper()
-  svg-inside(1lh)
+  svg-inside(1lh, marginLeft, marginRight)
   trans()
   centered-flex-container()
 
@@ -45,8 +45,8 @@ button-no-fill()
     color colorText1
     background mix(colorBlockBg, white, 20%)
 
-button-emp1()
-  button()
+button-emp1(marginLeft=0px, marginRight=10px)
+  button(marginLeft, marginRight)
 
   border-color transparent
   color colorTextInvert1
@@ -57,8 +57,8 @@ button-emp1()
     color colorTextInvert1
     background colorEmp1Hover
 
-button-emp2()
-  button-emp1()
+button-emp2(marginLeft=0px, marginRight=10px)
+  button-emp1(marginLeft, marginRight)
 
   background colorEmp2
 
@@ -66,8 +66,8 @@ button-emp2()
     background colorEmp2Hover
 
 
-button-emp1-no-fill()
-  button-emp1()
+button-emp1-no-fill(marginLeft=0px, marginRight=10px)
+  button-emp1(marginLeft, marginRight)
 
   padding-right 10px
   padding-left 10px
@@ -80,8 +80,8 @@ button-emp1-no-fill()
     color colorEmp1
     background mix(colorEmp1, white, 20%)
 
-button-emp2-no-fill()
-  button-emp2()
+button-emp2-no-fill(marginLeft=0px, marginRight=10px)
+  button-emp2(marginLeft, marginRight)
 
   padding-right 10px
   padding-left 10px
@@ -95,24 +95,24 @@ button-emp2-no-fill()
     background mix(colorEmp2, white, 20%)
 
 
-button-error()
-  button()
+button-error(marginLeft=0px, marginRight=10px)
+  button(marginLeft, marginRight)
 
   border-color colorError
-  background colorError
   color colorTextInvert1
+  background colorError
 
   &:hover
     border-color mix(colorError, white)
-    background mix(colorError, white)
     color colorTextInvert1
+    background mix(colorError, white)
 
-button-success()
-  button()
+button-success(marginLeft=0px, marginRight=10px)
+  button(marginLeft, marginRight)
 
   border-color colorSuccess
-  color colorTextInvert3
-  background mix(colorSuccess, transparent)
+  color colorTextInvert1
+  background mix(colorSuccess, transparent, 90%)
 
   &:hover
     border-color mix(colorSuccess, white)

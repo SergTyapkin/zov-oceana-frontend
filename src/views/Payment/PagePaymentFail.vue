@@ -41,6 +41,7 @@
     .address-info
       animation-float(0.5s, -20px, 0, left)
       font-small()
+
       margin-bottom 30px
       color colorTextInvert2
 
@@ -66,15 +67,28 @@
 
       <header class="header" style="--animation-index: 1">Оплата отклонена банком</header>
       <div class="address-info">
-        <div>Проверьте соединение и попробуйте ещё раз. Также проверьте возможные блокировки проблемы с картой в приложении банка</div>
+        <div>Проверьте соединение и попробуйте ещё раз. Также проверьте возможные блокировки и проблемы с картой в приложении банка</div>
         <br>
-        <div>Чтобы оплатить заказ заново, перейдите на него из раздела "мои заказы"</div>
+        <div>Чтобы оплатить заказ заново, перейдите на его страницу</div>
       </div>
     </section>
 
     <!-- Больщшая кнопка -->
     <section class="main">
-      <router-link :to="{name: 'profileOrders'}" class="button-go-back">Перейти в "мои заказы"</router-link>
+      <router-link 
+        v-if="orderId" 
+        :to="{name: 'order', params: {id: orderId}}"
+        class="button-go-back"
+      >
+        Перейти на страницу заказа
+      </router-link>
+      <router-link 
+        v-else 
+        :to="{name: 'profileOrders'}"
+        class="button-go-back"
+      >
+        Перейти в "мои заказы"
+      </router-link>
     </section>
   </div>
 </template>
@@ -82,5 +96,17 @@
 <script lang="ts">
 export default {
   components: { },
+
+  data() {
+    return {
+      orderIdFull: this.$route.query.OrderId as string,
+    }
+  },
+
+  computed: {
+    orderId() {
+      return (this.orderIdFull ?? '').split('_')[0];
+    },
+  },
 };
 </script>

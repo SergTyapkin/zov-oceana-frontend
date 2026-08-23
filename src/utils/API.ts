@@ -23,8 +23,6 @@ import {
   UsersListModel,
   UserPartnerListModel,
   UserPartnerListModelMockData,
-  PaymentInfoModel,
-  PaymentInfoModelMockData,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus, UserPartner } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
@@ -185,7 +183,7 @@ export default class API extends REST_API {
 
   // Payments
   createPayment = (orderId: string) =>
-    this.#POST(`/payments`, {orderId}, PaymentInfoModel, Response200(PaymentInfoModelMockData)) as MyResponse<{paymentUrl: string}>;
+    this.#POST(`/payments`, {orderId}, {}, Response200({})) as MyResponse<unknown>;
   confirmPayment = (orderId: string) =>
     this.#POST(`/payments/confirm`, {orderId}, {}, Response200({})) as MyResponse<unknown>;
   cancelPayment = (orderId: string) =>

@@ -41,6 +41,7 @@
     .address-info
       animation-float(0.5s, -20px, 0, left)
       font-small()
+
       margin-bottom 30px
       color colorTextInvert2
 
@@ -67,12 +68,15 @@
       <header class="header" style="--animation-index: 1">Заказ оплачен!</header>
       <div class="address-info">
         <div>Если с вами ещё не связывался оператор, ожидайте подтверждения заказа по телефону, указанному в профиле</div>
+        <br>
+        <div>Статус оплаты заказа изменится в течение 5 минут</div>
       </div>
     </section>
 
     <!-- Больщшая кнопка -->
     <section class="main">
-      <router-link :to="{name: 'profileOrders'}" class="button-go-back">Перейти в "мои заказы"</router-link>
+      <router-link v-if="orderId" :to="{name: 'order', params: {id: orderId}}" class="button-go-back">Перейти на страницу заказа</router-link>
+      <router-link v-else :to="{name: 'profileOrders'}" class="button-go-back">Перейти в "мои заказы"</router-link>
     </section>
   </div>
 </template>
@@ -80,5 +84,17 @@
 <script lang="ts">
 export default {
   components: { },
+
+  data() {
+    return {
+      orderIdFull: this.$route.query.OrderId as string,
+    }
+  },
+
+  computed: {
+    orderId() {
+      return (this.orderIdFull ?? '').split('_')[0];
+    },
+  },
 };
 </script>

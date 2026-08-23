@@ -118,6 +118,8 @@ export interface Order {
   paymentQrData?: string;
   paymentStatus: PaymentStatus;
   paymentCreatedDate?: Date;
+  paymentRoute?: string;
+  paymentSource?: string;
 }
 
 export interface PartnerHistoryTransaction {

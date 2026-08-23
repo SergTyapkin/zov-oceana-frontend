@@ -28,8 +28,10 @@ export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
         if (toFallbackValue) {
           return toFallbackValue;
         }
-        popupsError(`Ошибка ${status}`, errorText);
-        throw new Error(`Ошибка ${status} при запросе на API. ${errorText}`);
+        const errorTextFromBackend: string | undefined = data?.info;
+        const totalErrorText = errorText + (errorTextFromBackend ? ' | ' + errorTextFromBackend : '');
+        popupsError(`Ошибка ${status}`, totalErrorText);
+        throw new Error(`Ошибка ${status} при запросе на API. ${totalErrorText}`);
       }
       callback?.(data, status);
       return data;

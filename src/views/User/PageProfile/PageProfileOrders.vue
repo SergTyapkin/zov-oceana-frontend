@@ -34,6 +34,7 @@
       width 100%
       .desc
         font-small()
+
         color colorText5
         text-align center
 </style>

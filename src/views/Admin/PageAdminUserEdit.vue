@@ -47,7 +47,7 @@
       gap 40px
       > *
         padding 10px
-        buser-bottom 1px solid colorBuser
+        border-bottom 1px solid colorBorder
         box-shadow 0 0 10px colorShadow
     .left-column
       display flex
@@ -146,7 +146,7 @@
   <div class="root-page">
     <router-link :to="{ name: 'adminUsers' }">
       <section class="page-title">
-        <img src="/static/icons/arrow-left.svg" alt="arrow left" />
+        <img src="/static/icons/arrow-left.svg" alt="arrow left">
         Ко всем пользователям
       </section>
     </router-link>
@@ -156,17 +156,17 @@
         <InputComponent v-model="user.familyName" title="Фамилия" placeholder="Фамилия" />
         <InputComponent v-model="user.givenName" title="Имя" placeholder="Имя" />
         <InputComponent v-model="user.middleName" title="Отчество" placeholder="Отчество" />
-        <br />
+        <br>
         <InputComponent v-model="user.city" title="Город" placeholder="Город" />
         <InputComponent v-model="user.tel" title="Телефон" placeholder="+7 999 100 20 30" />
         <InputComponent v-model="user.email" title="Email" placeholder="some.email@mail.com" />
-        <br />
+        <br>
         <InputComponent v-model="user.tgId" title="Telegram ID" placeholder="1000000" />
         <InputComponent v-model="user.tgUsername" title="Telegram тэг" placeholder="Some_User" />
         <InputComponent v-model="user.avatarUrl" title="Telegram url аватарки" placeholder="https://some_image.png" />
-        <br />
+        <br>
         <InputSwitch v-model="user.isEmailNotificationsOn" title="Уведомления по email" />
-        <br />
+        <br>
         <SelectList
           class="category-selector"
           title="Партнерство"
@@ -188,7 +188,8 @@
               value: undefined,
             },
           ]"
-          v-model="user.partnerStatus" />
+          v-model="user.partnerStatus"
+        />
         <SelectList
           v-model="user.referrerId"
           :list="
@@ -201,7 +202,8 @@
           can-be-null
           :selected-id="user.referrerId"
           title="Пригласил пользователь"
-          ref="userSelect" />
+          ref="userSelect"
+        />
         <br>
         <br>
         <header class="info-header">Админские разрешения</header>
@@ -229,7 +231,8 @@
               :to="{ name: 'adminOrderEdit', params: { id: order.id } }"
               class="orders-one-container"
               v-for="order in orders"
-              :key="order.id">
+              :key="order.id"
+            >
               <div class="title">{{ order.number }}</div>
               <div class="goods">{{ order.goods.length }}</div>
               <div class="cost">{{ costFormatter(order.goods.reduce((acc, g) => acc + g.amount * g.cost, 0)) }}</div>
@@ -262,15 +265,27 @@
             ref="partnersGraph"
             :user="user"
             class="partners-graph"
-            @history-gotten="gottenHistory => (partnerHistory = gottenHistory)" />
+            @history-gotten="gottenHistory => (partnerHistory = gottenHistory)"
+          />
         </article>
 
         <article class="partners" v-if="user.partnerStatus">
           <header class="info-header">История партнерских начислений за месяц</header>
           <div class="input-container">
             <div class="inputs-group">
-              <InputComponent v-model="newTransactionValue" type="number" class="input" title="Начислить партнерские бонусы" placeholder="1000" description="Чтобы отнять, введите отрицательное значение"/>
-              <InputComponent v-model="newTransactionComment" class="input" placeholder="Ваш комментарий к начислению" />
+              <InputComponent
+                v-model="newTransactionValue"
+                type="number"
+                class="input"
+                title="Начислить партнерские бонусы"
+                placeholder="1000"
+                description="Чтобы отнять, введите отрицательное значение"
+              />
+              <InputComponent 
+                v-model="newTransactionComment"
+                class="input"
+                placeholder="Ваш комментарий к начислению"
+              />
             </div>
             <button class="button-submit" @click="createBonusesTransaction">Начислить</button>
           </div>
@@ -278,8 +293,8 @@
         </article>
 
         <div class="info" v-if="userId">
-          Присоединился: {{ dateTimeFormatter(user.joinedDate) }} <br />
-          #ID: {{ user.id }} <br />
+          Присоединился: {{ dateTimeFormatter(user.joinedDate) }} <br>
+          #ID: {{ user.id }} <br>
         </div>
       </div>
     </section>
