@@ -29,8 +29,6 @@ export default (options: {
       const webResultFileName = options.fileName || 'assetsList.js';
       const fsResultFilePath = `${fsOutBuildDir}/${webResultFileName}`;
 
-      formatConsole("Plugin initialized");
-
       const assetsList: string[] = [];
       assetsList.push(`index.html`);
 

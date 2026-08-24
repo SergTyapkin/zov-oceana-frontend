@@ -13,7 +13,6 @@ export default (options: {
   name: 'compile-typescript-service-worker',
   async generateBundle() {
     console.log();
-    formatConsole("Plugin initialized");
     const inputOptions: InputOptions = {
       input: 'src/serviceWorker/sw.ts',
       plugins: [

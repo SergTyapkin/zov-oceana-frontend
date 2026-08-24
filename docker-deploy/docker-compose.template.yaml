@@ -1,4 +1,10 @@
 name: ${FRONTEND_COMPOSE_NAME:-frontend-compose}
+
+volumes:
+  images-volume:
+    external: true # external volume, созданный на бэке
+    name: ${IMAGES_VOLUME_NAME}
+
 services:
   # Needs to serve only http and get certs when certs is not created yet
   nginx-certbot:
@@ -49,8 +55,3 @@ services:
     restart: unless-stopped
     networks:
       - default
-
-volumes:
-  images-volume:
-    external: true # external volume, созданный на бэке
-    name: ${IMAGES_VOLUME_NAME}
