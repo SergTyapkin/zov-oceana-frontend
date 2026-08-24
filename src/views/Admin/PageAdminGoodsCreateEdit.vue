@@ -255,11 +255,11 @@
           type="number"
         />
         <InputSwitch v-model="goods.isOnSale" title="В продаже?" on-state-title="ДА" off-state-title="НЕТ" />
-        <InputComponent v-model="goods.isDelicates" title="Деликатес?" on-state-title="ДА" off-state-title="НЕТ" />
+        <InputSwitch v-model="goods.isDelicates" title="Деликатес?" on-state-title="ДА" off-state-title="НЕТ" />
       </div>
 
       <div class="right-column">
-        <section class="images-container">
+        <section v-if="!isCreate" class="images-container">
           <header class="info-header">Картинки товара</header>
           <p class="info">Сохраняются сразу, без нажатия на кнопку "сохранить"!</p>
 
@@ -379,8 +379,8 @@
       </div>
     </section>
 
-    <button class="button-save" v-if="goodsId !== undefined" @click="updateGoodsData">Сохранить изменения</button>
-    <button class="button-save" v-else @click="createGoods">Создать товар</button>
+    <button class="button-save" v-if="isCreate" @click="createGoods">Создать товар</button>
+    <button class="button-save" v-else @click="updateGoodsData">Сохранить изменения</button>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -406,7 +406,11 @@ export default {
     return {
       goodsId: this.$route.params.id as string,
 
-      goods: {} as Goods,
+      goods: {
+        isWeighed: false,
+        isOnSale: false,
+        isDelicates: false,
+      } as Goods,
       newCategoryId: undefined as undefined | string,
       newCharacter: {
         title: '',
@@ -424,15 +428,19 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    isCreate() {
+      return this.goodsId === undefined;
+    },
+  },
 
   async mounted() {
-    if (this.goodsId !== undefined) {
-      await this.updateGoods();
-    } else {
+    if (this.isCreate) {
       this.goods.categories = [];
       this.goods.images = [];
       this.goods.characters = {};
+    } else {
+      await this.updateGoods();
     }
   },
 
