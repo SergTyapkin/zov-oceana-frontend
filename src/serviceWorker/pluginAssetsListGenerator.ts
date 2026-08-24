@@ -11,38 +11,45 @@ export default (options: {
   additionalFiles?: [] | string[],
 }) => ({
   name: 'plugin-assets-list-generator',
-  async closeBundle() {
-    const fsOutBuildDir = options.outBuildDir || 'dist';
+  closeBundle: {
+    order: 'post', // После всех плагинов
+    sequential: true, // Последовательно, после завершения всех плагинов
 
-    const webAssetsDir = `${options.assetsFolder || 'assets'}`;
-    const fsAssetsDir = `${fsOutBuildDir}/${webAssetsDir}`;
+    async handler() {
+      const fsOutBuildDir = options.outBuildDir || 'dist';
 
-    const webAdditionalDirs = options.additionalDirs || [];
-    const fsAdditionalDirs = webAdditionalDirs.map(folderPath => `${fsOutBuildDir}/${folderPath}`);
+      const webAssetsDir = `${options.assetsFolder || 'assets'}`;
+      const fsAssetsDir = `${fsOutBuildDir}/${webAssetsDir}`;
 
-    const webAdditionalFiles = options.additionalFiles || [];
+      const webAdditionalDirs = options.additionalDirs || [];
+      const fsAdditionalDirs = webAdditionalDirs.map(folderPath => `${fsOutBuildDir}/${folderPath}`);
 
-    const webResultFileName = options.fileName || 'assetsList.js';
-    const fsResultFilePath = `${fsOutBuildDir}/${webResultFileName}`;
+      const webAdditionalFiles = options.additionalFiles || [];
 
-    formatConsole("Plugin initialized");
+      const webResultFileName = options.fileName || 'assetsList.js';
+      const fsResultFilePath = `${fsOutBuildDir}/${webResultFileName}`;
 
-    const assetsList: string[] = [];
-    assetsList.push(`index.html`);
+      formatConsole("Plugin initialized");
 
-    fs.readdirSync(fsAssetsDir).forEach(fileName => {
-      assetsList.push(`${webAssetsDir}/${fileName}`);
-    });
+      const assetsList: string[] = [];
+      assetsList.push(`index.html`);
 
-    fsAdditionalDirs.forEach((fsDirPath, idx) => {
-      const webDirPath = webAdditionalDirs[idx];
-      fs.readdirSync(fsDirPath).forEach(fileName => {
-        assetsList.push(`${webDirPath}/${fileName}`);
+      fs.readdirSync(fsAssetsDir).forEach(fileName => {
+        assetsList.push(`${webAssetsDir}/${fileName}`);
       });
-    });
 
-    assetsList.push(...webAdditionalFiles);
+      fsAdditionalDirs.forEach((fsDirPath, idx) => {
+        const webDirPath = webAdditionalDirs[idx];
+        fs.readdirSync(fsDirPath).forEach(fileName => {
+          assetsList.push(`${webDirPath}/${fileName}`);
+        });
+      });
 
-    fs.writeFileSync(fsResultFilePath, `export default ${JSON.stringify(assetsList)};`);
+      assetsList.push(...webAdditionalFiles);
+
+      const assetsListUnique = Array.from(new Set(assetsList));
+      formatConsole(`📊 Listed assets: ${assetsListUnique.length}`);
+      fs.writeFileSync(fsResultFilePath, `export default ${JSON.stringify(assetsListUnique)};`);
+    }
   }
 });
