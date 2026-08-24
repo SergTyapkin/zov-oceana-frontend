@@ -89,8 +89,12 @@
 <template>
   <router-link :to="{name: 'order', params: {id: order.id}}" class="root-order-card">
     <div class="order-preview">
-      <img v-if="!order.goods.length" src="/static/icons/box.svg" alt="order">
-      <img v-else :src="IMAGES_URL_BASE_PATH + order.goods[0].images?.[0]" alt="goods">
+      <ImageFallback
+        :src="`${IMAGES_URL_BASE_PATH}${order.goods[0]?.images?.[0]?.path}`"
+        :fallback-src="DEFAULT_ORDER_IMAGE"
+        alt="preview"
+        class="background"
+      />
     </div>
 
     <div class="main-container">
@@ -122,6 +126,7 @@ import { Order } from '~/utils/models';
 import { PropType } from 'vue';
 import { costFormatter, dateFormatter } from '~/utils/utils';
 import { IMAGES_URL_BASE_PATH, OrderStatuses, PaymentStatuses } from '~/constants';
+import DEFAULT_ORDER_IMAGE from '#/icons/box.svg';
 
 export default {
   props: {
@@ -134,6 +139,7 @@ export default {
   data() {
     return {
       IMAGES_URL_BASE_PATH,
+      DEFAULT_ORDER_IMAGE,
 
       OrderStatuses,
       PaymentStatuses,
