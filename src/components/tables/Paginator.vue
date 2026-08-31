@@ -1,11 +1,11 @@
 <style lang="stylus" scoped>
-@import '../styles/constants.styl'
-@import '../styles/components.styl'
-@import '../styles/buttons.styl'
-@import '../styles/fonts.styl'
-@import '../styles/utils.styl'
-@import '../styles/animations.styl'
-@import '../styles/scrollbars.styl'
+@import '../../styles/constants.styl'
+@import '../../styles/components.styl'
+@import '../../styles/buttons.styl'
+@import '../../styles/fonts.styl'
+@import '../../styles/utils.styl'
+@import '../../styles/animations.styl'
+@import '../../styles/scrollbars.styl'
 
 paginator-button()
   button-no-styles()
@@ -33,7 +33,7 @@ paginator-button()
 
   .pages-list
     list-no-styles()
-    block-shadow()
+    block()
 
     display flex
     padding 0

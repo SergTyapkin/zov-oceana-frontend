@@ -36,7 +36,6 @@
     page-root-disable()
     animation-float()
 
-    margin-top 60px
 
   button
     button-emp2()
@@ -45,7 +44,7 @@
 <template>
   <div class="root-page">
     <nav class="navigation">
-      <router-link v-if="$user.canEditGoods" :to="{name: 'admin'}" style="--animation-index: 0">Товары</router-link>
+      <router-link v-if="$user.canEditGoods" :to="{name: 'adminGoods'}" style="--animation-index: 0">Товары</router-link>
       <router-link v-if="$user.canEditOrders" :to="{name: 'adminOrders'}" style="--animation-index: 1">Заказы</router-link>
       <router-link v-if="$user.canEditUsers" :to="{name: 'adminUsers'}" style="--animation-index: 2">Пользователи</router-link>
       <router-link v-if="$user.canEditGlobals" :to="{name: 'adminGlobals'}" style="--animation-index: 4">Глобальное</router-link>

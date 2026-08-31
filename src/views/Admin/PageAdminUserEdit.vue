@@ -46,9 +46,10 @@
       flex-direction column
       gap 40px
       > *
-        padding 10px
+        padding 20px
         border-bottom 1px solid colorBorder
-        box-shadow 0 0 10px colorShadow
+        background colorBgDark
+        color colorTextInvert1
     .left-column
       display flex
       flex-direction column
@@ -69,10 +70,9 @@
         font-thin()
         font-spaced()
 
-        color colorText3
+        color colorTextInvert3
 
       .addresses-big-container
-      .orders-big-container
       .partners
         overflow auto
         display flex
@@ -80,48 +80,6 @@
         max-height 700px
         padding 10px
         scrollable()
-        .orders-container
-          list-no-styles()
-
-          overflow auto
-          display grid
-          grid-template-columns repeat(4, auto)
-          scrollable()
-          .orders-one-container
-            display contents
-            &.header
-              font-semibold()
-              > *
-                justify-content center
-                text-align center
-            &:not(.header):hover
-              > *
-                opacity 0.6
-            > *
-              display flex
-              align-items center
-              justify-content flex-end
-              width 100%
-              height 100%
-              padding 10px 5px
-              text-align right
-              trans()
-            &:nth-child(2n) > *
-              background mix(colorBlockBg, transparent, 30%)
-            .title
-              font-medium()
-
-              flex 1
-            .button-add
-            .button-delete
-              button-no-fill()
-
-              padding 5px
-              img
-                margin 0
-      .addresses-big-container
-        .orders-container
-          grid-template-columns repeat(2, auto)
 
       .partners
         .partners-graph
@@ -217,51 +175,61 @@
         <InputSwitch v-model="user.canEditUsers" title="Изменение пользователей" />
         <InputSwitch v-model="user.canEditPartners" title="Изменение партнеров" />
         <InputSwitch v-model="user.canEditGlobals" title="Изменение глобальных настроек" />
+
+        <button class="button-save" @click="updateUserData">Сохранить изменения</button>
       </div>
 
       <div class="right-column">
-        <article class="orders-big-container">
-          <header class="info-header">Заказы</header>
+        <TableComponent
+          :content="orders ?? []"
+          title="Заказы пользователя"
+          :clickable="false"
+          :fields="[
+            // { name: '#', from: 'id' },
+            { name: 'Номер', from: 'number' },
+            { name: 'Товаров', from: 'goods', changer: (goods: Goods[]) => goods.length },
+            { name: 'Стоимость', from: 'goods', changer: (goods: Goods[]) => costFormatter(goods.reduce((acc, g) => acc + (g.amount ?? 0) * g.cost, 0)) },
+            { name: 'Дата', from: 'createdDate', changer: dateTimeFormatter },
+          ]"
+        />
 
-          <div class="info" v-if="!orders.length && !loading">Пользователь не делал заказов</div>
-          <ul class="orders-container" v-else>
-            <li class="orders-one-container header">
-              <div class="title">Номер</div>
-              <div class="goods">Товаров</div>
-              <div class="cost">Стоимость</div>
-              <div class="date">Дата</div>
-            </li>
-
-            <router-link
-              :to="{ name: 'adminOrderEdit', params: { id: order.id } }"
-              class="orders-one-container"
-              v-for="order in orders"
-              :key="order.id"
-            >
-              <div class="title">{{ order.number }}</div>
-              <div class="goods">{{ order.goods.length }}</div>
-              <div class="cost">{{ costFormatter(order.goods.reduce((acc, g) => acc + g.amount * g.cost, 0)) }}</div>
-              <div class="date">{{ dateTimeFormatter(order.createdDate) }}</div>
-            </router-link>
-          </ul>
-        </article>
-
-        <article class="addresses-big-container">
-          <header class="info-header">Адреса</header>
-
-          <div class="info" v-if="!addresses.length && !loading">У пользователя нет адресов</div>
-          <ul class="orders-container" v-else>
-            <li class="orders-one-container header">
-              <div class="title">#ID</div>
-              <div class="goods">Адрес</div>
-            </li>
-
-            <li class="orders-one-container" v-for="address in addresses" :key="address.id">
-              <div class="title">{{ address.id }}</div>
-              <div class="goods">{{ addressFormatter(address, '', true) }}</div>
-            </li>
-          </ul>
-        </article>
+        <TableComponent
+          :content="addresses ?? []"
+          title="Адреса пользователя"
+          :clickable="false"
+          :fields="[
+            { name: '#', from: 'id', addable: false },
+            { name: 'Короткая запись', from: undefined, addable: false, changer: (_: unknown, row: any) => addressFormatter(row, '', true) },
+            { name: 'Название', from: 'title' },
+            { name: 'Город', from: 'city' },
+            { name: 'Улица', from: 'street' },
+            { name: 'Дом', from: 'house' },
+            { name: 'Подъезд', from: 'entrance' },
+            { name: 'Этаж', from: 'floor' },
+            { name: 'Квартира', from: 'apartment' },
+            { name: 'Код домофона', from: 'code' },
+            { name: 'Комментарий', from: 'comment' },
+            { name: 'Создан', from: 'createdDate', changer: dateTimeFormatter, addable: false },
+          ]"
+          removable
+          addable
+          :on-add-callback="async (itemToAdd: {[key: string]: any}) => {
+            $popups.alert('Пока что создание адресов не поддерживается', 'Очень жаль');
+            
+            // addresses.push(deepClone(itemToAdd as Address));
+            // return !!(await updateGoodsData());
+          }"
+          :on-remove-callback="async (itemToRemove: {[key: string]: any}) => {
+            const existingIdx = addresses.findIndex(g => g.id === itemToRemove?.id);
+            if (!itemToRemove || existingIdx === -1) {
+              return false;
+            }
+            $popups.alert('Пока что удаление адресов не поддерживается', 'Очень жаль');
+            
+            // addresses.splice(existingIdx, 1);
+            // return !!(await updateGoodsData());
+          }"
+        />
 
         <article class="partners" v-if="user.partnerStatus">
           <header class="info-header">Партнерство за месяц</header>
@@ -304,8 +272,6 @@
       </div>
     </section>
 
-    <button class="button-save" @click="updateUserData">Сохранить изменения</button>
-
     <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
@@ -314,15 +280,16 @@
 import { Address, Order, PartnerHistoryTransaction, User, UserOther } from '~/utils/models';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import InputComponent from '~/components/InputComponent.vue';
-import { addressFormatter, costFormatter, dateTimeFormatter } from '~/utils/utils';
+import { addressFormatter, costFormatter, dateTimeFormatter, deepClone } from '~/utils/utils';
 import { nextTick } from 'vue';
 import PartnersGraph from '~/components/PartnersGraph.vue';
+import TableComponent from '~/components/tables/TableComponent.vue';
 import PartnerTransactionsHistory from '~/components/PartnerTransactionsHistory.vue';
 import SelectList from '~/components/SelectList.vue';
 import InputSwitch from '~/components/InputSwitch.vue';
 
 export default {
-  components: { InputSwitch, SelectList, PartnerTransactionsHistory, PartnersGraph, InputComponent, CircleLinesLoading },
+  components: { InputSwitch, SelectList, PartnerTransactionsHistory, PartnersGraph, InputComponent, CircleLinesLoading, TableComponent },
 
   data() {
     return {
@@ -364,6 +331,7 @@ export default {
     addressFormatter,
     dateTimeFormatter,
     costFormatter,
+    deepClone,
 
     async updateUsers() {
       this.users = (

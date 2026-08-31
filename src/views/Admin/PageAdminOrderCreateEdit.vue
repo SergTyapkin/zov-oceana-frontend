@@ -46,9 +46,10 @@
       flex-direction column
       gap 40px
       > *
-        padding 10px
+        padding 20px
         border-bottom 1px solid colorBorder
-        box-shadow 0 0 10px colorShadow
+        background colorBgDark
+        color colorTextInvert1
     .left-column
       display flex
       flex-direction column
@@ -64,30 +65,6 @@
 
         margin-bottom 10px
 
-      .goods-container
-        list-no-styles()
-
-        display flex
-        flex-direction column
-        gap 15px
-        padding 10px
-        .goods-one-container
-          display flex
-          gap 10px
-          align-items center
-          justify-content space-between
-          .title
-            font-medium()
-
-            flex 1
-          .button-add
-          .button-delete
-            button-no-fill()
-
-            padding 5px
-            img
-              margin 0
-
       .payment-container
         .buttons
           margin-top 30px
@@ -96,7 +73,6 @@
             font-normal()
             font-bold()
 
-            color colorText1
             text-align center
           .buttons-container
             display flex
@@ -162,63 +138,47 @@
         />
         <InputComponent v-model="order.commentTextCopy" title="Комментарий" placeholder="Комментарий текстом" />
         <InputComponent v-model="order.secretCode" title="Код получения заказа" disabled />
+        <button class="button-save" v-if="!isCreate" @click="updateOrderData">Сохранить изменения</button>
       </div>
 
       <div class="right-column">
-        <ul class="goods-container">
-          <header class="info-header">Товары в заказе</header>
+        <TableComponent
+          :content="order.goods ?? []"
+          title="Товары в заказе"
+          :clickable="false"
+          :fields="[
+            // { name: '#', from: 'id' },
+            { name: 'Название', from: 'title', availableValues: goods.map(g => ({name: g.title, value: g.id})) },
+            { name: 'Количество', from: 'amount', changer: (_: unknown, row: Goods) => `${row.amount} ${row.isWeighed ? 'кг' : 'шт'}` },
+            { name: 'Сумма за всё', from: 'costTotal', changer: (_: unknown, row: Goods) => costFormatter(row.cost * (row.amount ?? 0)) },
+          ]"
+          removable
+          addable
+          :on-add-callback="async (itemToAdd: {[key: string]: any}) => {
+            // Внутри title у нас id, потому что мы так указали в :fields выше
+            const goodsFound = goods.find(g => g.id === itemToAdd?.title);
+            if (!itemToAdd || !goodsFound) {
+              return false;
+            }
+            const cost = itemToAdd.costTotal / itemToAdd.amount;
+            order.goods.push({
+              ...deepClone(goodsFound),
+              amount: itemToAdd.amount,
+              cost: cost,
+            });
 
-          <li class="goods-one-container" v-for="(goodsOne, idx) in order.goods">
-            <div class="title">{{ goodsOne.title }}</div>
-            <div class="amount">{{ goodsOne.amount }} {{ goodsOne.isWeighed ? 'кг' : 'шт' }}</div>
-            <div class="cost">{{ costFormatter(goodsOne.cost * goodsOne.amount) }}</div>
-            <button class="button-delete" @click="order.goods.splice(idx, 1)">
-              <img src="/static/icons/trashbox.svg" alt="delete">
-            </button>
-          </li>
-          <li class="goods-one-container">
-            <SelectList
-              v-model="newGoods"
-              :list="
-                goods?.map?.(goodsOne => ({
-                  id: goodsOne.id,
-                  name: goodsOne.title,
-                  value: goodsOne,
-                }))
-              "
-              @input="newGoodsCost = newGoods.cost; newGoodsAmount = newGoods.amountMin"
-            />
-            <InputComponent v-model="newGoodsAmount" type="number" placeholder="Количество" />
-            <InputComponent v-model="newGoodsCost" type="number" placeholder="Стоимость за 1" />
-            <button
-              class="button-add"
-              @click="
-                () => {
-                  const existingIdx = order.goods.findIndex(g => g.id === newGoods?.id);
-                  if (newGoods === undefined || existingIdx !== -1) {
-                    newGoods = undefined;
-                    order.goods[existingIdx].amount = newGoodsAmount;
-                    order.goods[existingIdx].cost = newGoodsCost;
-                    newGoodsAmount = undefined;
-                    newGoodsCost = undefined;
-                    return;
-                  }
-                  order.goods.push(
-                    Object.assign(newGoods, {
-                      amount: newGoodsAmount,
-                      cost: newGoodsCost,
-                    }),
-                  );
-                  newGoods = undefined;
-                  newGoodsAmount = undefined;
-                  newGoodsCost = undefined;
-                }
-              "
-            >
-              <img src="/static/icons/plus-thin.svg" alt="add">
-            </button>
-          </li>
-        </ul>
+            return !!(await updateOrderData());
+          }"
+          :on-remove-callback="async (itemToRemove: {[key: string]: any}) => {
+            const existingIdx = order.goods.findIndex(g => g.id === itemToRemove?.id);
+            if (!itemToRemove || existingIdx === -1) {
+              return false;
+            }
+            order.goods.splice(existingIdx, 1);
+
+            return !!(await updateOrderData());
+          }"
+        />
 
         <section class="payment-container">
           <header class="info-header">Общая сумма</header>
@@ -276,8 +236,7 @@
       </div>
     </section>
 
-    <button class="button-save" v-if="orderId !== undefined" @click="updateOrderData">Сохранить изменения</button>
-    <button class="button-save" v-else @click="createOrder">Создать заказ</button>
+    <button class="button-save" v-if="isCreate" @click="createOrder">Создать заказ</button>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -287,13 +246,14 @@
 import { Goods, Order, UserOther } from '~/utils/models';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import InputComponent from '~/components/InputComponent.vue';
+import TableComponent from '~/components/tables/TableComponent.vue';
 import SelectList from '~/components/SelectList.vue';
-import { costFormatter, dateTimeFormatter } from '~/utils/utils';
+import { costFormatter, dateTimeFormatter, deepClone } from '~/utils/utils';
 import { OrderStatuses, PaymentStatuses } from '~/constants';
 import { nextTick } from 'vue';
 
 export default {
-  components: { SelectList, InputComponent, CircleLinesLoading },
+  components: { SelectList, InputComponent, CircleLinesLoading, TableComponent },
 
   data() {
     return {
@@ -314,6 +274,12 @@ export default {
     };
   },
 
+  computed: {
+    isCreate() {
+      return this.orderId === undefined;
+    },
+  },
+
   async mounted() {
     this.updateUsers();
     this.updateGoods();
@@ -328,6 +294,7 @@ export default {
   methods: {
     dateTimeFormatter,
     costFormatter,
+    deepClone,
 
     async updateOrder() {
       this.order = (await this.$request(
@@ -354,7 +321,7 @@ export default {
     },
 
     async updateOrderData() {
-      await this.$request(
+      return await this.$request(
         this,
         this.$api.updateOrder,
         [

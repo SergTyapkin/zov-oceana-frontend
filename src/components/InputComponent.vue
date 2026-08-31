@@ -11,7 +11,7 @@
   .title
     font-small()
 
-    color colorText1
+    // color colorText1
     trans()
 
   .description

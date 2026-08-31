@@ -30,16 +30,17 @@ field()
   z-index 999
   transform translateY(calc(var(--overflow-y-length) * -1px)) translateX(calc(var(--overflow-x-length) * -1px))
   min-width 100px
-  height height
+  // height height
   margin 0
   padding 0
+  padding-top 15px
   transition transform 0.2s ease
 
   .title
     pointer-events none
     position absolute
-    top -10px
-    left 4px
+    top -12px
+    // left 4px
     font-medium()
 
     transition all 0.2s ease
@@ -128,7 +129,7 @@ field()
     user-select text
 
     .title
-      color colorText2
+      opacity 0.8
 
     .selected-item
       padding-left 10px
@@ -143,7 +144,7 @@ field()
     opacity 0.6
 
     .title
-      color colorText2
+      opacity 0.8
 
     .selected-item
       img
@@ -229,7 +230,6 @@ export default {
     opened: Boolean,
     canBeNull: Boolean,
 
-     
     modelValue: {
       type: null as any,
       default: null,
@@ -351,7 +351,6 @@ export default {
         }
       }
 
-      console.log(this.$props.selectedIdx, this.$props.selectedId);
       if (this.$props.selectedIdx) {
         this.selectItemByIdx(this.$props.selectedIdx, true, true);
       } else if (this.$props.selectedId) {

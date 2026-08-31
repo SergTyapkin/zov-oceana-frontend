@@ -58,7 +58,7 @@ no-checked-border = 0px solid transparent
     <input
       type="checkbox"
       ref="value"
-      v-model="modelValue"
+      :model-value="modelValue"
       @change="updateVModel"
       :disabled="readonly || disabled"
       :class="{disabled}"

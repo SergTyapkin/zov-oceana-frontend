@@ -7,133 +7,109 @@
 @import '../../styles/animations.styl'
 @import '../../styles/scrollbars.styl'
 
-.root-page
-  page-root()
-
+.root-page-admin-globals
   display flex
   flex-direction column
-  gap 30px
 
   .header-info
     font-upper()
     font-medium()
+    font-bold()
 
     margin-bottom 10px
 
   .block
-    padding 10px
-    border-bottom 1px solid colorBorder
-    box-shadow 0 0 10px colorShadow
-
-  .goods-container
-    list-no-styles()
-
-    display flex
-    flex-direction column
-    gap 5px
-    padding 10px
-    .goods-one-container
-      display flex
-      gap 10px
-      align-items center
-      justify-content space-between
-      .title
-        font-medium()
-
-        flex 1
-      .button-add
-      .button-delete
-        button-no-fill()
-
-        padding 5px
-        img
-          margin 0
+    page-root()
+    padding-bottom 30px
+    background colorBgDark
+    color colorTextInvert1
+    &:nth-child(2n+1)
+      background none
+      color colorText1
+      
 
   .button-save
     button-emp2()
-    centered-margin()
-
+    
+    margin-top 10px
     width fit-content
 </style>
 
 <template>
-  <div class="root-page">
-    <InputSwitch
-      v-model="isOnMaintenance"
-      title="Сайт на техобслуживании?"
-      description="В режиме техобслуживания на сайт не сможет зайти вообще никто"
+  <div class="root-page-admin-globals">
+    <TableComponent
       class="block"
+      :content="goodsOnLanding"
+      title="Товары на главной странице сайта"
+      :clickable="true"
+      :fields="[
+        { name: '#', from: 'id', addable: false },
+        { name: 'Название', from: 'title', availableValues: goods.map(g => ({name: g.title, value: g.id})) },
+      ]"
+      row-click-redirect-name='adminGoodsEdit'
+      removable
+      addable
+      :on-add-callback="async (itemToAdd: {[key: string]: any}) => {
+        // Внутри title у нас id, потому что мы так указали в :fields выше
+        const goodsFound = goods.find(g => g.id === itemToAdd?.title);
+        if (!itemToAdd || !goodsFound) {
+          return false;
+        }
+        goodsOnLanding.push(deepClone(goodsFound));
+
+        return await updateGlobals();
+      }"
+      :on-remove-callback="async (itemToRemove: {[key: string]: any}) => {
+        const existingIdx = goods.findIndex(g => g.id === itemToRemove?.id);
+        if (!itemToRemove || existingIdx === -1) {
+          return false;
+        }
+        if (!(await $modals.confirm('Удаление товара с главной страницы', 'Вы уверены, что хотите убрать этот товар?'))) return false;
+        goodsOnLanding.splice(existingIdx, 1);
+        
+        return await updateGlobals();
+      }"
     />
-
-    <ul class="goods-container block">
-      <header class="header-info">Товары на главной странице сайта</header>
-
-      <li class="goods-one-container" v-for="(goodsOne, idx) in goodsOnLanding">
-        <div class="title">{{ goodsOne.title }}</div>
-        <button class="button-delete" @click="goodsOnLanding.splice(idx, 1)">
-          <img src="/static/icons/trashbox.svg" alt="delete">
-        </button>
-      </li>
-      <li class="goods-one-container">
-        <SelectList
-          v-model="newGoods"
-          :list="
-            goods?.map?.(goodsOne => ({
-              id: goodsOne.id,
-              name: goodsOne.title,
-              value: goodsOne,
-            }))
-          "
-        />
-        <button
-          class="button-add"
-          @click="
-            () => {
-              const existingIdx = goodsOnLanding.findIndex(g => g.id === newGoods?.id);
-              if (newGoods === undefined || existingIdx !== -1) {
-                newGoods = undefined;
-                return;
-              }
-              goodsOnLanding.push(newGoods);
-              newGoods = undefined;
-            }
-          "
-        >
-          <img src="/static/icons/plus-thin.svg" alt="add">
-        </button>
-      </li>
-    </ul>
 
     <div class="block">
       <header class="header-info">Категории товаров</header>
       <PageAdminCategories />
     </div>
 
-    <button class="button-save" @click="updateGlobals">Сохранить изменения</button>
+    <div class="block">
+      <InputSwitch
+        v-model="isOnMaintenance"
+        title="Сайт на техобслуживании"
+        description="В режиме техобслуживания на сайт не сможет зайти вообще никто"
+        @input="onInput"
+      />
+
+      <button class="button-save" @click="updateGlobals" :disabled="!isOnMaintenanceEdited">Сохранить изменения</button>
+    </div>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
 <script lang="ts">
+import TableComponent from '~/components/tables/TableComponent.vue';
 import InputSwitch from '~/components/InputSwitch.vue';
 import { Goods } from '~/utils/models';
-import SelectList from '~/components/SelectList.vue';
+import { deepClone } from '~/utils/utils';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import PageAdminCategories from '~/views/Admin/PageAdminCategories.vue';
 
 export default {
-  components: { PageAdminCategories, CircleLinesLoading, SelectList, InputSwitch },
+  components: { PageAdminCategories, CircleLinesLoading, InputSwitch, TableComponent },
 
   data() {
     return {
       isOnMaintenance: false,
       goodsOnLanding: [] as Goods[],
-
+      
       goods: [] as Goods[],
-
-      newGoods: undefined as undefined | Goods,
-
+      
+      isOnMaintenanceEdited: false,
       loading: false,
     };
   },
@@ -146,6 +122,8 @@ export default {
   },
 
   methods: {
+    deepClone,
+
     async updateGoods() {
       this.goods = (
         (await this.$request(this, this.$api.getAllAdminGoodsList, [], `Не удалось получить список товаров`)) as {
@@ -155,16 +133,22 @@ export default {
     },
 
     async updateGlobals() {
-      await this.$request(
+      return (await this.$request(
         this,
         this.$api.updateGlobals,
         [this.isOnMaintenance, this.goodsOnLanding.map(g => g.id)],
         `Не удалось обновить глобальные данные`,
         () => {
+          this.isOnMaintenanceEdited = false;
           window.onbeforeunload = null;
           this.$popups.success('Обновлено');
         },
-      );
+      )) !== undefined;
+    },
+
+    onInput() {
+      this.isOnMaintenanceEdited = true;
+      window.onbeforeunload = () => {};
     },
   },
 };

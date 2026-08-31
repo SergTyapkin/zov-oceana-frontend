@@ -84,8 +84,8 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: { loginRequired: true } },
 
     {
-      path: '/admin', component: PageAdmin, redirect: {name: 'admin'}, meta: { adminRequired: true }, children: [
-        { path: '/admin', name: 'admin', component: PageAdminGoods, meta: { adminRequired: true } },
+      path: '/admin', name: 'admin', component: PageAdmin, redirect: {name: 'adminGoods'}, meta: { adminRequired: true }, children: [
+        { path: '/admin/goods', name: 'adminGoods', component: PageAdminGoods, meta: { adminRequired: true } },
         { path: '/admin/orders', name: 'adminOrders', component: PageAdminOrders, meta: { adminRequired: true } },
         { path: '/admin/users', name: 'adminUsers', component: PageAdminUsers, meta: { adminRequired: true } },
         { path: '/admin/globals', name: 'adminGlobals', component: PageAdminGlobals, meta: { adminRequired: true } },

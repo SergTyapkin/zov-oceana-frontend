@@ -1,11 +1,11 @@
 <style lang="stylus" scoped>
-@import '../styles/constants.styl'
-@import '../styles/components.styl'
-@import '../styles/buttons.styl'
-@import '../styles/fonts.styl'
-@import '../styles/utils.styl'
-@import '../styles/animations.styl'
-@import '../styles/scrollbars.styl'
+@import '../../styles/constants.styl'
+@import '../../styles/components.styl'
+@import '../../styles/buttons.styl'
+@import '../../styles/fonts.styl'
+@import '../../styles/utils.styl'
+@import '../../styles/animations.styl'
+@import '../../styles/scrollbars.styl'
 
 .root-filters
   .header-row
@@ -54,7 +54,7 @@
     <section class="fields">
       <div class="fields-row" v-for="fieldsRow in fields">
         <div class="field" v-for="field in fieldsRow" :style="{ '--size': field.size || '1' }">
-          <header v-if="hasNames">{{ field.name || '&nbsp;' }}</header>
+          <header v-if="field.showName !== false">{{ field.name || '&nbsp;' }}</header>
           <SelectList
             v-if="field.type === FieldTypes.select"
             :key="fieldsUpdatingKey"
@@ -103,6 +103,7 @@ const FieldTypes = {
 };
 export type Filter = {
   name?: string;
+  showName: boolean;
   key: string;
   type: keyof typeof FieldTypes;
   placeholder: string;
@@ -129,7 +130,7 @@ export default {
     },
     title: {
       type: String,
-      default: 'Фильтр',
+      default: 'Фильтры',
     },
     modelValue: {
       type: Array,
@@ -141,7 +142,6 @@ export default {
   data() {
     return {
       isFiltersChanged: false,
-      hasNames: false,
       fieldsUpdatingKey: {},
 
       FieldTypes,
@@ -175,7 +175,6 @@ export default {
     },
 
     updateFiltersMeta() {
-      this.hasNames = this.fields.some(row => row.some(filter => filter.name !== undefined));
       this.isFiltersChanged = this.fields.some(row => row.some(filter => filter._value !== undefined));
     },
 

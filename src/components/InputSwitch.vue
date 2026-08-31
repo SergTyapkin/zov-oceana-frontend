@@ -127,10 +127,10 @@
   <section 
     class="input-root" 
     :class="{error, success}"
-    :style="{
-      &quot;--off-title&quot;: `&quot;${offStateTitle}&quot;`,
-      &quot;--on-title&quot;: `&quot;${onStateTitle}&quot;`
-    }"
+    :style='{
+      "--off-title": `"${offStateTitle}"`,
+      "--on-title": `"${onStateTitle}"`
+    }'
   >
     <header class="title" v-if="title">{{ title }}</header>
     <p v-if="description" class="description" :class="{link: href}">

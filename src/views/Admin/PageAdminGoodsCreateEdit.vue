@@ -46,9 +46,10 @@
       flex-direction column
       gap 40px
       > *
-        padding 10px
+        padding 20px
         border-bottom 1px solid colorBorder
-        box-shadow 0 0 10px colorShadow
+        background colorBgDark
+        color colorTextInvert1
     .left-column
       display flex
       flex-direction column
@@ -69,7 +70,7 @@
         font-thin()
         font-spaced()
 
-        color colorText3
+        color colorTextInvert2
 
       .images-container
         .images-list
@@ -78,11 +79,13 @@
           display flex
           flex-wrap wrap
           gap 5px
+          margin-top 10px
           .image-container
             position relative
             width 30%
             min-width 150px
             max-width 250px
+            background colorBgLight
             .image
               img-size(100%)
             .button-delete
@@ -99,7 +102,7 @@
               padding-top 0
               opacity 1
 
-            // === ДОБАВЛЕНО: стили для drag-n-drop ===
+            // === стили для drag-n-drop ===
             &.dragging
               opacity 0.5
               transform scale(0.95)
@@ -121,28 +124,6 @@
 
                   width unset
                   height unset
-
-      .categories-container
-        list-no-styles()
-
-        display flex
-        flex-direction column
-        gap 5px
-        padding 10px
-        .category-container
-          display flex
-          gap 10px
-          align-items center
-          justify-content space-between
-          .title
-            font-medium()
-          .button-add
-          .button-delete
-            button-no-fill()
-
-            padding 5px
-            img
-              margin 0
 
       .header
         font-large-extra()
@@ -168,41 +149,6 @@
         font-thin()
 
         margin-bottom 80px
-
-      .characters-container
-        list-no-styles()
-
-        display flex
-        flex-direction column
-        padding 10px
-        .character
-          display flex
-          gap 10px
-          align-items center
-          justify-content space-between
-          padding-block 15px
-          border-bottom 1px solid colorBorder
-          .info-header
-            margin 0
-          .title
-            font-thin()
-            font-upper()
-            font-small-extra()
-            font-spaced()
-
-            color colorText3
-          .value
-            font-small-extra()
-            font-semibold()
-
-            text-align right
-          .button-add
-          .button-delete
-            button-no-fill()
-
-            padding 5px
-            img
-              margin 0
 
   .button-save
     button-emp2()
@@ -256,15 +202,16 @@
         />
         <InputSwitch v-model="goods.isOnSale" title="В продаже?" on-state-title="ДА" off-state-title="НЕТ" />
         <InputSwitch v-model="goods.isDelicates" title="Деликатес?" on-state-title="ДА" off-state-title="НЕТ" />
+
+        <button class="button-save" v-if="!isCreate" @click="updateGoodsData">Сохранить изменения</button>
       </div>
 
       <div class="right-column">
         <section v-if="!isCreate" class="images-container">
           <header class="info-header">Картинки товара</header>
-          <p class="info">Сохраняются сразу, без нажатия на кнопку "сохранить"!</p>
+          <p class="info">Как и всё ниже, сохраняются сразу, без нажатия на кнопку "сохранить"</p>
 
           <ul class="images-list">
-            <!-- === ИЗМЕНЕНО: добавлены draggable атрибуты и обработчики === -->
             <li 
               v-for="(image, idx) in goods.images" 
               :key="image.id" 
@@ -306,71 +253,61 @@
           </ul>
         </section>
 
-        <ul class="categories-container">
-          <header class="info-header">Категории товара</header>
+        <TableComponent
+          :content="goods.categories ?? []"
+          title="Категории товара"
+          :clickable="false"
+          :fields="[
+            // { name: '#', from: 'id' },
+            { name: 'Название', from: 'title', availableValues: $globals.categories.map(c => ({name: c.title, value: c.id})) },
+          ]"
+          removable
+          addable
+          :on-add-callback="async (itemToAdd: {[key: string]: any}) => {
+            // Внутри title у нас id, потому что мы так указали в :fields выше
+            const categoryFound = $globals.categories.find(g => g.id === itemToAdd?.title);
+            if (!itemToAdd || !categoryFound) {
+              return false;
+            }
+            goods.categories.push(deepClone(categoryFound));
 
-          <li class="category-container" v-for="(category, idx) in goods.categories">
-            <div class="title">{{ category.title }}</div>
-            <button class="button-delete" @click="goods.categories.splice(idx, 1)">
-              <img src="/static/icons/trashbox.svg" alt="delete">
-            </button>
-          </li>
-          <li class="category-container">
-            <SelectList
-              v-model="newCategoryId"
-              :list="
-                $globals?.categories?.map?.(category => ({
-                  id: category.id,
-                  name: category.title,
-                  value: category.id,
-                }))
-              "
-            />
-            <button
-              class="button-add"
-              @click="
-                () => {
-                  if (newCategoryId === undefined || goods.categories.findIndex(c => c.id === newCategoryId) !== -1) {
-                    newCategoryId = undefined;
-                    return;
-                  }
-                  goods.categories.push({
-                    id: newCategoryId,
-                    title: $globals.categories.find(c => c.id === newCategoryId).title,
-                  });
-                  newCategoryId = undefined;
-                }
-              "
-            >
-              <img src="/static/icons/plus-thin.svg" alt="add">
-            </button>
-          </li>
-        </ul>
+            return !!(await updateGoodsData());
+          }"
+          :on-remove-callback="async (itemToRemove: {[key: string]: any}) => {
+            const existingIdx = goods.categories.findIndex(g => g.id === itemToRemove?.id);
+            if (!itemToRemove || existingIdx === -1) {
+              return false;
+            }
+            goods.categories.splice(existingIdx, 1);
 
-        <ul class="characters-container">
-          <header class="info-header">Характеристики</header>
-          <li class="character" v-for="(characterValue, characterName) in goods.characters">
-            <p class="title">{{ characterName }}</p>
-            <p class="value">{{ characterValue }}</p>
-            <button class="button-delete" @click="delete goods.characters[characterName]">
-              <img src="/static/icons/trashbox.svg" alt="delete">
-            </button>
-          </li>
-          <li class="character">
-            <InputComponent class="title" v-model="newCharacter.title" placeholder="Характеристика" />
-            <InputComponent class="value" v-model="newCharacter.value" placeholder="Значение" />
-            <button
-              class="button-add"
-              @click="
-                goods.characters[newCharacter.title] = newCharacter.value;
-                newCharacter.title = '';
-                newCharacter.value = '';
-              "
-            >
-              <img src="/static/icons/plus-thin.svg" alt="add">
-            </button>
-          </li>
-        </ul>
+            return !!(await updateGoodsData());
+          }"
+        />
+
+        <TableComponent
+          :content="Object.entries(goods.characters ?? {})"
+          title="Характеристики"
+          :clickable="false"
+          :fields="[
+            // { name: '#', from: 'id' },
+            { name: 'Название', from: 0 },
+            { name: 'Значение', from: 1 },
+          ]"
+          removable
+          addable
+          :on-add-callback="async (itemToAdd: {[key: string]: any}) => {
+            if (!itemToAdd[0] || !itemToAdd[1] || !goods.characters) return false;
+
+            goods.characters[itemToAdd[0]] = itemToAdd[1];
+            return !!(await updateGoodsData());
+          }"
+          :on-remove-callback="async (itemToRemove: {[key: string]: any}) => {
+            if (!goods.characters) return false;
+
+            delete goods.characters[itemToRemove[0]];
+            return !!(await updateGoodsData());
+          }"
+        />
 
         <div class="info" v-if="goodsId">
           Создан: {{ dateTimeFormatter(goods.createdDate) }} <br>
@@ -380,7 +317,6 @@
     </section>
 
     <button class="button-save" v-if="isCreate" @click="createGoods">Создать товар</button>
-    <button class="button-save" v-else @click="updateGoodsData">Сохранить изменения</button>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -395,12 +331,12 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import ImageFallback from '~/components/ImageFallback.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import InputSwitch from '~/components/InputSwitch.vue';
-import SelectList from '~/components/SelectList.vue';
+import TableComponent from '~/components/tables/TableComponent.vue';
 import DragNDropLoader from "@sergtyapkin/image-uploader/vue"
-import { dateTimeFormatter } from '~/utils/utils';
+import { dateTimeFormatter, deepClone } from '~/utils/utils';
 
 export default {
-  components: { DragNDropLoader, SelectList, InputSwitch, InputComponent, ImageFallback, CircleLinesLoading },
+  components: { DragNDropLoader, InputSwitch, InputComponent, ImageFallback, CircleLinesLoading, TableComponent },
 
   data() {
     return {
@@ -422,7 +358,6 @@ export default {
       DEFAULT_GOODS_IMAGE,
       IMAGES_URL_BASE_PATH,
 
-      // === ДОБАВЛЕНО: состояние для drag-n-drop ===
       draggedImage: null as null | { id: string; sortingKey: string },
       dragOverTarget: null as null | { id: string; sortingKey: string },
     };
@@ -446,6 +381,8 @@ export default {
 
   methods: {
     dateTimeFormatter,
+    deepClone,
+    
     async updateGoods() {
       this.goods = (await this.$request(
         this,
@@ -456,7 +393,7 @@ export default {
     },
 
     async updateGoodsData() {
-      await this.$request(
+      return await this.$request(
         this,
         this.$api.updateGoods,
         [

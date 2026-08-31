@@ -151,13 +151,12 @@ export const UserModelMockData = validateModel(UserModel, {
   tel: '+79160930930',
   isemailnotificationson: false,
   partnerbonuses: 0,
-  caneditorders: false,
-  caneditusers: false,
-  caneditgoods: false,
-  caneditpartners: false,
-  canexecutesql: false,
-  caneditglobals: false,
-  isadmin: false,
+  caneditorders: true,
+  caneditusers: true,
+  caneditgoods: true,
+  caneditpartners: true,
+  canexecutesql: true,
+  caneditglobals: true,
   joineddate: new Date('2023-04-04'),
 });
 
@@ -331,6 +330,10 @@ export const GoodsModelMockData = validateModel(GoodsModel, {
       title: 'Рыба',
     }
   ],
+  characters: {
+    'Вид': 'Красная рыба',
+    'Рекомендуется': 'Супы, салаты',
+  },
 });
 export const GoodsListModelMockData = {
   goods: [
@@ -493,7 +496,7 @@ export const OrderListModelMockData = {
   orders: [
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_1', status: 'created'}),
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_2', status: 'cancelled'}),
-    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', status: 'paid'}),
+    Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_3', status: 'accepted'}),
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_4', status: 'prepared'}),
     Object.assign({}, OrderModelMockData, {id: 'ORDER_ID_5', status: 'delivered'}),
   ],
