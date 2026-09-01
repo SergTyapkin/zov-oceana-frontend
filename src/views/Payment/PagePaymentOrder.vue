@@ -156,7 +156,9 @@
           svg-inside(80px, 0, 20px)
           font-small-extra()
 
-          margin-right 20px
+          justify-content center
+          img
+            height 50px
 
       section.left
         animation-float(0.5s, -20px, 0, left)
@@ -193,7 +195,8 @@
 
           width unset
           padding-left 25px
-          padding-block 25px
+          padding-bottom 25px
+          padding-top 7px
 
         @media ({mobile})
           padding-right 5px
