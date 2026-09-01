@@ -157,9 +157,8 @@
     background colorBgDark
     .section-header
       background colorEmp2
-    .map-image-container
-      .map-image
-        img-size(100%)
+    .map-container
+      max-height 500px
 
 
   section.contacts
@@ -258,9 +257,7 @@
       <div class="section-header">Глобальная сеть</div>
       <header class="header">Отечественные поставки</header>
       <div class="section-desc">Отслеживание происхождения наших премиальных морепродуктов</div>
-      <div class="map-image-container">
-        <img class="map-image" src="/static/images/map.svg" alt="map">
-      </div>
+      <MapRussia class="map-container" />
     </section>
 
     <section class="contacts">
@@ -287,9 +284,10 @@ import GoodsCard from '~/components/GoodsCard.vue';
 import CategoryCard from '~/components/CategoryCard.vue';
 import { setSmoothScrollOnThisPage } from '~/utils/utils';
 import AutoScroller from '~/components/AutoScroller.vue';
+import MapRussia from '~/components/MapRussia.vue';
 
 export default {
-  components: { AutoScroller, CategoryCard, GoodsCard },
+  components: { AutoScroller, CategoryCard, GoodsCard, MapRussia },
 
   data() {
     return {
