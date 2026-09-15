@@ -52,6 +52,8 @@
         :model-value="modelValue"
         @change="setValue(modelValue)"
         @select="(d: any) => $emit('select', d)"
+        @add="(d: any) => $emit('add', d)"
+        @remove="(d: any) => $emit('remove', d)"
       >
         <slot name="table" />
       </TableComponent>
@@ -67,7 +69,7 @@ import { PropType } from 'vue';
 type ExtFilter = Filter | {compareFoo: (tableRow: object, filterValue: any, allFilters: any[]) => boolean};
 
 export default {
-  emits: ['change', 'update:modelValue', 'select'],
+  emits: ['change', 'update:modelValue', 'select', 'add', 'remove'],
 
   components: { Filters, TableComponent },
 

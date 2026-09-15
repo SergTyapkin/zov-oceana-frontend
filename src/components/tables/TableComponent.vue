@@ -191,7 +191,7 @@
                     <img v-else-if="currentSortingFieldIdx === idx && !currentSortingIsDesc" src="/static/icons/chevron-up.svg" alt="sort asc">
                   </transition>
                 </th>
-                <th v-if="addable" />
+                <th v-if="addable || removable" />
               </tr>
             </thead>
             <tbody>
