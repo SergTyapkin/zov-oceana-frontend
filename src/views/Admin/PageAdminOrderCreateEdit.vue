@@ -48,8 +48,8 @@
       > *
         padding 20px
         border-bottom 1px solid colorBorder
-        color colorTextInvert1
         background colorBgDark
+        color colorTextInvert1
     .left-column
       display flex
       flex-direction column

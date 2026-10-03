@@ -48,8 +48,8 @@
       > *
         padding 20px
         border-bottom 1px solid colorBorder
-        background colorBgDark
         color colorTextInvert1
+        background colorBgDark
     .left-column
       display flex
       flex-direction column
@@ -104,9 +104,9 @@
 
             // === стили для drag-n-drop ===
             &.dragging
-              opacity 0.5
               transform scale(0.95)
-            
+              opacity 0.5
+
             &.drag-over
               border 2px solid colorEmp1
               background colorBlockBg

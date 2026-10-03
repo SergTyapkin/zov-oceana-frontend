@@ -67,12 +67,21 @@
           background mix(colorEmp2, transparent, 90%)
         &.gray
           background mix(colorTextInvert2, transparent, 90%)
-    .payment-button
-      animation-float(0.5s, -20px, 0, left)
-
-      width fit-content
+    .buttons-container
       margin-top 30px
-      button-emp2()
+      display flex
+      gap 10px
+      flex-wrap wrap
+      justify-content space-between
+      .cancel-button
+      .payment-button
+        animation-float(0.5s, -20px, 0, left)
+
+        width fit-content
+        button-emp2()
+      .cancel-button
+        button-no-fill()
+
     .address-info
       animation-float(0.5s, -20px, 0, left)
       font-small()
@@ -244,13 +253,22 @@
         <div class="status" :class="PaymentStatuses[order.paymentStatus]?.color">{{ PaymentStatuses[order.paymentStatus]?.title }}</div>
         <div class="date">изменено {{ dateTimeFormatter(order.updatedDate) }}</div>
       </div>
-      <button 
-        v-if="['new', 'expired', 'rejected'].includes(order.paymentStatus)"
-        class="payment-button"
-        @click="startPayment"
-      >
-        Оплатить заказ
-      </button>
+      <div class="buttons-container">
+        <button 
+          v-if="['new', 'expired', 'rejected'].includes(order.paymentStatus) && !['cancelled'].includes(order.status)"
+          class="payment-button"
+          @click="startPayment"
+        >
+          Оплатить заказ
+        </button>
+        <button 
+          v-if="['created'].includes(order.status)"
+          class="cancel-button"
+          @click="cancelOrder"
+        >
+          Отменить заказ
+        </button>
+      </div>
     </section>
 
     <section class="cart">
@@ -346,6 +364,21 @@ export default {
           404: () => this.$router.push({name: 'profileOrders'}),
         },
       )) as Order;
+    },
+
+    async cancelOrder() {
+      if (!(await this.$modals.confirm('Вы уверены, что хотите отменить заказ?', 'Чтобы оформить его ещё раз, нужно бует добавить все товары в конзину заново'))) return;
+
+      await this.$request(
+        this,
+        this.$api.updateOrderStatus,
+        [this.orderId, 'cancelled'],
+        `Не удалось обновить статус заказа`,
+        () => {
+          this.$popups.success('Заказ отменён');
+          this.$router.push({name: 'profileOrders'});
+        },
+      );
     },
 
     async startPayment() {

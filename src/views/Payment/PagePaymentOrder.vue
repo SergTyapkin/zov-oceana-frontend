@@ -194,9 +194,9 @@
           page-root()
 
           width unset
-          padding-left 25px
-          padding-bottom 25px
           padding-top 7px
+          padding-bottom 25px
+          padding-left 25px
 
         @media ({mobile})
           padding-right 5px

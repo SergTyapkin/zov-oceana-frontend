@@ -9,6 +9,7 @@
 
 .root-page-admin-orders
   page-root()
+
   padding-top 0
 
   > .status

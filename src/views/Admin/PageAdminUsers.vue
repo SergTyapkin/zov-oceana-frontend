@@ -9,6 +9,7 @@
 
 .root-page-admin-users
   page-root()
+
   padding-top 0
 
   > .status
@@ -29,7 +30,6 @@
 
 <template>
   <div class="root-page-admin-users">
-
     <UsersTable
       :data="users"
       row-click-redirect-name="adminUserEdit"

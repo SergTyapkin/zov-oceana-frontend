@@ -9,15 +9,17 @@
 
 .root-table-with-filters
   page-root-disable()
-  
+
   .filters
     page-root()
+
     padding-block 20px
-    background colorBgDark
     color colorTextInvert1
+    background colorBgDark
 
   .main
     page-root()
+
     min-width 0
     background colorBlockBg
 

@@ -9,6 +9,7 @@
 
 .root-page-admin-goods
   page-root()
+
   padding-top 0
 
   .button-plus
