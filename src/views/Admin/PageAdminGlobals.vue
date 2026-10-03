@@ -20,19 +20,20 @@
 
   .block
     page-root()
+
     padding-bottom 30px
-    background colorBgDark
     color colorTextInvert1
+    background colorBgDark
     &:nth-child(2n+1)
-      background none
       color colorText1
-      
+      background none
+
 
   .button-save
     button-emp2()
-    
-    margin-top 10px
+
     width fit-content
+    margin-top 10px
 </style>
 
 <template>
@@ -44,9 +45,9 @@
       :clickable="true"
       :fields="[
         { name: '#', from: 'id', addable: false },
-        { name: 'Название', from: 'title', availableValues: goods.map(g => ({name: g.title, value: g.id})) },
+        { name: 'Название', from: 'title', availableValues: goods.map(g => ({name: g.title, value: g.id})), addWithSearch: true },
       ]"
-      row-click-redirect-name='adminGoodsEdit'
+      row-click-redirect-name="adminGoodsEdit"
       removable
       addable
       :on-add-callback="async (itemToAdd: {[key: string]: any}) => {
@@ -76,7 +77,7 @@
       <PageAdminCategories />
     </div>
 
-    <div class="block">
+    <div class="block" v-if="$user.canExecuteSQL">
       <InputSwitch
         v-model="isOnMaintenance"
         title="Сайт на техобслуживании"

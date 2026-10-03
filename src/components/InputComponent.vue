@@ -9,9 +9,9 @@
 
 .input-root
   .title
-    font-small()
+    font-small-extra()
 
-    // color colorText1
+    color colorText1
     trans()
 
   .description
@@ -31,7 +31,7 @@
       font-spaced()
       font-normal()
       trans()
-      
+
       width 100%
       margin-bottom 3px
       padding 10px
@@ -47,6 +47,10 @@
         color colorText5
       &.icon-in-left
         padding-left 40px
+
+      &[readonly]
+      &[disabled]
+        opacity 0.6
 
     textarea
       resize none
@@ -125,8 +129,8 @@
     <p v-if="description" class="description">{{ description }}</p>
 
     <section class="input-container" :class="{ hideable }" @input="onInput">
-      <div class="images-container left">
-        <img v-if="icon && iconInLeft" :src="icon" class="image" :alt="title">
+      <div class="images-container left" v-if="icon && iconInLeft">
+        <img :src="icon" class="image" :alt="title">
       </div>
 
       <input
@@ -150,7 +154,7 @@
         @keydown.enter="$emit('submit')"
       />
 
-      <div class="images-container">
+      <div class="images-container" v-if="icon || hideable || copyable">
         <img v-if="icon && !iconInLeft" :src="icon" class="image" :alt="title">
 
         <img

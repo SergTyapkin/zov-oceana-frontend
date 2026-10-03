@@ -478,7 +478,7 @@ export const OrderModelMockData = validateModel(OrderModel, {
   goods: [],
   createddate: '2028-03-18',
   updateddate: '2028-04-20',
-  status: 'created',
+  status: 'accepted',
   number: 123543,
   secretcode: 'OS8DS2X',
   userid: 'USER_ID_1',

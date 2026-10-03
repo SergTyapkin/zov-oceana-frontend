@@ -23,6 +23,8 @@
 
   .order-preview
     aspect-ratio 1/1
+    max-width 300px
+    min-height 100px
     padding 15px
     background colorBgDark
     img
@@ -127,8 +129,11 @@ import { PropType } from 'vue';
 import { costFormatter, dateFormatter } from '~/utils/utils';
 import { IMAGES_URL_BASE_PATH, OrderStatuses, PaymentStatuses } from '~/constants';
 import DEFAULT_ORDER_IMAGE from '#/icons/box.svg';
+import ImageFallback from './ImageFallback.vue';
 
 export default {
+  components: { ImageFallback },
+
   props: {
     order: {
       type: Object as PropType<Order>,

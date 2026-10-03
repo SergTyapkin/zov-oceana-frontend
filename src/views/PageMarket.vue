@@ -111,8 +111,10 @@
           <InputSearch class="search" placeholder="Найти продукты..." v-model="filters.searchText" />
           <SelectList
             class="category-selector"
+            title="Категории"
             placeholder="Все категории"
             can-be-null
+            big-font
             :list="
               $globals?.categories?.map?.(category => ({
                 id: category.id,
@@ -127,8 +129,10 @@
         </div>
 
         <SelectList
+          title="Порядок"
           v-model="filters.sorting"
           :selected-idx="0"
+          big-font
           :list="[
             {
               name: 'Название (А-Я)',

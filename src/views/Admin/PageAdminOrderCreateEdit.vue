@@ -48,8 +48,8 @@
       > *
         padding 20px
         border-bottom 1px solid colorBorder
-        background colorBgDark
         color colorTextInvert1
+        background colorBgDark
     .left-column
       display flex
       flex-direction column
@@ -99,9 +99,15 @@
       </section>
     </router-link>
 
+    <OrderStatusBar 
+      :status="order.status"
+      class="order-status-bar"
+      @change="changeOrderStatus"
+    />
+
     <section class="orders" @input="onInput">
       <div class="left-column">
-        <InputComponent v-model="order.id" disabled title="#ID" />
+        <InputComponent v-model="order.number" disabled title="Номер" />
 
         <SelectList
           v-model="order.userId"
@@ -115,12 +121,14 @@
           can-be-null
           :selected-id="order.userId"
           title="Пользователь"
+          title-always-shown
           ref="userSelect"
         />
         <SelectList
           v-model="order.status"
           :selected-id="order.status"
           title="Статус заказа"
+          title-always-shown
           :list="
             Object.entries(OrderStatuses).map(([key, status]) => ({
               id: key,
@@ -148,7 +156,7 @@
           :clickable="false"
           :fields="[
             // { name: '#', from: 'id' },
-            { name: 'Название', from: 'title', availableValues: goods.map(g => ({name: g.title, value: g.id})) },
+            { name: 'Название', from: 'title', availableValues: goods.map(g => ({name: g.title, value: g.id})), addWithSearch: true },
             { name: 'Количество', from: 'amount', changer: (_: unknown, row: Goods) => `${row.amount} ${row.isWeighed ? 'кг' : 'шт'}` },
             { name: 'Сумма за всё', from: 'costTotal', changer: (_: unknown, row: Goods) => costFormatter(row.cost * (row.amount ?? 0)) },
           ]"
@@ -191,6 +199,7 @@
               v-model="order.paymentStatus"
               :selected-id="order.paymentStatus"
               title="Статус оплаты"
+              title-always-shown
               :list="
                 Object.entries(PaymentStatuses).map(([key, status]) => ({
                   id: key,
@@ -243,7 +252,7 @@
 </template>
 
 <script lang="ts">
-import { Goods, Order, UserOther } from '~/utils/models';
+import { Goods, Order, OrderStatus, UserOther } from '~/utils/models';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import TableComponent from '~/components/tables/TableComponent.vue';
@@ -251,9 +260,10 @@ import SelectList from '~/components/SelectList.vue';
 import { costFormatter, dateTimeFormatter, deepClone } from '~/utils/utils';
 import { OrderStatuses, PaymentStatuses } from '~/constants';
 import { nextTick } from 'vue';
+import OrderStatusBar from '~/components/OrderStatusBar.vue';
 
 export default {
-  components: { SelectList, InputComponent, CircleLinesLoading, TableComponent },
+  components: { SelectList, InputComponent, CircleLinesLoading, TableComponent, OrderStatusBar },
 
   data() {
     return {
@@ -422,6 +432,22 @@ export default {
 
     onInput() {
       window.onbeforeunload = () => {};
+    },
+
+    async changeOrderStatus(status: OrderStatus) {
+      if (status === this.order.status) return;
+      if (!(await this.$modals.confirm(`Изменить статус заказа на '${OrderStatuses[status].title}'?`, 'Клиенту придет уведомление об изменении статуса заказа'))) return;
+      
+      await this.$request(
+        this,
+        this.$api.updateOrderStatus,
+        [this.order.id, status],
+        `Не удалось изменить статус заказа`,
+        () => {
+          this.$popups.success("Статус заказа изменен", `Теперь он '${OrderStatuses[status].title}'`);
+          this.$router.push({ name: 'adminOrders' });
+        },
+      );
     },
   },
 };

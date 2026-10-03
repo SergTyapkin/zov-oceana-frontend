@@ -48,8 +48,8 @@
       > *
         padding 20px
         border-bottom 1px solid colorBorder
-        background colorBgDark
         color colorTextInvert1
+        background colorBgDark
     .left-column
       display flex
       flex-direction column
@@ -133,6 +133,7 @@
         <SelectList
           class="category-selector"
           title="Партнерство"
+          title-always-shown
           ref="partnerStatusSelector"
           :list="[
             {
@@ -165,6 +166,8 @@
           can-be-null
           :selected-id="user.referrerId"
           title="Пригласил пользователь"
+          with-search
+          title-always-shown
           ref="userSelect"
         />
         <br>

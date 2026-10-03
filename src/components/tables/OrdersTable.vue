@@ -13,7 +13,7 @@
       { name: 'Номер', from: 'number' },
       { name: 'Товары', from: 'goods', changer: (goods: Goods[]) => goods.map((g) => `${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`).join('\n\n') },
       { name: 'Статус', from: 'status', changer: (status: OrderStatus) => OrderStatuses[status]?.title, colorMatches: statusColorMatches },
-      { name: 'Пользователь', from: '', changer: (_: unknown, order: Order) => `#${order.userId} ${order.userGivenName} ${order.userFamilyName}` },
+      { name: 'Пользователь', from: '', changer: (_: unknown, order: Order) => `${order.userGivenName} ${order.userFamilyName} #${order.userId}` },
       { name: 'Сумма', from: 'goods', changer: (goods: Goods[]) => costFormatter(goods.reduce((acc, g) => acc + g.cost * g.amount!, 0)) },
       { name: 'Оплата', from: 'paymentStatus', changer: (paymentStatus: PaymentStatus) => PaymentStatuses[paymentStatus]?.title, colorMatches: paymentStatusColorMatches },
     ] : undefined"
@@ -22,7 +22,7 @@
       { name: 'Номер', from: 'number' },
       { name: 'Товары', from: 'goods', changer: (goods: Goods[]) => goods.map((g) => `${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`).join('\n\n') },
       { name: 'Статус', from: 'status', changer: (status: OrderStatus) => OrderStatuses[status]?.title, colorMatches: statusColorMatches },
-      { name: 'Пользователь', from: '', changer: (_: unknown, order: Order) => `#${order.userId} ${order.userGivenName} ${order.userFamilyName}` },
+      { name: 'Пользователь', from: '', changer: (_: unknown, order: Order) => `${order.userGivenName} ${order.userFamilyName} #${order.userId}` },
       { name: 'Сумма', from: 'goods', changer: (goods: Goods[]) => costFormatter(goods.reduce((acc, g) => acc + g.cost * g.amount!, 0)) },
       { name: 'Оплата', from: 'paymentStatus', changer: (paymentStatus: PaymentStatus) => PaymentStatuses[paymentStatus]?.title, colorMatches: paymentStatusColorMatches },
     ]"

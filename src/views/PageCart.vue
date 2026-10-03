@@ -180,6 +180,7 @@
             v-else
             :disabled="!$cart.length || loading"
             title="Выберите адрес доставки"
+            title-always-shown
             :list="[
               ...(addresses.map(a => ({ name: addressFormatter(a, '', true), value: a.id })) as {name: string, value: string | symbol}[]),
               {name: '+ Добавить адрес', value: CREATE_NEW_ADDRESS_SYMBOL},
@@ -223,7 +224,7 @@ export default {
     return {
       isTakeOrderBlockShown: false,
 
-      selectedAddressId: null as string | null | symbol,
+      selectedAddressId: ((this.$route.query.addressId as string | undefined) || null) as string | null | symbol,
       addresses: [] as Address[],
       errors: {
         address: false,
@@ -337,7 +338,10 @@ export default {
 
     onChangeAddress() {
       if (this.selectedAddressId === CREATE_NEW_ADDRESS_SYMBOL) {
-        this.$router.push({name: 'profileAddresses'});
+        this.$router.push({name: 'profileAddresses', query: {
+          isCreateNew: true,
+          returnPage: 'cart',
+        }});
         return;
       }
     }

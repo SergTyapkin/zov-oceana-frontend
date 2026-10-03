@@ -76,7 +76,7 @@
         margin-block 10px
         text-align center
       .field
-        margin-block 10px
+        margin-block 0px
       .buttons-container
         display flex
         gap 20px
@@ -120,14 +120,14 @@
           @delete="deleteAddress(address)"
         />
 
-        <button @click="$refs.addAddressModal.showModal()" class="add-address-button">
+        <button @click="clickCreateAddress" class="add-address-button">
           <img src="/static/icons/plus-thin.svg" alt="plus">
           Добавить адрес
         </button>
       </ul>
     </main>
 
-    <dialog class="modal" ref="addAddressModal" closedby="any">
+    <dialog class="modal" ref="addAddressModal" closedby="any" @close="clickCancel">
       <div class="modal-inside">
         <header class="header">Добавить адрес</header>
         <main class="main">
@@ -217,13 +217,13 @@
 
           <div class="buttons-container">
             <button class="submit" @click="addAddress">Добавить</button>
-            <button class="cancel" @click="$refs.addAddressModal.close()">Отменить</button>
+            <button class="cancel" @click="clickCancel">Отменить</button>
           </div>
         </main>
       </div>
     </dialog>
 
-    <dialog class="modal" ref="editAddressModal" closedby="any">
+    <dialog class="modal" ref="editAddressModal" closedby="any" @close="clickCancel">
       <div class="modal-inside">
         <header class="header">Изменить адрес</header>
         <main class="main">
@@ -306,7 +306,7 @@
 
           <div class="buttons-container">
             <button class="submit" @click="editAddress">Изменить</button>
-            <button class="cancel" @click="$refs.editAddressModal.close()">Отменить</button>
+            <button class="cancel" @click="clickCancel">Отменить</button>
           </div>
         </main>
       </div>
@@ -327,6 +327,9 @@ export default {
 
   data() {
     return {
+      isCreateNew: (this.$route.query.isCreateNew as string | undefined) === 'true',
+      returnPage: (this.$route.query.returnPage as string | undefined),
+
       addresses: [] as Address[],
 
       addressData: {
@@ -359,6 +362,10 @@ export default {
   },
 
   mounted() {
+    if (this.isCreateNew) {
+      this.clickCreateAddress();
+    }
+
     this.updateAddresses();
   },
 
@@ -402,8 +409,11 @@ export default {
           this.addressData.comment,
         ],
         `Не удалось создать адрес`,
-        () => {
+        (address: Address) => {
           this.updateAddresses();
+          if (this.returnPage) {
+            this.$router.push({name: this.returnPage, query: {addressId: address.id}});
+          }
         },
       );
     },
@@ -457,7 +467,7 @@ export default {
     async deleteAddress(address: Address) {
       if (!(await this.$modals.confirm(
         `Удаляем адрес "${address.title || (address.city + ', ' + address.street + ', ' + address.house)}"?`,
-        'Отменить удаление не получится',
+        'Адрес будет удален навсегда',
       ))) {
         return;
       }
@@ -470,6 +480,17 @@ export default {
           this.updateAddresses();
         },
       );
+    },
+
+    clickCreateAddress() {
+      this.$refs.addAddressModal?.showModal?.();
+    },
+    clickCancel() {
+      this.$refs.addAddressModal?.close?.();
+      this.$refs.editAddressModal?.close?.();
+      if (this.returnPage) {
+        this.$router.push({name: this.returnPage});
+      }
     },
   },
 };

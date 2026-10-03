@@ -11,9 +11,8 @@
   cursor text
   display flex
   align-items center
-  height 45px
   margin 0
-  padding 0 15px
+  padding 10px 15px
   border none
   background colorBlockBg
   &:focus
@@ -35,14 +34,23 @@
     display block
     width 18px
     height 18px
+
+  &.small-font
+    .input
+      font-small-extra()
+    .icon
+    .clear
+      width 15px
+      height 15px
 </style>
 
 <template>
-  <div class="root-input-with-icon">
+  <div class="root-input-with-icon" :class="{'small-font': smallFont}">
     <label for="search">
       <img class="icon" src="/static/icons/search.svg" alt="search">
     </label>
     <input
+      ref="input"
       class="input"
       :type="type"
       @input="updateModelValue(undefined)"
@@ -70,6 +78,7 @@ export default {
       type: String,
       default: '',
     },
+    smallFont: Boolean,
 
     modelValue: {
       type: String,
@@ -89,6 +98,10 @@ export default {
       this.$emit('update:modelValue', value);
       this.$emit('input');
       this.value = value;
+    },
+
+    focus() {
+      (this.$refs.input as HTMLElement | undefined)?.focus?.();
     }
   }
 };

@@ -14,8 +14,8 @@
     align-items flex-start
 
     .table-block
-      width 100%
       flex 1
+      width 100%
 
       .header-row
         display flex
@@ -48,18 +48,19 @@
               th
                 font-small()
                 font-semibold()
+
                 padding 16px
                 padding-right calc(16px + 1.3em)
                 text-align left
-                background mix(colorBlockBg, colorBgDark, 90%)
                 white-space nowrap
+                background mix(colorBlockBg, colorBgDark, 90%)
                 transition color 0.2s ease
                 &:has(img)
-                  color colorEmp2
                   padding-right 16px
+                  color colorEmp2
                 img
-                  height 1em
                   width 1em
+                  height 1em
                   padding-top 0.2lh
 
               th:first-child
@@ -72,9 +73,9 @@
             tr
               width 100%
               border-bottom 1px solid colorBorder
-              hover-effect()
-              background mix(colorBgLight, colorBgDark, 100%)
               color colorText1
+              background mix(colorBgLight, colorBgDark, 100%)
+              hover-effect()
               &:nth-child(2n)
                 background mix(colorBlockBg, colorBgDark, 96%)
 
@@ -106,6 +107,7 @@
                 .button-add-row
                   button-no-styles()
                   svg-inside(15px, 0, 0)
+
                   padding 10px
                   border-radius radiusS
                   background mix(colorSuccess, transparent, 20%)
@@ -113,11 +115,12 @@
                   &:hover
                     background mix(colorSuccess, transparent, 30%)
                   &[disabled]
-                    opacity 0
                     pointer-events none
+                    opacity 0
                 .button-remove-row
                   button-no-styles()
                   svg-inside(20px, 0, 0)
+
                   padding 7px
                   border-radius radiusS
                   background mix(colorError, transparent, 20%)
@@ -125,8 +128,8 @@
                   &:hover
                     background mix(colorError, transparent, 30%)
                   &[disabled]
-                    opacity 0
                     pointer-events none
+                    opacity 0
 
         .no-data-info
           width 100%
@@ -180,8 +183,11 @@
                     if (idx !== currentSortingFieldIdx) {
                       currentSortingFieldIdx = idx;
                       currentSortingIsDesc = true;
-                    } else {
+                    } else if (currentSortingIsDesc) {
                       currentSortingIsDesc = !currentSortingIsDesc;
+                    } else {
+                      currentSortingFieldIdx = null;
+                      currentSortingIsDesc = true;
                     }
                   }"
                 >
@@ -245,11 +251,11 @@
                 <td v-if="modelValue !== undefined" />
                 <td v-for="field in fields">
                   <span v-if="field.from === undefined || field.addable === false" />
-                  <SelectList v-else-if="field.availableValues" v-model="addedRowData[field.from]" :list="field.availableValues" />
+                  <SelectList v-else-if="field.availableValues" v-model="addedRowData[field.from]" :list="field.availableValues" :with-search="field.addWithSearch" />
                   <InputComponent v-else v-model="addedRowData[field.from]" :placeholder="field.name" />
                 </td>
                 <td class="thin">
-                  <button class="button-add-row" @click="onAddRow" :disabled="isLoadingAdding"><img src="/static/icons/plus-bold.svg" alt="add" /></button>
+                  <button class="button-add-row" @click="onAddRow" :disabled="isLoadingAdding"><img src="/static/icons/plus-bold.svg" alt="add"></button>
                 </td>
               </tr>
             </tbody>
@@ -297,6 +303,7 @@ type Field = {
   preventClicks?: boolean;
   availableValues?: { name: string, value: any }[];
   addable?: boolean;
+  addWithSearch?: boolean;
   colorMatches?: { [key: string]: string };
 };
 
