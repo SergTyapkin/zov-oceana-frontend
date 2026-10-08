@@ -56,8 +56,8 @@ export default new Vuex.Store({
       state.user.city = userData.city;
       state.user.joinedDate = new Date(userData.joinedDate);
       state.user.referrerId = userData.referrerId;
-      state.user.partnerStatus = userData.partnerStatus;
-      state.user.partnerBonuses = userData.partnerBonuses;
+      state.user.isPartnershipRequested = userData.isPartnershipRequested;
+      state.user.isPartner = userData.isPartner;
 
       state.user.isEmailNotificationsOn = userData.isEmailNotificationsOn;
 
@@ -86,6 +86,8 @@ export default new Vuex.Store({
       state.globals.isOnMaintenance = globalsData.isOnMaintenance;
       state.globals.goodsOnLanding = globalsData.goodsOnLanding;
       state.globals.categories = globalsData.categories;
+      state.globals.blackPearlCost = globalsData.blackPearlCost;
+      state.globals.moneyForBonuses = globalsData.moneyForBonuses;
     },
 
     ADD_TO_CART(state: State, goods: Goods) {

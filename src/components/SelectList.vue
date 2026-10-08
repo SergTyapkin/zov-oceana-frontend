@@ -369,8 +369,10 @@ export default {
     selectItemByIdx(idx: number | undefined, disableEmitting = false, disableUpdating = false) {
       this.state = this.States.default;
       this.currentSelectedIdx = idx;
-
+      
       if (idx !== undefined) {
+        if (idx >= this.list.length) return;
+        
         if (!disableUpdating) {
           this.$emit('update:modelValue', this.list[idx].value);
         }

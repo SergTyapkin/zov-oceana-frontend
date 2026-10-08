@@ -117,12 +117,13 @@ bg = colorBgDark
           display block
         img.done
           display none
+      &.not-active
       &.active ~ *
         img.done
           display none
 
       &.active ~ *:not(:hover)
-      &.not-active:not(:hover)
+      &.not-active:not(:hover):not(.active)
         &.red
           .status
             background mix(colorError, bg)
@@ -159,7 +160,11 @@ bg = colorBgDark
       <div 
         class="status-container"
         v-for="(s, key) in ConsistentOrderStatuses" 
-        :class="s.color + (key === status ? ' active' : '')"
+        :class="{
+          [s.color]: true,
+          active: key === status,
+          'not-active': SPECIAL_ORDER_STATUSES.includes(status),
+        }"
       > 
         <div
           class="status" 
@@ -179,7 +184,10 @@ bg = colorBgDark
       <div 
         class="status-container not-active"
         v-for="(s, key) in SpecialOrderStatuses" 
-        :class="s.color + (key === status ? ' active' : '')"
+        :class="{
+          [s.color]: true,
+          active: key === status,
+        }"
       > 
         <div 
           class="status" 
@@ -213,6 +221,7 @@ export default {
 
   data() {
     return {
+      SPECIAL_ORDER_STATUSES,
       SpecialOrderStatuses: Object.fromEntries(Object.entries(OrderStatuses).filter(([key]) => SPECIAL_ORDER_STATUSES.includes(key))),
       ConsistentOrderStatuses: Object.fromEntries(Object.entries(OrderStatuses).filter(([key]) => !SPECIAL_ORDER_STATUSES.includes(key))),
     };

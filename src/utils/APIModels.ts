@@ -51,14 +51,15 @@ export const UserModel = {
     from: 'referrerid',
     optional: true,
   },
-  partnerStatus: {
+  isPartnershipRequested: {
     type: Boolean,
-    from: 'partnerstatus',
+    from: 'ispartnershiprequested',
     optional: true,
   },
-  partnerBonuses: {
-    type: Number,
-    from: 'partnerbonuses',
+  isPartner: {
+    type: Boolean,
+    from: 'ispartner',
+    optional: true,
   },
   canEditOrders: {
     type: Boolean,
@@ -150,7 +151,8 @@ export const UserModelMockData = validateModel(UserModel, {
   city: 'Москва',
   tel: '+79160930930',
   isemailnotificationson: false,
-  partnerbonuses: 0,
+  ispartnershiprequested: false,
+  ispartner: true,
   caneditorders: true,
   caneditusers: true,
   caneditgoods: true,
@@ -205,6 +207,210 @@ export const UserPartnerListModelMockData = {
   ],
 };
 
+export const UserPartnerBonusHistoryModel = {
+  id: String,
+  userId: {
+    type: String,
+    from: 'userid',
+  },
+  avatarUrl: {
+    type: String,
+    from: 'avatarurl',
+    optional: true,
+  },
+  givenName: {
+    type: String,
+    from: 'givenname',
+    optional: true,
+  },
+  familyName: {
+    type: String,
+    from: 'familyname',
+    optional: true,
+  },
+  fromUserId: {
+    type: String,
+    optional: true,
+    from: 'fromuserid',
+  },
+  comment: {
+    type: String,
+    optional: true,
+  },
+  isGroup: {
+    type: Boolean,
+    from: 'isgroup',
+  },
+  value: Number,
+  date: Date,
+};
+export const UserPartnerBonusesHistoryModel = {
+  history: ArrayType(UserPartnerBonusHistoryModel),
+};
+export const UserPartnerBonusHistoryModelMockData = validateModel(UserPartnerBonusHistoryModel, {
+  id: 1,
+  userid: 1,
+  avatarurl: null,
+  givenname: null,
+  familyname: null,
+  fromuserid: null,
+  comment: "Подарок приветственный",
+  isgroup: false,
+  value: 1500,
+  date: "Sat, 03 Oct 2026 18:41:37 GMT",
+});
+export const UserPartnerBonusesHistoryModelMockData = {
+  history: [
+    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: '1'}),
+    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: '2', comment: 'Списание', value: -100, isgroup: true}),
+    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: '3', comment: null, value: 330}),
+  ],
+};
+
+
+export const PartnerModel = {
+  userId: {
+    type: String,
+    from: 'userid',
+  },
+  totalBonuses: {
+    type: Number,
+    from: 'totalbonuses',
+  },
+  personalBonuses: {
+    type: Number,
+    from: 'personalbonuses',
+  },
+  groupBonuses: {
+    type: Number,
+    from: 'groupbonuses',
+  },
+  branchTotalBonuses: {
+    type: Number,
+    from: 'branchtotalbonuses',
+  },
+  qualityId: {
+    type: Number,
+    from: 'qualityid',
+    optional: true,
+  },
+  newbieBonusPeriodsLeft: {
+    type: Number,
+    from: 'newbiebonusperiodsleft',
+  },
+  blackPearlBonuses: {
+    type: Number,
+    from: 'blackpearlbonuses',
+  },
+  bonusBigTeamPeriods: {
+    type: Number,
+    from: 'bonusbigteamperiods',
+  },
+  activatedDate: {
+    type: Date,
+    from: 'activateddate',
+  },
+  isActive: {
+    type: Boolean,
+    from: 'isactive',
+  },
+  joinedDate: {
+    type: Date,
+    from: 'joineddate',
+  },
+};
+export const PartnersModel = {
+  partners: ArrayType(PartnerModel),
+}
+export const PartnerModelMockData = validateModel(PartnerModel, {
+  userid: 'USER_ID_1',
+  isconfirmed: true,
+  totalbonuses: 1230,
+  personalbonuses: 230,
+  groupbonuses: 900,
+  branchtotalbonuses: 420,
+  qualityid: null,
+  newbiebonusperiodsleft: 2,
+  blackpearlbonuses: 511,
+  bonusbigteamperiods: 1,
+  activateddate: new Date('2025-05-04'),
+  isactive: true,
+  joineddate: new Date('2025-04-04'),
+});
+export const PartnersModelMockData = {
+  partners: [
+    Object.assign({}, PartnerModelMockData, {id: 'PARNTER_ID_1'}),
+    Object.assign({}, PartnerModelMockData, {id: 'PARNTER_ID_2'}),
+    Object.assign({}, PartnerModelMockData, {id: 'PARNTER_ID_3'}),
+  ],
+};
+
+
+export const QualityModel = {
+  id: String,
+  title: String,
+  branchDeepForQuality: {
+    type: Number,
+    from: 'branchdeepforquality',
+  },
+  percentForQuality: {
+    type: Number,
+    from: 'percentforquality',
+  },
+  activeCountRequirement: {
+    type: Number,
+    from: 'activecountrequirement',
+    optional: true,
+  },
+  branchesCountRequirement: {
+    type: Number,
+    from: 'branchescountrequirement',
+    optional: true,
+  },
+  branchesValuesRequirement: {
+    type: Number,
+    from: 'branchesvaluesrequirement',
+    optional: true,
+  },
+  totalPersonalBonusesRequirement: {
+    type: Number,
+    from: 'totalpersonalbonusesrequirement',
+    optional: true,
+  },
+  qualityBonusValue: {
+    type: Number,
+    from: 'qualitybonusvalue',
+    optional: true,
+  },
+  qualityBonusMaxCount: {
+    type: Number,
+    from: 'qualitybonusmaxcount',
+    optional: true,
+  },
+};
+export const QualitiesListModel = {
+  qualitys: ArrayType(QualityModel),
+}
+export const QualityModelMockData = validateModel(QualityModel, {
+  id: 'QUALITY_ID',
+  title: 'Рыбак 1',
+  branchdeepforquality: 1,
+  percentforquality: 25,
+  activecountrequirement: 3,
+  branchescountrequirement: 2,
+  branchesvaluesrequirement: 450,
+  totalpersonalbonusesrequirement: 220,
+  qualitybonusvalue: 2000,
+  qualitybonusmaxcount: 3,
+});
+export const QualitiesListModelMockData = {
+  qualities: [
+    Object.assign({}, QualityModelMockData, {id: 'QUALITY_ID_1'}),
+    Object.assign({}, QualityModelMockData, {id: 'QUALITY_ID_2', title: 'Рыбак 2', qualityBonusValue: 100, qualityBonusMaxCount: 2}),
+    Object.assign({}, QualityModelMockData, {id: 'QUALITY_ID_3', title: 'Капитан 1', qualityBonusValue: 1200, qualityBonusMaxCount: 1}),
+    Object.assign({}, QualityModelMockData, {id: 'QUALITY_ID_4', title: 'Капитан 2'}),
+  ],
+};
 
 export const CategoryModel = {
   id: String,
@@ -517,12 +723,53 @@ export const GlobalsModel = {
     from: 'goodsonlanding',
   },
   categories: ArrayType(CategoryModel),
+  moneyForBonuses: {
+    type: Number,
+    from: 'moneyforbonuses',
+  },
+  blackPearlCost: {
+    type: Number,
+    from: 'blackpearlcost',
+  },
 };
 
 export const GlobalsModelMockData = validateModel(GlobalsModel, {
   isonmaintenance: false,
   goodsonlanding: [],
+  moneyforbonuses: 55.7293,
+  blackpearlcost: 120,
   categories: [],
 }) as Globals;
 GlobalsModelMockData.goodsOnLanding = GoodsListModelMockData.goods as Goods[];
 GlobalsModelMockData.categories = CategoriesListModelMockData.categories as Category[];
+
+
+
+export const SbpBankModel = {
+  id: {
+    type: String,
+    from: 'MemberId',
+  },
+  title: {
+    type: String,
+    from: 'MemberName',
+  },
+  titleRus: {
+    type: String,
+    from: 'MemberNameRus',
+  },
+};
+export const SbpBankModelMockData = validateModel(SbpBankModel, {
+  MemberId: '10000023',
+  MemberName: 'Some bank',
+  MemberNameRus: 'ООО "Какой-то банк"',
+}) as Globals;
+export const SbpBankListModel = {
+  banks: ArrayType(SbpBankModel),
+};
+export const SbpBankListModelMockData = {
+  banks: [
+    Object.assign({}, SbpBankModelMockData, {id: '10000025'}),
+    Object.assign({}, SbpBankModelMockData, {id: '10000027', title: 'Any Other Bank', titleRus: 'БАНК РУС'}),
+  ],
+};

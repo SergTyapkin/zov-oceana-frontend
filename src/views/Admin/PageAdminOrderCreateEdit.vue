@@ -175,7 +175,7 @@
               cost: cost,
             });
 
-            return !!(await updateOrderData());
+            return !!(await updateOrderData(true));
           }"
           :on-remove-callback="async (itemToRemove: {[key: string]: any}) => {
             const existingIdx = order.goods.findIndex(g => g.id === itemToRemove?.id);
@@ -184,7 +184,7 @@
             }
             order.goods.splice(existingIdx, 1);
 
-            return !!(await updateOrderData());
+            return !!(await updateOrderData(true));
           }"
         />
 
@@ -330,7 +330,7 @@ export default {
       ).goods;
     },
 
-    async updateOrderData() {
+    async updateOrderData(withoutReturn = false) {
       return await this.$request(
         this,
         this.$api.updateOrder,
@@ -347,7 +347,9 @@ export default {
         `Не удалось обновить данные заказа`,
         () => {
           window.onbeforeunload = null;
-          this.$router.push({ name: 'adminOrders' });
+          if (!withoutReturn) {
+            this.$router.push({ name: 'adminOrders' });
+          }
         },
       );
     },

@@ -22,7 +22,9 @@ export default {
   '/payment/order/:id': false,
   '/payment/success': false,
   '/payment/fail': false,
-  '/payment/takeout': false,
+  
+  // Payout
+  '/payout': false,
 
   // Documents
   '/documents': false,

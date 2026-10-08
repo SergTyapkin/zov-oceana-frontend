@@ -17,7 +17,7 @@
     img-size(30px)
 
     transform rotate(180deg)
-    opacity 0.2
+    opacity 0.4
   .user-container
     centered-flex-container()
 
@@ -58,7 +58,7 @@
       <div class="name" v-else>{{ user.givenName }} {{ user.familyName }}</div>
       <div class="bottom-row">
         <UserAvatar class="avatar" :user="user" />
-        <div class="cost">{{ costFormatter(yourMonthlyTotalValue) }}</div>
+        <div class="cost">{{ bonusesFormatter(yourMonthlyTotalValue) }}</div>
       </div>
     </div>
 
@@ -69,7 +69,7 @@
         <div class="name">{{ partner.givenName }} {{ partner.familyName }}</div>
         <div class="bottom-row">
           <UserAvatar class="avatar" :user="partner" />
-          <div class="cost">{{ costFormatter(partner.totalValue) }}</div>
+          <div class="cost">{{ bonusesFormatter(partner.totalValue) }}</div>
         </div>
       </div>
     </div>
@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { costFormatter } from '~/utils/utils';
+import { bonusesFormatter } from '~/utils/utils';
 import UserAvatar from '~/components/UserAvatar.vue';
 import { PropType } from 'vue';
 import { PartnerHistoryTransaction, User, UserPartner } from '~/utils/models';
@@ -116,7 +116,7 @@ export default {
   },
 
   methods: {
-    costFormatter,
+    bonusesFormatter,
 
     update() {
       this.updatePartnershipInfo();

@@ -23,8 +23,18 @@ import {
   UsersListModel,
   UserPartnerListModel,
   UserPartnerListModelMockData,
+  UserPartnerBonusesHistoryModelMockData,
+  UserPartnerBonusesHistoryModel,
+  PartnerModel,
+  PartnerModelMockData,
+  QualitiesListModel,
+  QualitiesListModelMockData,
+  QualityModel,
+  QualityModelMockData,
+  SbpBankListModel,
+  SbpBankListModelMockData,
 } from '~/utils/APIModels';
-import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus, UserPartner } from '~/utils/models';
+import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus, UserPartner, PartnerHistoryTransaction, Partner, Quality, SBPBank } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
@@ -88,11 +98,10 @@ export default class API extends REST_API {
     this.#GET(`/user/all`, {}, UsersListModel, Response200(UsersListModelMockData)) as MyResponse<{users: User[]}>;
   getOtherUser = (id: string) =>
     this.#GET(`/user`, {id}, UserOtherModel, Response200(UserOtherModelMockData)) as MyResponse<UserOther>;
-    // this.#GET(`/user`, {}, UserModel) as MyResponse<User>;
-  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, city?: string, password?: string, isEmailNotificationsOn?: boolean }) =>
+  updateProfile = (id: string, profileData: { givenName?: string, familyName?: string, middleName?: string, email?: string, tel?: string, city?: string, password?: string, isEmailNotificationsOn?: boolean, isPartnershipRequested?: boolean }) =>
     this.#PUT(`/user`, Object.assign({id}, profileData), UserModel) as MyResponse<User>;
-  updateProfileAdmin = (id: string, givenName: string, familyName: string, middleName: string, email: string, avatarUrl: string, tel: string, city: string, partnerStatus: string, isEmailNotificationsOn: string, tgUsername: string, tgId: string, referrerId: string, canEditGoods: boolean,  canEditOrders: boolean,  canEditUsers: boolean,  canEditPartners: boolean,  canEditGlobals: boolean) =>
-    this.#PUT(`/user`, {id, givenName, familyName, middleName, email, avatarUrl, tel, city, partnerStatus, isEmailNotificationsOn, tgUsername, tgId, referrerId, canEditGoods, canEditOrders, canEditUsers, canEditPartners, canEditGlobals}, UserModel) as MyResponse<User>;
+  updateProfileAdmin = (id: string, givenName: string, familyName: string, middleName: string, email: string, avatarUrl: string, tel: string, city: string, isPartnershipRequested: boolean, isEmailNotificationsOn: boolean, tgUsername: string, tgId: string, referrerId: string, canEditGoods: boolean,  canEditOrders: boolean,  canEditUsers: boolean,  canEditPartners: boolean,  canEditGlobals: boolean) =>
+    this.#PUT(`/user`, {id, givenName, familyName, middleName, email, avatarUrl, tel, city, isPartnershipRequested, isEmailNotificationsOn, tgUsername, tgId, referrerId, canEditGoods, canEditOrders, canEditUsers, canEditPartners, canEditGlobals}, UserModel) as MyResponse<User>;
   updateProfilePassword = (id: string, oldPassword: string, newPassword: string) =>
     this.#PUT(`/user/password`, {id, oldPassword, newPassword}) as MyResponse<unknown>;
   register = (
@@ -121,21 +130,47 @@ export default class API extends REST_API {
   restorePasswordByCode = (code: string, newPassword: string): MyResponse<unknown> =>
     this.#PUT(`/auth/password/restore`, { code, new_password: newPassword }) as MyResponse<unknown>;
 
-  // Partnership
-  sendPartnershipRequest = (id: string) =>
-    this.#PUT(`/user`, {id, partnerStatus: null}, UserModel) as MyResponse<User>;
+  // Partners history
   getUserBonusesHistoryMonthly = (userId: string) =>
-    this.#GET(`/partner/history/monthly`, {userId}) as MyResponse<unknown>;
+    this.#GET(`/partner/history/monthly`, {userId}, UserPartnerBonusesHistoryModel, Response200(UserPartnerBonusesHistoryModelMockData)) as MyResponse<{history: PartnerHistoryTransaction[]}>;
   getAllPartnerUsers = (userId: string) =>
     this.#GET(`/partner/users/bonuses/monthly`, {userId}, UserPartnerListModel, Response200(UserPartnerListModelMockData)) as MyResponse<{users: UserPartner[]}>;
   createHistoryBonusesRecord = (userId: string, value: number, comment: string) =>
     this.#POST(`/partner/history`, {userId, value, comment}) as MyResponse<unknown>;
+  
+  // Partnership
+  sendPartnershipRequest = (id: string) =>
+    this.#PUT(`/user`, {id, isPartnershipRequested: true}, UserModel) as MyResponse<User>;
+  declinePartnershipRequest = (id: string) =>
+    this.#PUT(`/user`, {id, isPartnershipRequested: null}, UserModel) as MyResponse<User>;
+  getUserPartnerInfo = (userId: string) =>
+    this.#GET(`/partner`, {userId}, PartnerModel, Response200(PartnerModelMockData)) as MyResponse<Partner>;
+  getAllPartners = (isActive: boolean | null) =>
+    this.#GET(`/partner/all`, {isActive}, UserPartnerListModel, Response200(UserPartnerListModelMockData)) as MyResponse<{users: UserPartner[]}>;
+  updateUserPartnerInfo = (userId: string, isConfirmed: boolean, personalBonuses: number, groupBonuses: number, qualityId: number | undefined, newbieBonusPeriodsLeft: number, blackPearlBonuses: number, bonusBigTeamPeriods: number, isActive: boolean) =>
+    this.#PUT(`/partner`, {userId, isConfirmed, personalBonuses, groupBonuses, qualityId, newbieBonusPeriodsLeft, blackPearlBonuses, bonusBigTeamPeriods, isActive}) as MyResponse<unknown>;
+  updateUserPartner = (userId: string, isConfirmed: boolean, personalBonuses: number, groupBonuses: number, qualityId: number | undefined, newbieBonusPeriodsLeft: number, blackPearlBonuses: number, bonusBigTeamPeriods: number, isActive: boolean) =>
+    this.#PUT(`/partner`, {userId, isConfirmed, personalBonuses, groupBonuses, qualityId, newbieBonusPeriodsLeft, blackPearlBonuses, bonusBigTeamPeriods, isActive}) as MyResponse<unknown>;
+  createUserPartner = (userId: string) =>
+    this.#POST(`/partner`, {userId}) as MyResponse<unknown>;
 
   // Globals
   getGlobals = () =>
     this.#GET(`/globals`, {}, GlobalsModel, Response200(GlobalsModelMockData)) as MyResponse<Globals>;
-  updateGlobals = (isOnMaintenance: boolean, goodsIdsOnLanding: string[]) =>
-    this.#PUT(`/globals`, {isOnMaintenance, goodsIdsOnLanding}) as MyResponse<unknown>;
+  updateGlobals = (isOnMaintenance: boolean, goodsIdsOnLanding: string[], moneyForBonuses: number) =>
+    this.#PUT(`/globals`, {isOnMaintenance, goodsIdsOnLanding, moneyForBonuses}) as MyResponse<unknown>;
+
+  // Qualities
+  getAllQualities = () =>
+    this.#GET(`/quality`, {}, QualitiesListModel, Response200(QualitiesListModelMockData)) as MyResponse<{qualities: Quality[]}>;
+  getQuality = (id: string) =>
+    this.#GET(`/quality`, {id}, QualityModel, Response200(QualityModelMockData)) as MyResponse<Quality>;
+  createQuality = (title: string, branchDeepForQuality: number, percentForQuality: number, activeCountRequirement: number, branchesCountRequirement: number, branchesValuesRequirement: number, totalPersonalBonusesRequirement: number, qualityBonusValue: number, qualityBonusMaxCount: number) =>
+    this.#POST(`/quality`, {title, branchDeepForQuality, percentForQuality, activeCountRequirement, branchesCountRequirement, branchesValuesRequirement, totalPersonalBonusesRequirement, qualityBonusValue, qualityBonusMaxCount}) as MyResponse<unknown>;
+  deleteQuality = (id: string) =>
+    this.#DELETE(`/quality`, {id}) as MyResponse<unknown>;
+  updateQuality = (id: string, title: string, branchDeepForQuality: number, percentForQuality: number, activeCountRequirement: number, branchesCountRequirement: number, branchesValuesRequirement: number, totalPersonalBonusesRequirement: number, qualityBonusValue: number, qualityBonusMaxCount: number) =>
+    this.#PUT(`/quality`, {id, title, branchDeepForQuality, percentForQuality, activeCountRequirement, branchesCountRequirement, branchesValuesRequirement, totalPersonalBonusesRequirement, qualityBonusValue, qualityBonusMaxCount}) as MyResponse<unknown>;
 
   // Categories
   getCategories = () =>
@@ -176,8 +211,8 @@ export default class API extends REST_API {
     this.#DELETE(`/orders`, {id}) as MyResponse<unknown>;
   updateOrder = (id: string, userId: string, number: number, addressTextCopy: string, commentTextCopy: string, status: OrderStatus, trackingCode: string, goods: Goods[]) =>
     this.#PUT(`/orders`, {id, userId, number, addressTextCopy, commentTextCopy, status, trackingCode, goods}) as MyResponse<unknown>;
-  updateOrderStatus = (number: string, status: string) =>
-    this.#PUT(`/orders`, {number, status}) as MyResponse<unknown>;
+  updateOrderStatus = (id: string, status: string) =>
+    this.#PUT(`/orders`, {id, status}) as MyResponse<unknown>;
   getAllAdminOrdersList = () =>
     this.#GET(`/orders/all`, {}, OrderListModel, Response200(OrderListModelMockData)) as MyResponse<{orders: Order[]}>;
 
@@ -188,6 +223,12 @@ export default class API extends REST_API {
     this.#POST(`/payments/confirm`, {orderId}, {}, Response200({})) as MyResponse<unknown>;
   cancelPayment = (orderId: string) =>
     this.#POST(`/payments/cancel`, {orderId}, {}, Response200({})) as MyResponse<unknown>;
+
+  // Payouts
+  getSpbBanks = () =>
+    this.#GET(`/payouts/banks`, {}, SbpBankListModel, Response200(SbpBankListModelMockData)) as MyResponse<{banks: SBPBank[]}>;
+  initPayout = (userId: string, tel: string, spbBankId: string, amount: number) =>
+    this.#POST(`/payouts/init`, {userId, tel, spbBankId, amount}) as MyResponse<unknown>;
 
   // Addresses
   getUserAddresses = (userId: string) =>

@@ -150,33 +150,87 @@ export function deepClone<T>(obj: T): T {
 }
 
 
+const SUPPORTED_LANGUAGES = ['en', 'ru'];
+type Language = (typeof SUPPORTED_LANGUAGES)[number];
+let userLanguage: Language = SUPPORTED_LANGUAGES[0];
+for (const lang of navigator.languages) {
+  if (SUPPORTED_LANGUAGES.includes(lang)) {
+    userLanguage = lang;
+    break;
+  }
+}
+const TRANSLATIONS: Record<string, Record<Language, string>> = {
+  today: {en: 'Today', ru: 'Сегодня'},
+  yesterday: {en: 'Yesterday', ru: 'Вчера'},
+  tomorrow: {en: 'Tomorrow', ru: 'Завтра'},
+  now: {en: 'Now', ru: 'Сейчас'},
+  zero: {en: 'From start', ru: 'С начала'},
+  from: {en: 'From', ru: 'С'},
+  to: {en: 'To', ru: 'До'},
+  allTime: {en: 'All time', ru: 'Все время'},
+
+  yearOne:   { en: 'Year',     ru: 'Год' },
+  yearFew:   { en: 'Years',    ru: 'Года' },
+  yearMany:  { en: 'Years',    ru: 'Лет' },
+
+  monthOne:  { en: 'Month',    ru: 'Месяц' },
+  monthFew:  { en: 'Months',   ru: 'Месяца' },
+  monthMany: { en: 'Months',   ru: 'Месяцев' },
+
+  dayOne:    { en: 'Day',      ru: 'День' },
+  dayFew:    { en: 'Days',     ru: 'Дня' },
+  dayMany:   { en: 'Days',     ru: 'Дней' },
+
+  hourOne:   { en: 'Hour',     ru: 'Час' },
+  hourFew:   { en: 'Hours',    ru: 'Часа' },
+  hourMany:  { en: 'Hours',    ru: 'Часов' },
+
+  minuteOne:  { en: 'Min',     ru: 'Мин' },
+  minuteFew:  { en: 'Mins',    ru: 'Мин' },
+  minuteMany: { en: 'Mins',    ru: 'Мин' },
+
+  secondOne:  { en: 'Sec',     ru: 'Сек' },
+  secondFew:  { en: 'Secs',    ru: 'Сек' },
+  secondMany: { en: 'Secs',    ru: 'Сек' },
+}
+
+function getTranslation(key: keyof typeof TRANSLATIONS) {
+  return TRANSLATIONS[key][userLanguage];
+}
+
 type DateTypeStyle = 'full' | 'long' | 'medium' | 'short';
 const currentYear = new Date().getFullYear();
-export function dateFormatter(d: Date | null, style: DateTypeStyle | any = 'medium') {
+export function dateFormatter(d: Date | string | number | null, style: DateTypeStyle | any = 'medium', suppressToday = false) {
   if (!d) {
     return '';
   }
+  d = new Date(d);
+  if (isNaN(d.getTime())) return '';
+
   if (typeof style !== 'string') {
     style = 'medium';
   }
   if (d.toDateString() === new Date().toDateString()) {
-    return 'Сегодня';
+    return suppressToday ? '' : getTranslation('today');
   } else if (d.toDateString() === new Date(new Date().getTime() - 1000 * 60 * 60 * 24).toDateString()) {
-    return 'Вчера';
+    return getTranslation('yesterday');
   } else if (d.toDateString() === new Date(new Date().getTime() + 1000 * 60 * 60 * 24).toDateString()) {
-    return 'Завтра';
+    return getTranslation('tomorrow');
   }
-  return d.toLocaleDateString('ru-RU', { dateStyle: style }).replace(' г.', '').replace(String(currentYear), '');
+  return d.toLocaleDateString(userLanguage, { dateStyle: style }).replace(' г.', '').replace(String(currentYear), '').replace(/\./, '');
 }
 
-export function timeFormatter(d: Date | null, style: DateTypeStyle | any = 'short') {
+export function timeFormatter(d: Date | string | number | null, style: DateTypeStyle | any = 'short') {
   if (!d) {
     return '';
   }
+  d = new Date(d);
+  if (isNaN(d.getTime())) return '';
+
   if (typeof style !== 'string') {
     style = 'short';
   }
-  return d.toLocaleTimeString('ru-RU', { timeStyle: style });
+  return d.toLocaleTimeString(userLanguage, { timeStyle: style });
 }
 
 export function timeMinutesFormatter(d: Date | null) {
@@ -185,12 +239,99 @@ export function timeMinutesFormatter(d: Date | null) {
   return str.slice(idx + 1);
 }
 
+export function timeDurationFormatter(d: Date | string | number | null): string {
+    if (!d) return '';
+
+    d = new Date(d);
+    if (isNaN(d.getTime())) return '';
+
+    const from = new Date(0);
+    const to = d;
+
+    let years   = to.getFullYear() - from.getFullYear();
+    let months  = to.getMonth()    - from.getMonth();
+    let days    = to.getDate()     - from.getDate();
+    let hours   = to.getHours()    - from.getHours();
+    let minutes = to.getMinutes()  - from.getMinutes();
+    let seconds = to.getSeconds()  - from.getSeconds();
+
+    if (seconds < 0) { seconds += 60; minutes--; }
+    if (minutes < 0) { minutes += 60; hours--; }
+    if (hours   < 0) { hours   += 24; days--; }
+    if (days    < 0) {
+        const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+        days += prevMonth.getDate();
+        months--;
+    }
+    if (months  < 0) { months += 12; years--; }
+
+    // Принимает ключи объекта TRANSLATIONS
+    const plural = (n: number, oneKey: string, fewKey: string, manyKey: string): string => {
+        const mod10  = n % 10;
+        const mod100 = n % 100;
+        if (mod10 === 1 && mod100 !== 11) return getTranslation(oneKey).toLocaleLowerCase();
+        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return getTranslation(fewKey).toLocaleLowerCase();
+        return getTranslation(manyKey).toLocaleLowerCase();
+    };
+
+    const parts: string[] = [];
+
+    if (years   > 0) parts.push(`${years} ${plural(years,   'yearOne',   'yearFew',   'yearMany')}`);
+    if (months  > 0) parts.push(`${months} ${plural(months,  'monthOne',  'monthFew',  'monthMany')}`);
+    if (days    > 0) parts.push(`${days} ${plural(days,    'dayOne',    'dayFew',    'dayMany')}`);
+    if (hours   > 0) parts.push(`${hours} ${plural(hours,   'hourOne',   'hourFew',   'hourMany')}`);
+    if (minutes > 0) parts.push(`${minutes} ${plural(minutes, 'minuteOne', 'minuteFew', 'minuteMany')}`);
+    if (seconds > 0) parts.push(`${seconds} ${plural(seconds, 'secondOne', 'secondFew', 'secondMany')}`);
+
+    if (parts.length === 0) {
+        return `0 ${getTranslation('secondMany')}`;
+    }
+
+    return parts.join(' ');
+}
+
 export function dateTimeFormatter(
-  d: Date | null,
+  d: Date | string | number | null,
+  dateStyle: DateTypeStyle | any = 'medium',
+  timeStyle: DateTypeStyle | any = 'short',
+  suppressToday = false
+) {
+  if (!d) {
+    return '';
+  }
+  d = new Date(d);
+  if (isNaN(d.getTime())) return '';
+
+  const minutes = d.getTime() / 1000 / 60;
+  const nowMinutes = (new Date()).getTime() / 1000 / 60;
+  // console.log(minutes, (d).toLocaleTimeString(), nowMinutes, (new Date()).toLocaleTimeString())
+  if (d.toDateString() === (new Date()).toDateString() && (nowMinutes - 3 < minutes && minutes < nowMinutes + 3)) {
+    return getTranslation('now');
+  }
+  if (d.getTime() < 1000 * 60 * 60 * 24) { // 1 day from 1970
+    return getTranslation('zero');
+  }
+  if (typeof dateStyle !== 'string') {
+    dateStyle = 'medium';
+  }
+  if (typeof timeStyle !== 'string') {
+    timeStyle = 'short';
+  }
+  const date = dateFormatter(d, dateStyle, suppressToday);
+  const time = timeFormatter(d, timeStyle);
+  if (!date) {
+    return time;
+  }
+  return date + ' - ' + time;
+}
+
+export function rangeFormatter(
+  from: Date | string | number | null,
+  to: Date | string | number | null,
   dateStyle: DateTypeStyle | any = 'medium',
   timeStyle: DateTypeStyle | any = 'short',
 ) {
-  if (!d) {
+  if (!from || !to) {
     return '';
   }
   if (typeof dateStyle !== 'string') {
@@ -199,7 +340,39 @@ export function dateTimeFormatter(
   if (typeof timeStyle !== 'string') {
     timeStyle = 'short';
   }
-  return dateFormatter(d, dateStyle) + ' ' + timeFormatter(d, timeStyle);
+
+  from = new Date(from);
+  to = new Date(to);
+  if (isNaN(from.getTime()) || isNaN(to.getTime())) return '';
+
+  const minutesTo = to.getTime() / 1000 / 60;
+  const nowMinutes = (new Date()).getTime() / 1000 / 60;
+  // console.log(minutes, (d).toLocaleTimeString(), nowMinutes, (new Date()).toLocaleTimeString())
+  const toIsNow = to.toDateString() === (new Date()).toDateString() && (nowMinutes - 3 < minutesTo && minutesTo < nowMinutes + 3);
+  const fromIsStart = from.getTime() < 1000 * 60 * 60 * 24;
+
+  if (!toIsNow && !fromIsStart) {
+    return `${getTranslation('from')} ${dateTimeFormatter(from)} ${getTranslation('to').toLocaleLowerCase()} ${dateTimeFormatter(to)}`;
+  }
+  if (toIsNow && fromIsStart) {
+    return getTranslation('allTime');
+  }
+  if (toIsNow) {
+    return `${getTranslation('from')} ${dateTimeFormatter(from)}`;
+  }
+  // if (fromIsStart) {
+  return `${getTranslation('to')} ${dateTimeFormatter(to)}`;
+  // }
+}
+
+export function valuteFormatter(val: number, valuteSign = '₽') {
+  return `${val < 0 ? '-' : ''}${valuteSign} ${Math.round(Math.abs(val) * 100) / 100}`;
+}
+export function costFormatter(val: number) {
+  return valuteFormatter(val, '₽');
+}
+export function bonusesFormatter(val: number) {
+  return valuteFormatter(val, '₿');
 }
 
 export function costFormatterWorded(val: number): string {
@@ -214,7 +387,7 @@ export function costFormatterWorded(val: number): string {
     val /= 1_000;
     postfix = 'тыс.';
   }
-  return `${Math.floor(val * 10) / 10} ${postfix} ₽`;
+  return `${val < 0 ? '-' : ''}₽ ${Math.floor(Math.abs(val) * 10) / 10} ${postfix}`;
 }
 
 export async function saveAllAssetsByServiceWorker(
@@ -301,10 +474,6 @@ export function addressFormatter(address: Address, defaultTitle = '', addFullDes
   const fullAddress = `г. ${address.city}, ул. ${address.street}, д. ${address.house}`;
   const title = address.title || defaultTitle;
   return title ? (addFullDescription ? `${title} (${fullAddress})` : title) : fullAddress;
-}
-
-export function costFormatter(cost: number) {
-  return '₽' + Math.round(cost * 100) / 100;
 }
 
 export function telFormatter(tel: string) {

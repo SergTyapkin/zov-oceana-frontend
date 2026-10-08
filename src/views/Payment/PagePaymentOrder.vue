@@ -392,7 +392,7 @@
           </div>
 
           <div class="qr-img-container">
-            <img v-show="!isPaymentTimeOver" class="img-qr-code" :src="qrCodeDataUrl" alt="SBP payment QR Code">
+            <QRGenerator v-show="!isPaymentTimeOver" class="img-qr-code" :text="order.paymentQrData" />
           </div>
         </section>
 
@@ -471,8 +471,7 @@
 </template>
 
 <script lang="ts">
-import QRCode from 'qrcode';
-
+import QRGenerator from '~/components/QRGenerator.vue';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter, dateFormatter, dateTimeFormatter, initPaymentWidget, timeMinutesFormatter } from '~/utils/utils';
@@ -480,13 +479,12 @@ import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS, PaymentStatuses } from '~/c
 import { Order } from '~/utils/models';
 
 export default {
-  components: { GoodsInfoCard, CircleLinesLoading },
+  components: { GoodsInfoCard, CircleLinesLoading, QRGenerator },
 
   data() {
     return {
       orderId: this.$route.params.id as string,
 
-      qrCodeDataUrl: '',
       paymentTimeLeft: 0,
       updatingInterval: null as ReturnType<typeof setInterval> | null,
 
@@ -566,25 +564,6 @@ export default {
     costFormatter,
     timeMinutesFormatter,
     
-    async updatePaymentQRCode() {
-      try {
-        this.qrCodeDataUrl = (await QRCode.toDataURL(
-          this.order.paymentQrData,
-          {
-            width: 400,
-            margin: 2,
-            color: {
-              dark: '#000000',
-              light: '#ffffff',
-            },
-            errorCorrectionLevel: 'M',
-          }
-        ));
-      } catch (err) {
-        this.$popups.error('Не удалось сгенерировать QR код СБП', err);
-      }
-    },
-
     updatePaymentTimeLeft() {
       if (!this.order.id) {
         this.paymentTimeLeft = 0;
@@ -609,8 +588,6 @@ export default {
       )) as Order;
 
       this.updatePaymentTimeLeft();
-
-      this.updatePaymentQRCode();
     },
   },
 };

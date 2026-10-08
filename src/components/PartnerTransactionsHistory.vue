@@ -33,16 +33,18 @@
     <li v-if="!compressedHistory.length && !loading">Нет ни одного начисления бонусов</li>
     <li class="date-container" v-for="historyRecord in compressedHistory">
       <span class="date">
-        {{ dateFormatter(historyRecord.date) }} - {{ costFormatter(historyRecord.totalValue) }}
+        {{ dateFormatter(historyRecord.date) }} - {{ bonusesFormatter(historyRecord.totalValue) }}
       </span>
       <ul class="users-transactions-container">
         <li class="transaction" v-for="transaction in historyRecord.transactions">
           <UserAvatar v-if="transaction.fromUserId" :user="transaction" size="30px" size-mobile="30px" />
           <div class="name" v-if="transaction.fromUserId">{{ transaction.givenName }} {{ transaction.familyName }}</div>
           <div class="name" v-else>
-            Начисление<span v-if="transaction.comment"> с комментарием: {{ transaction.comment }}</span>
+            <span v-if="transaction.comment">{{ transaction.comment }}</span>
+            <span v-else-if="transaction.value >= 0">Начисление</span>
+            <span v-else>Списание</span>
           </div>
-          <div class="cost">{{ costFormatter(transaction.value) }}</div>
+          <div class="cost">{{ bonusesFormatter(transaction.value) }} <span v-if="transaction.isGroup">групповое</span></div>
         </li>
       </ul>
     </li>
@@ -50,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { costFormatter, dateFormatter } from '~/utils/utils';
+import { bonusesFormatter, dateFormatter } from '~/utils/utils';
 import UserAvatar from '~/components/UserAvatar.vue';
 import { PropType } from 'vue';
 import { PartnerHistoryTransaction } from '~/utils/models';
@@ -84,6 +86,7 @@ export default {
           avatarUrl?: string;
           givenName?: string;
           familyName?: string;
+          isGroup: boolean;
           value: number;
           fromUserId?: string;
           comment?: string;
@@ -104,6 +107,7 @@ export default {
           avatarUrl: h.avatarurl,
           givenName: h.givenname,
           familyName: h.familyname,
+          isGroup: h.isgroup,
           value: h.value,
           fromUserId: h.fromuserid,
           comment: h.comment,
@@ -123,7 +127,7 @@ export default {
 
   methods: {
     dateFormatter,
-    costFormatter,
+    bonusesFormatter,
   },
 
   watch: {},

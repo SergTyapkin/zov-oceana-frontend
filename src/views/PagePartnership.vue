@@ -44,7 +44,7 @@
       margin-top 30px
       padding 30px
       background colorBlockBg
-      mark
+      strong
         font-semibold()
 
         background none
@@ -61,18 +61,27 @@
         Станьте нашим партнером, получайте проценты за ваши продажи, привлекайте новых партнёров и получайте прибыль от
         их продаж.
         <br>
-        <mark>Станьте получать доход прямо сейчас!</mark>
+        <strong>Станьте получать доход прямо сейчас!</strong>
       </p>
 
+      <p v-if="!$user.isSignedIn" class="text">
+        Чтобы подать заявку, сначала зарегитрируйтесь
+      </p>
+      <p v-else-if="$user.isPartner" class="text">
+        Вы уже являетесь подтвержденным партнером
+      </p>
       <button
+        v-else-if="$user.isPartnershipRequested === false"
         class="button-submit"
         @click="submit"
-        :disabled="!$user.isSignedIn || $user.partnerStatus !== false || loading"
+        :disabled="loading"
       >
         Отправить заявку
       </button>
-
-      <p v-if="$user.partnerStatus !== false" class="text">
+      <p v-else-if="!$user.isPartnershipRequested" class="text">
+        Ваша завяка на партнерство отклонена. Вы можете связаться с поддержкой для уточнения деталей
+      </p>
+      <p v-else class="text">
         Ваша заявка отправлена. Ожидайте звонка оператора
       </p>
     </section>

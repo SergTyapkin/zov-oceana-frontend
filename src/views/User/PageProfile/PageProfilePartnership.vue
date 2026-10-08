@@ -14,6 +14,7 @@
 
     display flex
     justify-content space-between
+    margin-bottom 20px
     .withdraw-container
       display flex
       flex-direction column
@@ -72,15 +73,56 @@
 <template>
   <div class="root-profile-partnership">
     <header class="page-header">
-      <span>Статистика продаж за последний месяц</span>
-      <div class="withdraw-container">
-        <span class="small">БАЛАНС</span>
-        <span class="main">{{ costFormatter($user.partnerBonuses) }}</span>
-        <button class="button-withdraw" :disabled="$user.partnerBonuses === 0">Вывести</button>
+      <div>
+        <span>Статистика продаж за последний месяц</span>
+        <br>
+        <small>Ваша квалификация: {{ qualities.find(q => q.id === partner.qualityId) || 'нет' }}</small>
       </div>
+
+      <router-link :to="{name: 'payout'}" class="withdraw-container">
+        <span class="small">БАЛАНС</span>
+        <span class="main">{{ bonusesFormatter(partner.totalBonuses) }}</span>
+        <button class="button-withdraw" :disabled="partner.totalBonuses <= 0">Вывести</button>
+      </router-link>
     </header>
 
     <ul class="cards-container">
+      <li class="card">
+        <header class="header">
+          <img src="/static/icons/numbers-list.svg" alt="">
+          Статистика за месяц и состояние
+        </header>
+
+        <main class="main">
+          <small>Активирован: {{ partner.isActive ? 'Да' : 'Нет' }}</small>
+          <br>
+          <small>Последняя активация: {{ dateFormatter(partner.activatedDate) }}</small>
+          <br>
+          <small>Личный объём (ЛО) за месяц: {{ bonusesFormatter(partner.personalBonuses) }}</small>
+          <br>
+          <small>Групповой объём (ГО) за месяц: {{ bonusesFormatter(partner.groupBonuses) }}</small>
+          <br>
+          <small>Общий оборот за месяц: {{ bonusesFormatter(partner.branchTotalBonuses) }}</small>
+          <br>
+          <small>Стал партнером: {{ dateFormatter(partner.joinedDate) }}</small>
+        </main>
+      </li>
+
+      <li class="card">
+        <header class="header">
+          <img src="/static/icons/numbers-list.svg" alt="">
+          Бонусы
+        </header>
+
+        <main class="main">
+          <small>Осталось периодов "Бонуса Новичка": {{ partner.newbieBonusPeriodsLeft }}</small>
+          <br>
+          <small>Баллов "Бонуса Чёрной Икры": {{ bonusesFormatter(partner.blackPearlBonuses) }} из {{ bonusesFormatter($globals.blackPearlCost) }} </small>
+          <br>
+          <small>Периодов "Бонуса Большой Команды": {{ bonusesFormatter(partner.bonusBigTeamPeriods) }}</small>
+        </main>
+      </li>
+
       <li class="card">
         <header class="header">
           <img src="/static/icons/numbers-list.svg" alt="">
@@ -116,7 +158,32 @@
         <main class="main">
           <InputComponent class="link" :model-value="referrerLink" readonly copyable />
 
-          <QRGenerator class="qr" :initial-text="referrerLink" />
+          <QRGenerator class="qr" :text="referrerLink" />
+        </main>
+      </li>
+
+      <li class="card">
+        <header class="header">
+          <img src="/static/icons/invite.svg" alt="">
+          Все квалификации
+        </header>
+
+        <main class="main">
+          <div v-for="quality in qualities">
+            {{ quality.title }}
+            <br>
+            На {{ quality.branchDeepForQuality }} вложенности бонус {{ quality.percentForQuality }}
+            <br>
+            Нужно
+            {{ quality.activeCountRequirement }} автивных в 1 вложенности,
+            {{ quality.branchesCountRequirement }} веток по {{ quality.branchesValuesRequirement }} оборота,
+            {{ quality.totalPersonalBonusesRequirement }} ЛО
+            <br>
+            За это бонус
+            {{ quality.qualityBonusValue }} максимум {{ quality.qualityBonusMaxCount }} раз
+            <br>
+            <br>
+          </div>
         </main>
       </li>
     </ul>
@@ -129,8 +196,8 @@
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import QRGenerator from '~/components/QRGenerator.vue';
-import { costFormatter } from '~/utils/utils';
-import { PartnerHistoryTransaction } from '~/utils/models';
+import { bonusesFormatter, dateFormatter } from '~/utils/utils';
+import { Partner, PartnerHistoryTransaction, Quality } from '~/utils/models';
 import { QUERY_PARAM_REFERRER_ID } from '~/constants';
 import PartnersGraph from '~/components/PartnersGraph.vue';
 import PartnerTransactionsHistory from '~/components/PartnerTransactionsHistory.vue';
@@ -141,6 +208,8 @@ export default {
   data() {
     return {
       history: [] as PartnerHistoryTransaction[],
+      partner: {} as Partner,
+      qualities: [] as Quality[],
 
       loading: false,
     };
@@ -153,10 +222,30 @@ export default {
   },
 
   mounted() {
+    this.updatePartner();
+    this.updateQualities();
   },
 
   methods: {
-    costFormatter,
+    bonusesFormatter,
+    dateFormatter,
+
+    async updatePartner() {
+      this.partner = (await this.$request(
+        this,
+        this.$api.getUserPartnerInfo,
+        [this.$user.id],
+        `Не удалось получить данные партнера`,
+      )) as Partner;
+    },
+    async updateQualities() {
+      this.qualities = (await this.$request(
+        this,
+        this.$api.getAllQualities,
+        [],
+        `Не удалось получить список всех квалификаций`,
+      ) as {qualities: Quality[]}).qualities;
+    },
   },
 };
 </script>

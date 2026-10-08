@@ -14,7 +14,6 @@
       { name: 'Телефон', from: 'tel' },
       { name: 'Заказов', from: 'ordersCount' },
       { name: 'Сумма выкупа', from: 'totalOrdersCost', changer: costFormatter },
-      { name: 'Статус партнерства', from: 'partnerStatus', changer: (isPartner: boolean | null) => isPartner === false ? '-' : (isPartner ? 'Партнёр' : 'Подал заявку') },
     ] : undefined"
     :table-fields="[
       { name: '#', from: 'id' },
@@ -22,7 +21,6 @@
       { name: 'Телефон', from: 'tel' },
       { name: 'Заказов', from: 'ordersCount' },
       { name: 'Сумма выкупа', from: 'totalOrdersCost', changer: costFormatter },
-      { name: 'Статус партнерства', from: 'partnerStatus', changer: (isPartner: boolean | null) => isPartner === false ? '-' : (isPartner ? 'Партнёр' : 'Подал заявку') },
     ]"
     :filters="[
       [
@@ -32,20 +30,6 @@
           key: 'search',
           compareFoo: (item: User, filter: string) => new RegExp(filter, 'i')?.test(`${item.familyName} ${item.givenName} ${item.middleName}`),
         },
-      ],
-      [
-        {
-          name: 'Статус партнерства',
-          type: 'select',
-          key: 'status',
-          options: [
-            { name: 'Да', value: true },
-            { name: 'Нет', value: false },
-            { name: 'Подал заявку', value: undefined },
-          ],
-          canBeNull: true,
-          compareFoo: (item: User, filter: boolean | null | undefined) => filter === null || item.partnerStatus === filter,
-        }
       ],
     ]"
   >

@@ -13,8 +13,8 @@ export interface User {
   tel: string;
   joinedDate: Date;
   referrerId?: string;
-  partnerStatus?: boolean;
-  partnerBonuses: number;
+  isPartnershipRequested: boolean;
+  isPartner?: boolean;
 
   isEmailNotificationsOn: boolean;
 
@@ -49,10 +49,40 @@ export interface UserPartner {
   totalValue: number;
 }
 
+export interface Partner {
+  userId: string;
+  totalBonuses: number;
+  personalBonuses: number;
+  groupBonuses: number;
+  branchTotalBonuses: number;
+  qualityId?: string;
+  newbieBonusPeriodsLeft: number;
+  blackPearlBonuses: number;
+  bonusBigTeamPeriods: number;
+  activatedDate: Date;
+  isActive: boolean;
+  joinedDate: Date;
+}
+
+export interface Quality {
+    id: string;
+    title: string;
+    branchDeepForQuality: number;
+    percentForQuality: number;  
+    activeCountRequirement?: number;
+    branchesCountRequirement?: number
+    branchesValuesRequirement?: number
+    totalPersonalBonusesRequirement?: number
+    qualityBonusValue?: number
+    qualityBonusMaxCount?: number
+}
+
 export interface Globals {
   isOnMaintenance: boolean;
   goodsOnLanding: Goods[];
   categories: Category[];
+  moneyForBonuses: number;
+  blackPearlCost: number;
 }
 
 export interface Goods {
@@ -130,7 +160,14 @@ export interface PartnerHistoryTransaction {
   familyname?: string;
   fromuserid?: string;
   comment?: string;
+  isgroup: boolean;
   value: number;
   date: Date;
+}
+
+export interface SBPBank {
+  id: string;
+  title: string;
+  titleRus: string;
 }
 

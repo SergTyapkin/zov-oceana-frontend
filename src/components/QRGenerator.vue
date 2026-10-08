@@ -5,154 +5,15 @@
 @import '../styles/utils.styl'
 @import '../styles/animations.styl'
 
-
-slider-length = 300px
-slider-width = 13px
-thumb-size = 15px
-
 .qr-generator
   overflow hidden
-
-.qr-image
-  overflow hidden
-  aspect-ratio 1/1
-  width 400px
-  max-height 400px
-  border-radius borderRadiusM
-  transition filter 0.5s ease
-  svg
-    display block
-
-
-.qr-image.invert
-  filter invert(1)
-
-.qr-image.blured
-  overflow hidden
-  filter blur(10px)
-
-.qr-image.invert.blured
-  filter invert(1) blur(10px)
-
-.switch
-  display inline-block
-
-.link
-  word-break break-all
-
-
-.flex-container
-  centered-flex-container()
-
-  flex-wrap wrap
-
-.container-bg
-  background #00000044
-  box-shadow 0 0 10px colorBg
-
-  @media ({mobile})
-    box-shadow none
-
-.switch-container
-  display flex
-  width min-content
-  padding 10px 10px
-  padding-bottom 0
-  border-radius 0 0 10px 10px
-
-  .switch
-    margin 0 10px
-
-.range-container
+  display block
   width 100%
-  max-width 400px
-  padding 10px
-  border-radius 0 10px 10px 0
-
-  .title
-    display block
-
-  .slider-container
-    display flex
-    flex-direction column
-
-    .slider
-      all unset
-      overflow hidden
-      width calc(100% - 10px)
-      max-width slider-length
-      height slider-width
-      margin 10px
-      border-radius thumb-size
-      background colorBlockBg
-      outline none
-      box-shadow inset 0 0 5px colorEmp1
-
-      @media ({mobile})
-        background linear-gradient(170deg, colorBg, colorBlockBg)
-        box-shadow none
-
-    .slider::-webkit-slider-thumb
-      cursor pointer
-      width thumb-size
-      height thumb-size
-      border 4px solid #333
-      border-radius 50%
-      -webkit-appearance none
-      background empColor2
-      box-shadow (- slider-length - 5px) 0 0 (slider-length) mix(colorEmp1, transparent, 30%)
-
-    .range-labels
-      display flex
-      flex-direction row
-      justify-content space-between
-      width calc(100% - 10px)
-      max-width slider-length
-
-@media (min-width 560px)
-  .range-container
-    width 90px
-
-    .slider-container
-      display block
-      flex-direction row
-      height slider-length
-
-      .slider
-        transform-origin left
-        transform rotate(-90deg) translateX(- slider-length + 3px)
-        min-width slider-length
-
-      .range-labels
-        transform translate(slider-width + 10px, - slider-width - 10px)
-        flex-direction column-reverse
-        width unset
-        height slider-length
+  height 100%
 </style>
 
 <template>
-  <div class="qr-generator">
-    <div v-if="withText">
-      <div class="text-big">Закодировано:</div>
-      <div class="text-middle link">{{ text || '???' }}</div>
-    </div>
-
-    <div class="flex-container">
-      <div ref="qr" v-html="html" class="qr-image" :class="{ blured: !text }" />
-
-      <div class="range-container container-bg" v-if="withRange">
-        <label class="text-big title">Размер</label>
-        <div class="slider-container">
-          <input type="range" class="slider" min="1" max="3" step="1" v-model="size" @input="onInput">
-          <div class="range-labels text-small">
-            <div>Low</div>
-            <div>Mid</div>
-            <div>High</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <img class="qr-generator" :src="qrCodeDataUrl" alt="qr-code">
 </template>
 
 <script lang="ts">
@@ -163,7 +24,7 @@ export default {
   components: {},
 
   props: {
-    initialText: {
+    text: {
       type: String,
       default: '',
     },
@@ -171,62 +32,55 @@ export default {
       type: String,
       default: 'L',
     },
-    withText: Boolean,
-    withRange: Boolean,
   },
 
   data() {
     return {
-      qr: null as QRCode | null,
-      html: '',
-      text: this.$props.initialText || '',
-
-      size: '0',
+      qrCodeDataUrl: null as string | null,
+      currentText: this.$props.text || '',
       errorCorrectionLevel: this.$props.errorCorrection,
     };
   },
 
   mounted() {
-    this.create();
-    this.regenerate();
+    this.regenerate(this.currentText);
   },
 
   unmounted() {
-    this.destroy();
   },
 
   methods: {
-    create() {
-      this.qr = new QRCode(0, this.errorCorrectionLevel);
-    },
-    destroy() {
-      this.qr = null;
-    },
-
-    regenerate(text?: string) {
-      if (!this.qr) {
-        this.create();
+    async regenerate(text?: string) {
+      if (!text) {
+        this.qrCodeDataUrl = null;
+        return;
       }
+      if (text !== undefined) this.currentText = text;
+      else if (!this.currentText) this.currentText = '';
 
-      if (text !== undefined) this.text = text;
-      else if (!this.text) this.text = '';
-
-      this.refresh();
-      this.qr!.addData(this.text);
-      this.qr!.make();
-      this.html = this.qr!.createSvgTag({});
-    },
-    refresh() {
-      this.destroy();
-      this.create();
-    },
-
-    onInput() {
-      if (this.size === '1') this.errorCorrectionLevel = 'L';
-      else if (this.size === '2') this.errorCorrectionLevel = 'M';
-      else if (this.size === '3') this.errorCorrectionLevel = 'H';
-      this.regenerate();
+      try {
+        this.qrCodeDataUrl = (await QRCode.toDataURL(
+          text,
+          {
+            width: 400,
+            margin: 2,
+            color: {
+              dark: '#000000',
+              light: '#ffffff',
+            },
+            errorCorrectionLevel: this.errorCorrectionLevel,
+          }
+        ));
+      } catch (err) {
+        this.$popups.error('Не удалось сгенерировать QR код', err);
+      }
     },
   },
+
+  watch: {
+    text(newVal: string) {
+      this.regenerate(newVal);
+    },
+  }
 };
 </script>
