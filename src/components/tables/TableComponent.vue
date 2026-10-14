@@ -206,7 +206,7 @@
               <tr
                 v-for="(row, idx) in paginatedContent"
                 :class="{
-                  clickable: clickable | rowClickRedirectName,
+                  clickable: clickable || rowClickRedirectName,
                   selected: row === selectedRow || selectedRows.has(row),
                 }"
                 @click="onClickRow(row)"

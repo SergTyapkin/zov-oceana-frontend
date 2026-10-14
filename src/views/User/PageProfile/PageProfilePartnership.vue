@@ -17,6 +17,7 @@
     animation-float()
 
   .your-balance
+    block-emp()
     display grid
     grid-template auto 1fr / 1fr 1fr
     gap 10px
@@ -55,17 +56,15 @@
       gap 10px
       align-items center
       padding 0
-      color colorTextInvert1
-      text-wrap balance
-      &:last-child
-        color colorTextInvert3
+      color colorTextInvert3
+      &:nth-child(4)
+        color colorTextInvert1
       .value
         font-semibold()
         font-medium()
 
     @media ({desktop})
       min-width 600px
-    block-emp()
 
   section.activation
     block()
@@ -223,24 +222,27 @@
       block()
 
       display grid
-      grid-template auto auto / auto 1fr auto
-      gap 10px
+      grid-template auto auto auto / auto 1fr auto
+      gap 2px 10px
       align-items center
       margin-bottom 20px
       img
         img-size(20px)
-
-        grid-row 1
       header
         font-semibold()
         font-small()
 
         color colorEmp2
       .input
-        grid-column 1/3
+        grid-column 1/-1
+      .info
+        font-small-extra()
+        color colorText4
+        grid-column 1/-1
+        text-wrap balance
       img.qr
         grid-column 3
-        grid-row 1/-1
+        grid-row 1
         img-size(70px)
 
   section.history
@@ -355,7 +357,11 @@
       </div>
 
       <p class="info">
-        Ваши ЛО и ГО за текущий период поступят к вам на баланс после его окончания
+        Текущий курс рублей к баллам {{ $globals.moneyForBonuses }}:1. То есть за каждые {{ costFormatter($globals.moneyForBonuses) }} рублей покупки начисляется {{ bonusesFormatter(1) }} ЛО
+      </p>
+
+      <p class="info">
+        Ваши ЛО и ГO за текущий период поступят к вам на баланс после его окончания
       </p>
     </section>
 
@@ -429,6 +435,7 @@
         <img src="/static/icons/link.svg" alt="place">
         <header>Выша реферальная ссылка</header>
         <InputComponent class="input" :model-value="referrerLink" readonly copyable />
+        <p class="info">Бонусы за заказы приглашенного человека начисляются после их доставки</p>
 
         <QRGenerator class="qr" :text="referrerLink" />
       </div>
@@ -521,7 +528,7 @@
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import QRGenerator from '~/components/QRGenerator.vue';
-import { bonusesFormatter, dateFormatter } from '~/utils/utils';
+import { costFormatter, bonusesFormatter, dateFormatter } from '~/utils/utils';
 import { Partner, PartnerHistoryTransaction, Quality } from '~/utils/models';
 import { QUERY_PARAM_REFERRER_ID } from '~/constants';
 import PartnersGraph from '~/components/PartnersGraph.vue';
@@ -554,6 +561,7 @@ export default {
   methods: {
     bonusesFormatter,
     dateFormatter,
+    costFormatter,
 
     async updatePartner() {
       this.partner = (await this.$request(

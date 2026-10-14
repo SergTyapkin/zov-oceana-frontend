@@ -45,6 +45,7 @@
         :fields="tableFields"
         :content="filteredData"
         :row-click-redirect-name="rowClickRedirectName"
+        :redirect-query-params="redirectQueryParams"
         :on-row-clicked-callback="tableOnRowClickedCallback"
         :clickable="tableRowsClickable"
         :addable="addable"
@@ -110,6 +111,10 @@ export default {
     rowClickRedirectName: {
       type: String as PropType<string | null>,
       default: null,
+    },
+    redirectQueryParams: {
+      type: Object as PropType<{ [key: string]: any }>,
+      default: () => ({}),
     },
     tableRowsClickable: Boolean,
     modelValue: {

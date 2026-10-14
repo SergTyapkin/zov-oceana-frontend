@@ -148,8 +148,8 @@ export default class API extends REST_API {
     this.#GET(`/partner`, {userId}, PartnerModel, Response200(PartnerModelMockData)) as MyResponse<Partner>;
   getAllPartners = (isActive: boolean | null) =>
     this.#GET(`/partner/all`, {isActive}, UserPartnerListModel, Response200(UserPartnerListModelMockData)) as MyResponse<{users: UserPartner[]}>;
-  updateUserPartnerInfo = (userId: string, isConfirmed: boolean, personalBonuses: number, groupBonuses: number, qualityId: number | undefined, newbieBonusPeriodsLeft: number, blackPearlBonuses: number, bonusBigTeamPeriods: number, isActive: boolean) =>
-    this.#PUT(`/partner`, {userId, isConfirmed, personalBonuses, groupBonuses, qualityId, newbieBonusPeriodsLeft, blackPearlBonuses, bonusBigTeamPeriods, isActive}) as MyResponse<unknown>;
+  updateUserPartnerInfo = (userId: string, personalBonuses: number, groupBonuses: number, qualityId: number | undefined, newbieBonusPeriodsLeft: number, blackPearlBonuses: number, bonusBigTeamPeriods: number, isActive: boolean) =>
+    this.#PUT(`/partner`, {userId, personalBonuses, groupBonuses, qualityId, newbieBonusPeriodsLeft, blackPearlBonuses, bonusBigTeamPeriods, isActive}) as MyResponse<unknown>;
   updateUserPartner = (userId: string, isConfirmed: boolean, personalBonuses: number, groupBonuses: number, qualityId: number | undefined, newbieBonusPeriodsLeft: number, blackPearlBonuses: number, bonusBigTeamPeriods: number, isActive: boolean) =>
     this.#PUT(`/partner`, {userId, isConfirmed, personalBonuses, groupBonuses, qualityId, newbieBonusPeriodsLeft, blackPearlBonuses, bonusBigTeamPeriods, isActive}) as MyResponse<unknown>;
   createUserPartner = (userId: string) =>

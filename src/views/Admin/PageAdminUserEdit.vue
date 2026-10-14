@@ -226,7 +226,7 @@
         <TableComponent
           :content="orders ?? []"
           title="Заказы пользователя"
-          :clickable="false"
+          row-click-redirect-name="adminOrderEdit"
           :fields="[
             // { name: '#', from: 'id' },
             { name: 'Номер', from: 'number' },
@@ -551,8 +551,7 @@ export default {
         this,
         this.$api.updateUserPartnerInfo,
         [
-          this.partner.id,
-          this.partner.isConfirmed,
+          this.partner.userId,
           this.partner.personalBonuses,
           this.partner.groupBonuses,
           this.partner.qualityId,

@@ -95,23 +95,23 @@ import FooterComponent from '~/components/FooterComponent.vue';
 import { DISABLED_CACHING_URLS } from '~/constants';
 
 function removeAllHoverStyles() {
-  try {
-    // prevent exception on browsers not supporting DOM styleSheets properly
-    for (var si in document.styleSheets) {
-      var styleSheet = document.styleSheets[si];
-      if (!styleSheet.rules) continue;
+  // try {
+  //   // prevent exception on browsers not supporting DOM styleSheets properly
+  //   for (var si in document.styleSheets) {
+  //     var styleSheet = document.styleSheets[si];
+  //     if (!styleSheet.rules) continue;
 
-      for (var ri = styleSheet.rules.length - 1; ri >= 0; ri--) {
-        if (!styleSheet.rules[ri].selectorText) continue;
+  //     for (var ri = styleSheet.rules.length - 1; ri >= 0; ri--) {
+  //       if (!styleSheet.rules[ri].selectorText) continue;
 
-        if (styleSheet.rules[ri].selectorText.match(':hover')) {
-          styleSheet.deleteRule(ri);
-        }
-      }
-    }
-  } catch (err) {
-    console.log('Error while removing hover styles:', err);
-  }
+  //       if (styleSheet.rules[ri].selectorText.match(':hover')) {
+  //         styleSheet.deleteRule(ri);
+  //       }
+  //     }
+  //   }
+  // } catch (err) {
+  //   console.log('Error while removing hover styles:', err);
+  // }
 }
 
 export default {
