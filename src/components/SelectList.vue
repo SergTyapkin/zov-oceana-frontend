@@ -5,10 +5,10 @@
 @import '../styles/fonts.styl'
 @import '../styles/scrollbars.styl'
 
-bg-color = colorBlockBg
-bg-color-hover = mix(colorBlockBg, colorEmp2, 90%)
-bg-color-selected = mix(colorBlockBg, colorEmp2, 85%)
-bg-color-selected-hover = mix(colorBlockBg, colorEmp2, 90%)
+bg-color = colorBlockBgLow
+bg-color-hover = mix(colorBlockBgLow, colorEmp2, 90%)
+bg-color-selected = mix(colorBlockBgLow, colorEmp2, 85%)
+bg-color-selected-hover = mix(colorBlockBgLow, colorEmp2, 90%)
 
 max-list-height = 200px
 
@@ -47,7 +47,9 @@ field()
     &.shown
       top calc(-1lh + 10px)
       opacity 1
-
+  &.invert
+    .title
+      color colorTextInvert1
   &:hover
     .title
       opacity 1
@@ -114,7 +116,7 @@ field()
   &[disabled]:not([disabled="false"])
     pointer-events none
     user-select text
-    opacity 0.6
+    opacity 0.8
 
     .title
       opacity 0.8
@@ -196,7 +198,7 @@ field()
   <div
     class="select-root"
     ref="root"
-    :class="{ unrolled: isUnrolled, error, 'big-font': bigFont }"
+    :class="{ unrolled: isUnrolled, error, 'big-font': bigFont, invert: invertColor }"
     :disabled="disabled"
     :readonly="readonly"
     :style="{
@@ -297,6 +299,7 @@ export default {
     titleAlwaysShown: Boolean,
     withSearch: Boolean,
     bigFont: Boolean,
+    invertColor: Boolean,
 
     modelValue: {
       type: null as any,

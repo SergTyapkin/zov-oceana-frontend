@@ -13,7 +13,7 @@
   gap 20px
   justify-content space-between
   padding 20px
-  background colorBlockBg
+  background colorBlockBgLow
   .preview
     min-width 200px
     max-width 250px
@@ -102,7 +102,7 @@
       <router-link :to="{ name: 'goods', params: { id: goods.id } }" class="title">
         {{ goods.title }}
         <div v-if="goods.fromLocation" class="location">
-          <img src="/static/icons/location-dark.svg" alt="location" />
+          <img src="/static/icons/location-dark.svg" alt="location">
           {{ goods.fromLocation }}
         </div>
       </router-link>
@@ -115,7 +115,7 @@
 
     <div class="right-container">
       <button v-if="!noDeleteButton" class="button-remove" @click="$emit('delete')">
-        <img src="/static/icons/trashbox.svg" alt="remove" />
+        <img src="/static/icons/trashbox.svg" alt="remove">
       </button>
 
       <div class="cost">
@@ -135,9 +135,8 @@ import { IMAGES_URL_BASE_PATH } from '~/constants';
 import { costFormatter } from '~/utils/utils';
 
 export default {
-  methods: { costFormatter },
-  components: { ImageFallback },
   emits: ['increaseAmount', 'decreaseAmount', 'delete'],
+  components: { ImageFallback },
 
   props: {
     goods: {
@@ -154,5 +153,7 @@ export default {
       DEFAULT_GOODS_IMAGE,
     }
   },
+
+  methods: { costFormatter },
 };
 </script>

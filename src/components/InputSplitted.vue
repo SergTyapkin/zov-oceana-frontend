@@ -106,7 +106,18 @@ export default {
     }
   },
 
+  mounted() {
+    this.syncInputs(this.modelValue);
+  },
+
   methods: {
+    syncInputs(value: string) {
+      const inputsElements = this.$refs.inputs as HTMLInputElement[];
+      inputsElements.forEach((input, index) => {
+        input.value = value[index] ?? '';
+      });
+    },
+
     onKeyDown(evt: KeyboardEvent, pos: number) {
       const inputsElements = this.$refs.inputs as HTMLInputElement[];
       if (evt.key >= '0' && evt.key <= '9') {
@@ -181,6 +192,12 @@ export default {
     updateModelValue() {
       this.$emit('update:modelValue', this.getValue());
     }
+  },
+
+  watch: {
+    modelValue(value: string) {
+      this.syncInputs(value);
+    },
   },
 };
 </script>

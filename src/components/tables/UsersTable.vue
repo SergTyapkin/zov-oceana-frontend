@@ -6,6 +6,8 @@
     :table-rows-clickable="tableRowsClickable"
     :row-click-redirect-name="rowClickRedirectName"
     :model-value="modelValue"
+    :rows-per-page="9"
+    :sorted-by-column-idx="1"
     @change="updateModelValue"
     @select="(d: any) => $emit('select', d)"
     :table-info-block-fields="withInfoBlock ? [
@@ -13,14 +15,14 @@
       { name: 'Имя', from: '', changer: (_: unknown, user: User) => `${user.familyName} ${user.givenName} ${user.middleName}` },
       { name: 'Телефон', from: 'tel' },
       { name: 'Заказов', from: 'ordersCount' },
-      { name: 'Сумма выкупа', from: 'totalOrdersCost', changer: costFormatter },
+      { name: 'Сумма выкупа', from: 'totalOrdersCost', changer: (v: number | null) => v ? costFormatter(v) : '-' },
     ] : undefined"
     :table-fields="[
       { name: '#', from: 'id' },
       { name: 'Имя', from: '', changer: (_: unknown, user: User) => `${user.familyName} ${user.givenName} ${user.middleName}` },
       { name: 'Телефон', from: 'tel' },
       { name: 'Заказов', from: 'ordersCount' },
-      { name: 'Сумма выкупа', from: 'totalOrdersCost', changer: costFormatter },
+      { name: 'Сумма выкупа', from: 'totalOrdersCost', changer: (v: number | null) => v ? costFormatter(v) : '-' },
     ]"
     :filters="[
       [
@@ -29,6 +31,20 @@
           type: 'search',
           key: 'search',
           compareFoo: (item: User, filter: string) => new RegExp(filter, 'i')?.test(`${item.familyName} ${item.givenName} ${item.middleName}`),
+        },
+      ],
+      [
+        {
+          name: 'Только партнеры',
+          type: 'switch',
+          key: 'isPartner',
+          compareFoo: (item: User, filter: boolean) => !filter || item.isPartner === filter,
+        },
+        {
+          name: 'Подали заявку на партнерство',
+          type: 'switch',
+          key: 'isPartnershipRequested',
+          compareFoo: (item: User, filter: boolean) => !filter || item.isPartnershipRequested === filter,
         },
       ],
     ]"

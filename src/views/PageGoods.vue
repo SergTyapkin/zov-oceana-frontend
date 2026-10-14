@@ -17,8 +17,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
-
   section.title
     cursor pointer
     padding-block 40px
@@ -153,7 +151,7 @@
 
     section.add-to-cart
       padding 20px
-      background colorBlockBg
+      background colorBlockBgLow
       .top-row
         display flex
         align-items center

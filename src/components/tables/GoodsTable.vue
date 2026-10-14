@@ -6,6 +6,8 @@
     :table-rows-clickable="tableRowsClickable"
     :row-click-redirect-name="rowClickRedirectName"
     :model-value="modelValue"
+    :rows-per-page="rowsPerPage"
+    :sorted-by-column-idx="1"
     @change="updateModelValue"
     @select="(d: any) => $emit('select', d)"
     :table-info-block-fields="withInfoBlock ? [
@@ -22,7 +24,7 @@
       { name: 'Происхождение', from: 'fromLocation' },
       { name: 'Цена', from: 'cost', changer: costFormatter },
       { name: 'На складе', from: 'amountLeft' },
-      { name: 'В продаже', from: 'isOnSale', type: 'switch', disabled: true, preventClicks: true,  onEdit: onToggleProductOnSale},
+      { name: 'В продаже', from: 'isOnSale', type: 'switch', disabled: true, preventClicks: true, onEdit: onToggleProductOnSale},
     ]"
     :filters="[
       [
@@ -109,6 +111,10 @@ export default {
     modelValue: {
       type: Array as PropType<{ [key: string]: any }[] | undefined>,
       default: undefined,
+    },
+    rowsPerPage: {
+      type: Number,
+      default: 9,
     },
 
     onToggleProductOnSale: {

@@ -1,4 +1,4 @@
-import { OrderStatuses, PaymentStatuses } from '~/constants';
+import { HistoryRecordTypes, OrderStatuses, PaymentStatuses } from '~/constants';
 
 export interface User {
   id: string;
@@ -46,7 +46,9 @@ export interface UserPartner {
   avatarUrl?: string;
   city: string;
   joinedDate: Date;
-  totalValue: number;
+  groupBonuses: number;
+  personalBonuses: number;
+  branchTotalBonuses: number;
 }
 
 export interface Partner {
@@ -54,12 +56,12 @@ export interface Partner {
   totalBonuses: number;
   personalBonuses: number;
   groupBonuses: number;
-  branchTotalBonuses: number;
+  branchTotalBonuses?: number;
   qualityId?: string;
   newbieBonusPeriodsLeft: number;
   blackPearlBonuses: number;
   bonusBigTeamPeriods: number;
-  activatedDate: Date;
+  activatedDate?: Date;
   isActive: boolean;
   joinedDate: Date;
 }
@@ -128,6 +130,7 @@ export interface Address {
 
 export type OrderStatus = keyof typeof OrderStatuses;
 export type PaymentStatus = keyof typeof PaymentStatuses;
+export type HistoryRecordType = keyof typeof HistoryRecordTypes;
 export interface Order {
   id: string;
   goods: Goods[];
@@ -160,7 +163,7 @@ export interface PartnerHistoryTransaction {
   familyname?: string;
   fromuserid?: string;
   comment?: string;
-  isgroup: boolean;
+  type: HistoryRecordType;
   value: number;
   date: Date;
 }

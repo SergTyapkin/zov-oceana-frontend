@@ -179,7 +179,6 @@
 
 <script lang="ts">
 import {
-  COMPANY_FULL_NAME,
   COMPANY_SHORT_NAME,
   COMPANY_PHONE,
   COMPANY_EMAIL,
@@ -191,7 +190,6 @@ export default {
   data() {
     return {
       companyTitle: COMPANY_TITLE,
-      companyName: COMPANY_FULL_NAME,
       companyShortName: COMPANY_SHORT_NAME,
       phone: COMPANY_PHONE,
       email: COMPANY_EMAIL,

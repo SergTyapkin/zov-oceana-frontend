@@ -16,7 +16,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
     padding-block 70px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")

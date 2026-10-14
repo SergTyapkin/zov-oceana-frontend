@@ -16,7 +16,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
     padding-block 70px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
@@ -173,7 +172,14 @@
           <button class="info-link" v-if="!$user.isSignedIn" @click="$app.showSignInModal()">
             Войти или создать профиль, чтобы оформить заказ
           </button>
-          <router-link :to="{name: 'profileAddresses'}" v-else-if="!addresses.length" class="info-link">
+          <router-link 
+            :to="{name: 'profileAddresses', query: {
+              isCreateNew: true,
+              returnPage: 'cart',
+            }}"
+            v-else-if="!addresses.length"
+            class="info-link"
+          >
             Добавить адрес доставки в профиле
           </router-link>
           <SelectList
@@ -182,10 +188,11 @@
             title="Выберите адрес доставки"
             title-always-shown
             :list="[
-              ...(addresses.map(a => ({ name: addressFormatter(a, '', true), value: a.id })) as {name: string, value: string | symbol}[]),
+              ...(addresses.map(a => ({ name: addressFormatter(a, '', true), value: a.id, id: a.id })) as {name: string, value: string | symbol}[]),
               {name: '+ Добавить адрес', value: CREATE_NEW_ADDRESS_SYMBOL},
             ]"
             v-model="selectedAddressId"
+            :selected-id="selectedAddressId ?? null"
             error-text="Не выбрано"
             :error="errors.address"
             @input="onChangeAddress"

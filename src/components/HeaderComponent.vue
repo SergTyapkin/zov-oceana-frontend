@@ -254,7 +254,7 @@
       <header class="header"><img src="/static/images/logo-big.png" alt="logo">{{ COMPANY_TITLE }}</header>
 
       <nav v-if="$store.state.user.hasSomeAdminRights" class="nav">
-        <header class="header">Администрирование</header>
+        <header class="header">Админинское</header>
         <router-link :to="{ name: 'admin' }" @click="isOverlayMenuShown = false">Админская страница</router-link>
       </nav>
 

@@ -35,6 +35,7 @@
         scrollable()
 
         table
+          overflow hidden
           border-collapse collapse
           box-sizing border-box
           width 100%
@@ -49,6 +50,7 @@
                 font-small()
                 font-semibold()
 
+                cursor pointer
                 padding 16px
                 padding-right calc(16px + 1.3em)
                 text-align left
@@ -76,12 +78,12 @@
               color colorText1
               background mix(colorBgLight, colorBgDark, 100%)
               hover-effect()
-              &:nth-child(2n)
-                background mix(colorBlockBg, colorBgDark, 96%)
+              &:nth-child(even)
+                background mix(colorBlockBgLow, colorBgDark, 96%)
 
               &:hover
                 opacity 1
-                background mix(colorBlockBg, colorBgDark, 92%)
+                background mix(colorBlockBgLow, colorBgDark, 92%)
 
               &.selected
                 background mix(colorEmp1, colorBgLight, 10%)
@@ -138,7 +140,7 @@
           text-align center
 
     .info-block
-      block-bg-shadow()
+      block-bg()
 
       .row
         font-medium()
@@ -215,21 +217,21 @@
                 <td v-if="modelValue !== undefined">
                   <Checkbox :model-value="selectedRows.has(row)" readonly class="checkbox" />
                 </td>
-                <td v-for="(field, idx) in fields" :style="{color: field.colorMatches?.[row.values[idx]]}">
+                <td v-for="(field, fieldIdx) in fields" :style="{color: field.colorMatches?.[row.values[fieldIdx]]}">
                   <component 
                     :is="rowClickRedirectName && !field.preventClicks ? 'router-link' : 'span'"
                     :to="{ name: rowClickRedirectName, params: { id: row.id }, query: redirectQueryParams }"
                   >
-                    <span v-if="!field.type || field.type === 'text'">{{ row.values[idx] }}</span>
+                    <span v-if="!field.type || field.type === 'text'">{{ row.values[fieldIdx] }}</span>
                     <Checkbox
                       v-else-if="field.type === 'checkbox'"
-                      :model-value="row.values[idx]"
+                      :model-value="row.values[fieldIdx]"
                       :readonly="field.disabled"
                       @update:model-value="(value: any) => field.onEdit?.(value, row)"
                     />
                     <InputSwitch
                       v-else-if="field.type === 'switch'"
-                      :model-value="row.values[idx]"
+                      :model-value="row.values[fieldIdx]"
                       :readonly="field.disabled"
                       @update:model-value="(value: any) => field.onEdit?.(value, row)"
                     />
@@ -277,9 +279,10 @@
     <Paginator
       v-if="withPaginator"
       class="paginator"
-      :max-pages-count="Math.ceil(content.length / rowsPerPage)"
+      :max-pages-count="Math.ceil(content.length / rowsPerPageVal)"
       v-model="selectedPageNum"
       can-show-more
+      @show-more="rowsPerPageVal += 8"
     />
   </section>
 </template>
@@ -371,18 +374,25 @@ export default {
     modelValue: {
       type: Array as PropType<{[key: string]: any}[] | undefined>,
       default: undefined,
-    }
+    },
+    sortedByColumnIdx: {
+      type: Number,
+      default: undefined,
+    },
+    sortedDesc: Boolean,
   },
 
   data() {
     return {
+      rowsPerPageVal: this.$props.rowsPerPage,
+
       selectedRow: null as { [key: string]: any } | null,
       selectedRows: new Set() as Set<{ [key: string]: any }>,
 
       selectedPageNum: 1,
 
-      currentSortingFieldIdx: null as number | null,
-      currentSortingIsDesc: true,
+      currentSortingFieldIdx: this.$props.sortedByColumnIdx ?? null as number | null,
+      currentSortingIsDesc: !this.$props.sortedDesc,
 
       addedRowData: {},
 
@@ -397,7 +407,8 @@ export default {
         ...row,
         id: row.id,
         status: row.status,
-        values: (this.fields.map(field => field.changer?.(row[field.from], row) ?? row[field.from])),
+        values: (this.fields.map(field => field.changer?.(field.from ? row[field.from] : null, row) ?? (field.from ? row[field.from] : null))),
+        oldValues: (this.fields.map(field => field.from ? row[field.from] : null)),
       }));
     },
     sortedContent(): RowWithValues[] {
@@ -405,10 +416,10 @@ export default {
       const sortingReverseCoeff = this.currentSortingIsDesc ? 1 : -1;
 
       return this.changedContent.toSorted((rowA, rowB) => {
-        const valA = rowA.values[this.currentSortingFieldIdx!];
-        const valB = rowB.values[this.currentSortingFieldIdx!];
-        if (typeof valA === 'number' && typeof valB === 'number') {
-          return (valA - valB) * sortingReverseCoeff;
+        const valA = rowA.oldValues[this.currentSortingFieldIdx!] ?? rowA.values[this.currentSortingFieldIdx!];
+        const valB = rowB.oldValues[this.currentSortingFieldIdx!] ?? rowB.values[this.currentSortingFieldIdx!];
+        if (!isNaN(valA) && !isNaN(valB)) {
+          return (Number(valA) - Number(valB)) * sortingReverseCoeff;
         } else {
           try { // strings
             return String(valA).localeCompare(String(valB)) * sortingReverseCoeff;
@@ -420,7 +431,7 @@ export default {
     },
     paginatedContent(): RowWithValues[] {
       const pageIdx = this.selectedPageNum - 1;
-      return this.sortedContent.slice(this.rowsPerPage * pageIdx, this.rowsPerPage * (pageIdx + 1));
+      return this.sortedContent.slice(this.rowsPerPageVal * pageIdx, this.rowsPerPageVal * (pageIdx + 1));
     },
   },
 
@@ -470,6 +481,12 @@ export default {
   watch: {
     content() {
       this.selectedRow = null;
+    },
+    sortedByColumnIdx(newVal) {
+      this.currentSortingFieldIdx = newVal;
+    },
+    sortedDesc(newVal) {
+      this.currentSortingIsDesc = newVal;
     },
   },
 };

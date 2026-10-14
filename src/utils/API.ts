@@ -23,8 +23,6 @@ import {
   UsersListModel,
   UserPartnerListModel,
   UserPartnerListModelMockData,
-  UserPartnerBonusesHistoryModelMockData,
-  UserPartnerBonusesHistoryModel,
   PartnerModel,
   PartnerModelMockData,
   QualitiesListModel,
@@ -33,6 +31,8 @@ import {
   QualityModelMockData,
   SbpBankListModel,
   SbpBankListModelMockData,
+  UserPartnerBonusesHistoryModel,
+  UserPartnerBonusesHistoryModelMockData,
 } from '~/utils/APIModels';
 import { Category, Goods, Order, User, Address, Globals, UserOther, OrderStatus, UserPartner, PartnerHistoryTransaction, Partner, Quality, SBPBank } from '~/utils/models';
 import { detectBrowser, detectOS } from '~/utils/utils';
@@ -129,20 +129,21 @@ export default class API extends REST_API {
     this.#POST(`/auth/password/restore`) as MyResponse<unknown>;
   restorePasswordByCode = (code: string, newPassword: string): MyResponse<unknown> =>
     this.#PUT(`/auth/password/restore`, { code, new_password: newPassword }) as MyResponse<unknown>;
-
+  
   // Partners history
-  getUserBonusesHistoryMonthly = (userId: string) =>
-    this.#GET(`/partner/history/monthly`, {userId}, UserPartnerBonusesHistoryModel, Response200(UserPartnerBonusesHistoryModelMockData)) as MyResponse<{history: PartnerHistoryTransaction[]}>;
-  getAllPartnerUsers = (userId: string) =>
-    this.#GET(`/partner/users/bonuses/monthly`, {userId}, UserPartnerListModel, Response200(UserPartnerListModelMockData)) as MyResponse<{users: UserPartner[]}>;
   createHistoryBonusesRecord = (userId: string, value: number, comment: string) =>
     this.#POST(`/partner/history`, {userId, value, comment}) as MyResponse<unknown>;
+  getHistoryBonusesRecords = (userId: string) =>
+    this.#GET(`/partner/history/monthly`, {userId}, UserPartnerBonusesHistoryModel, Response200(UserPartnerBonusesHistoryModelMockData)) as MyResponse<{history: PartnerHistoryTransaction[]}>;
   
   // Partnership
+  getUserReferals = (userId: string) =>
+    this.#GET(`/partner/referals`, {userId}, UserPartnerListModel, Response200(UserPartnerListModelMockData)) as MyResponse<{partners: UserPartner[]}>;
   sendPartnershipRequest = (id: string) =>
     this.#PUT(`/user`, {id, isPartnershipRequested: true}, UserModel) as MyResponse<User>;
   declinePartnershipRequest = (id: string) =>
     this.#PUT(`/user`, {id, isPartnershipRequested: null}, UserModel) as MyResponse<User>;
+  acceptPartnershipRequest = this.sendPartnershipRequest;
   getUserPartnerInfo = (userId: string) =>
     this.#GET(`/partner`, {userId}, PartnerModel, Response200(PartnerModelMockData)) as MyResponse<Partner>;
   getAllPartners = (isActive: boolean | null) =>
@@ -157,12 +158,12 @@ export default class API extends REST_API {
   // Globals
   getGlobals = () =>
     this.#GET(`/globals`, {}, GlobalsModel, Response200(GlobalsModelMockData)) as MyResponse<Globals>;
-  updateGlobals = (isOnMaintenance: boolean, goodsIdsOnLanding: string[], moneyForBonuses: number) =>
-    this.#PUT(`/globals`, {isOnMaintenance, goodsIdsOnLanding, moneyForBonuses}) as MyResponse<unknown>;
+  updateGlobals = (isOnMaintenance: boolean, goodsIdsOnLanding: string[], moneyForBonuses: number, blackPearlCost: number) =>
+    this.#PUT(`/globals`, {isOnMaintenance, goodsIdsOnLanding, moneyForBonuses, blackPearlCost}) as MyResponse<unknown>;
 
   // Qualities
   getAllQualities = () =>
-    this.#GET(`/quality`, {}, QualitiesListModel, Response200(QualitiesListModelMockData)) as MyResponse<{qualities: Quality[]}>;
+    this.#GET(`/quality/all`, {}, QualitiesListModel, Response200(QualitiesListModelMockData)) as MyResponse<{qualities: Quality[]}>;
   getQuality = (id: string) =>
     this.#GET(`/quality`, {id}, QualityModel, Response200(QualityModelMockData)) as MyResponse<Quality>;
   createQuality = (title: string, branchDeepForQuality: number, percentForQuality: number, activeCountRequirement: number, branchesCountRequirement: number, branchesValuesRequirement: number, totalPersonalBonusesRequirement: number, qualityBonusValue: number, qualityBonusMaxCount: number) =>

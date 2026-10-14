@@ -38,7 +38,7 @@ export const PaymentStatuses = {
     color: 'yellow',
   },
   authorized: {
-    title: 'Оплата подтверждена',
+    title: 'Оплата зарезервирована',
     color: 'green',
   },
   confirmed: {
@@ -62,6 +62,12 @@ export const PaymentStatuses = {
     color: 'gray',
   },
 };
+
+export const HistoryRecordTypes = {
+  personal: 'personal',
+  group: 'group',
+  total: 'total',
+}
 
 
 export const COMPANY_PHONE = '+7-926-325-2452';

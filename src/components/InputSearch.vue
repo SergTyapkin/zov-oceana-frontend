@@ -14,7 +14,7 @@
   margin 0
   padding 10px 15px
   border none
-  background colorBlockBg
+  background colorBlockBgLow
   &:focus
     border-color colorEmp1
 

@@ -19,15 +19,16 @@ button(marginLeft=0px, marginRight=10px)
 
   &[disabled]:not([disabled="false"])
     pointer-events none
-    color mix(white, colorText1, 70%)
-    background mix(white, colorBlockBg, 50%)
-    box-shadow none
+    opacity 0.9
+    // color mix(white, colorText1, 70%)
+    // background mix(white, colorBlockBg, 50%)
+    // box-shadow none
 
   @media ({mobile})
     padding-inline 15px
   font-small()
   font-spaced()
-  font-normal()
+  font-semibold()
   font-upper()
   svg-inside(1lh, marginLeft, marginRight)
   trans()

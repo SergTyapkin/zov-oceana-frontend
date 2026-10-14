@@ -5,7 +5,7 @@
 
 page-root()
   // box-sizing content-box
-  width 100%
+  min-width 100%
   padding-top 30px
   padding-bottom 70px
   padding-inline 'max(calc((100vw - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPadding)
@@ -14,6 +14,7 @@ page-root()
     padding-inline 'max(calc((100vw - %s) / 2), %s)' % (pageMaxWidth pageMinHorizontalPaddingMobile)
 
 page-root-disable()
+  min-width 100%
   margin-inline 'min(calc((100vw - %s) / -2), -%s)' % (pageMaxWidth pageMinHorizontalPadding)
 
   @media ({mobile})
@@ -22,27 +23,34 @@ page-root-disable()
 block(colorBorder=colorBorder)
   display block
   padding 15px
+  border 1px solid colorBorder
+  border-radius 8px
   header
     font-medium()
-    font-bold()
-  section
-    font-medium()
+    font-normal()
 
-block-shadow()
+block-emp(colorBorder=colorEmp2, colorBg=colorBlockBgEmp2)
   block()
 
-  box-shadow 0 0 10px 2px colorShadow
+  border-color colorBorder
+  color colorTextInvert1
+  // background colorBg
+  background url('/static/images/ocean-bg.jpg')
 
-block-bg(colorBgLight=colorBlockBg)
+block-bg(colorBg=colorBlockBg)
   block()
 
-  display block
-  background colorBgLight
+  background colorBg
 
-block-bg-shadow()
-  block-bg()
-  block-shadow()
+block-glass(colorBorder=colorBorder, colorBg=colorBlockBgEmp2)
+  block()
 
+  border-top-color mix(colorBorder, transparent, 40%)
+  border-right-color mix(colorBorder, transparent, 20%)
+  border-bottom-color mix(colorBorder, transparent, 20%)
+  border-left-color mix(colorBorder, transparent, 40%)
+  background mix(colorBg, transparent, 20%)
+  backdrop-filter blur(15px)
 
 input()
   input-no-styles()
@@ -54,7 +62,7 @@ input()
   padding 10px 15px
   border none
   color colorText1
-  background colorBlockBg
+  background colorBlockBgLow
   font-small()
 
   &::placeholder
@@ -71,6 +79,5 @@ input()
   &[disabled]:not([disabled="false"])
     cursor default
     color colorText2
-    background mix(colorBlockBg, transparent, 10%)
 
   trans()

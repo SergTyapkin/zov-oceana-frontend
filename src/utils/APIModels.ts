@@ -1,6 +1,6 @@
 import { ArrayType, ObjectType, Type, validateModel } from '@sergtyapkin/models-validator';
 import { Category, Globals, Goods, Order } from '~/utils/models';
-import { OrderStatuses, PaymentStatuses } from '~/constants';
+import { HistoryRecordTypes, OrderStatuses, PaymentStatuses } from '~/constants';
 
 export const UserModel = {
   id: String,
@@ -136,9 +136,17 @@ export const UserPartnerModel = {
     type: Date,
     from: 'joineddate',
   },
-  totalValue: {
+  groupBonuses: {
     type: Number,
-    from: 'totalvalue',
+    from: 'groupbonuses',
+  },
+  personalBonuses: {
+    type: Number,
+    from: 'personalbonuses',
+  },
+  branchTotalBonuses: {
+    type: Number,
+    from: 'branchtotalbonuses',
   },
 };
 
@@ -150,6 +158,7 @@ export const UserModelMockData = validateModel(UserModel, {
   email: 'Tyapkin2002@mail.ru',
   city: 'Москва',
   tel: '+79160930930',
+  referrerid: 'USER_REFERRER_ID_1',
   isemailnotificationson: false,
   ispartnershiprequested: false,
   ispartner: true,
@@ -174,7 +183,9 @@ export const UserPartnerModelMockData = validateModel(UserPartnerModel, {
   familyname: 'Тяпкин',
   city: 'Москва',
   joineddate: new Date('2023-04-04'),
-  totalvalue: 515,
+  personalbonuses: 515,
+  groupbonuses: 120,
+  branchtotalbonuses: 3040,
 });
 export const UsersListModel = {
   users: ArrayType(UserModel),
@@ -182,7 +193,7 @@ export const UsersListModel = {
 export const UsersListModelMockData = {
   users: [
     Object.assign({}, UserModelMockData, {id: 'USER_ID_1', familyName: 'Первый'}),
-    Object.assign({}, UserModelMockData, {id: 'USER_ID_2', familyName: 'Второй'}),
+    Object.assign({}, UserModelMockData, {id: 'USER_ID_2', familyName: 'Второй', isPartner: false}),
     Object.assign({}, UserModelMockData, {id: 'USER_ID_3', familyName: 'Третий'}),
   ],
 };
@@ -237,33 +248,31 @@ export const UserPartnerBonusHistoryModel = {
     type: String,
     optional: true,
   },
-  isGroup: {
-    type: Boolean,
-    from: 'isgroup',
-  },
+  type: new Set(Object.values(HistoryRecordTypes)),
   value: Number,
   date: Date,
 };
 export const UserPartnerBonusesHistoryModel = {
   history: ArrayType(UserPartnerBonusHistoryModel),
-};
+}
 export const UserPartnerBonusHistoryModelMockData = validateModel(UserPartnerBonusHistoryModel, {
-  id: 1,
+  id: 'HISTORY_ID',
   userid: 1,
   avatarurl: null,
   givenname: null,
   familyname: null,
   fromuserid: null,
   comment: "Подарок приветственный",
-  isgroup: false,
+  type: 'total',
   value: 1500,
   date: "Sat, 03 Oct 2026 18:41:37 GMT",
 });
 export const UserPartnerBonusesHistoryModelMockData = {
   history: [
-    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: '1'}),
-    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: '2', comment: 'Списание', value: -100, isgroup: true}),
-    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: '3', comment: null, value: 330}),
+    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: 'HISTORY_ID_1'}),
+    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: 'HISTORY_ID_2', value: 100, type: 'personal', comment: null}),
+    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: 'HISTORY_ID_3', value: -150, type: 'total', comment: 'Штраф', date: "Tue, 01 Oct 2026 18:41:37 GMT"}),
+    Object.assign({}, UserPartnerBonusHistoryModelMockData, {id: 'HISTORY_ID_4', value: 15, type: 'group', comment: null, date: "Tue, 01 Oct 2026 18:41:37 GMT"}),
   ],
 };
 
@@ -288,9 +297,10 @@ export const PartnerModel = {
   branchTotalBonuses: {
     type: Number,
     from: 'branchtotalbonuses',
+    optional: true,
   },
   qualityId: {
-    type: Number,
+    type: String,
     from: 'qualityid',
     optional: true,
   },
@@ -309,6 +319,7 @@ export const PartnerModel = {
   activatedDate: {
     type: Date,
     from: 'activateddate',
+    optional: true,
   },
   isActive: {
     type: Boolean,
@@ -325,11 +336,11 @@ export const PartnersModel = {
 export const PartnerModelMockData = validateModel(PartnerModel, {
   userid: 'USER_ID_1',
   isconfirmed: true,
-  totalbonuses: 1230,
+  totalbonuses: 230,
   personalbonuses: 230,
   groupbonuses: 900,
   branchtotalbonuses: 420,
-  qualityid: null,
+  qualityid: 'QUALITY_ID_2',
   newbiebonusperiodsleft: 2,
   blackpearlbonuses: 511,
   bonusbigteamperiods: 1,
@@ -389,7 +400,7 @@ export const QualityModel = {
   },
 };
 export const QualitiesListModel = {
-  qualitys: ArrayType(QualityModel),
+  qualities: ArrayType(QualityModel),
 }
 export const QualityModelMockData = validateModel(QualityModel, {
   id: 'QUALITY_ID',
@@ -400,8 +411,8 @@ export const QualityModelMockData = validateModel(QualityModel, {
   branchescountrequirement: 2,
   branchesvaluesrequirement: 450,
   totalpersonalbonusesrequirement: 220,
-  qualitybonusvalue: 2000,
-  qualitybonusmaxcount: 3,
+  qualitybonusvalue: null,
+  qualitybonusmaxcount: 0,
 });
 export const QualitiesListModelMockData = {
   qualities: [

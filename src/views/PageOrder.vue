@@ -16,7 +16,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
     padding-block 70px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
@@ -68,11 +67,11 @@
         &.gray
           background mix(colorTextInvert2, transparent, 90%)
     .buttons-container
-      margin-top 30px
       display flex
-      gap 10px
       flex-wrap wrap
+      gap 10px
       justify-content space-between
+      margin-top 30px
       .cancel-button
       .payment-button
         animation-float(0.5s, -20px, 0, left)
@@ -108,7 +107,7 @@
         gap 20px
         justify-content space-between
         padding 20px
-        background colorBlockBg
+        background colorBlockBgLow
         .preview
           min-width 200px
           max-width 250px

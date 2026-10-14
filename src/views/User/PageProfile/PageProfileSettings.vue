@@ -8,6 +8,8 @@
 @import '../../../styles/scrollbars.styl'
 
 .root-profile-settings
+  animation-float()
+
   box-shadow 0 0 10px colorShadow
   .header
     padding 30px

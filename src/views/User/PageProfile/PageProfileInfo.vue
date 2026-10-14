@@ -9,6 +9,7 @@
 
 .root-profile-info
   box-shadow 0 0 10px colorShadow
+  animation-float()
   .header
     padding 30px
     color colorTextInvert1

@@ -183,14 +183,12 @@ import {
   COMPANY_PHONE,
   COMPANY_EMAIL,
   COMPANY_DATA_UPDATED_DATE,
-  COMPANY_TITLE,
   COMPANY_DATA_UPDATED_YEAR,
 } from '~/constants';
 
 export default {
   data() {
     return {
-      companyTitle: COMPANY_TITLE,
       companyName: COMPANY_FULL_NAME,
       companyShortName: COMPANY_SHORT_NAME,
       legalAddress: COMPANY_LEGAL_ADDRESS,

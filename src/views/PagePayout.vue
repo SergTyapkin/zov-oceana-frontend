@@ -16,7 +16,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
     padding-block 70px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
@@ -44,28 +43,28 @@
       margin-top 30px
       padding 30px
       background colorBlockBg
-  
+
     .payout
       overflow auto
       display flex
       flex-direction column
       gap 20px
+      margin-top 20px
       padding 20px
       box-shadow 0 0 10px colorShadow
-      margin-top 20px
       .header
         font-medium()
         font-upper()
 
-        padding 20px
         margin -20px
         margin-bottom 0
-        
+        padding 20px
         color colorTextInvert1
         background colorBgDark
         svg-inside(25px)
         .info
           font-small-extra()
+
           color colorTextInvert3
 </style>
 

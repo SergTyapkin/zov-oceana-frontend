@@ -322,7 +322,7 @@ export function dateTimeFormatter(
   if (!date) {
     return time;
   }
-  return date + ' - ' + time;
+  return date + ' ' + time;
 }
 
 export function rangeFormatter(
@@ -365,13 +365,13 @@ export function rangeFormatter(
   // }
 }
 
-export function valuteFormatter(val: number, valuteSign = '₽') {
-  return `${val < 0 ? '-' : ''}${valuteSign} ${Math.round(Math.abs(val) * 100) / 100}`;
+export function valuteFormatter(val: number | null, valuteSign = '₽') {
+  return `${(val || val == 0) && val < 0 ? '-' : ''}${valuteSign} ${(!val && val != 0) ? '-' : Math.round(Math.abs(val) * 100) / 100}`;
 }
-export function costFormatter(val: number) {
+export function costFormatter(val: number | null) {
   return valuteFormatter(val, '₽');
 }
-export function bonusesFormatter(val: number) {
+export function bonusesFormatter(val: number | null) {
   return valuteFormatter(val, '₿');
 }
 

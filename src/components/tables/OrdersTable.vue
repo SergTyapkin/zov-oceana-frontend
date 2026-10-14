@@ -6,11 +6,15 @@
     :table-rows-clickable="tableRowsClickable"
     :row-click-redirect-name="rowClickRedirectName"
     :model-value="modelValue"
+    :sorted-by-column-idx="2"
+    sorted-desc
+    :rows-per-page="6"
     @change="updateModelValue"
     @select="(d: any) => $emit('select', d)"
     :table-info-block-fields="withInfoBlock ? [
       { name: '#', from: 'id' },
       { name: 'Номер', from: 'number' },
+      { name: 'Время', from: 'createdDate', changer: dateTimeFormatter },
       { name: 'Товары', from: 'goods', changer: (goods: Goods[]) => goods.map((g) => `${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`).join('\n\n') },
       { name: 'Статус', from: 'status', changer: (status: OrderStatus) => OrderStatuses[status]?.title, colorMatches: statusColorMatches },
       { name: 'Пользователь', from: '', changer: (_: unknown, order: Order) => `${order.userGivenName} ${order.userFamilyName} #${order.userId}` },
@@ -20,6 +24,7 @@
     :table-fields="[
       { name: '#', from: 'id' },
       { name: 'Номер', from: 'number' },
+      { name: 'Время', from: 'createdDate', changer: dateTimeFormatter },
       { name: 'Товары', from: 'goods', changer: (goods: Goods[]) => goods.map((g) => `${g.title} ${g.amount}${g.isWeighed ? 'кг' : 'шт'}`).join('\n\n') },
       { name: 'Статус', from: 'status', changer: (status: OrderStatus) => OrderStatuses[status]?.title, colorMatches: statusColorMatches },
       { name: 'Пользователь', from: '', changer: (_: unknown, order: Order) => `${order.userGivenName} ${order.userFamilyName} #${order.userId}` },
@@ -70,7 +75,7 @@
 import TableWithFilters from '~/components/tables/TableWithFilters.vue';
 import { PropType } from 'vue';
 import { Order } from '~/utils/models';
-import { costFormatter } from '~/utils/utils';
+import { costFormatter, dateTimeFormatter } from '~/utils/utils';
 import { OrderStatuses, PaymentStatuses } from '~/constants';
 
 export default {
@@ -106,6 +111,7 @@ export default {
   data() {
     return {
       costFormatter,
+      dateTimeFormatter,
 
       OrderStatuses,
       PaymentStatuses,

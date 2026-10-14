@@ -44,6 +44,7 @@ bg = colorBgDark
         height 100%
         padding 0 15px
         color colorTextInvert1
+        text-align center
         img
           display none
           border-radius radiusMax
@@ -55,8 +56,7 @@ bg = colorBgDark
             padding 5px
 
         @media ({mobile})
-          display flex
-          flex-direction column
+          // flex-direction column
         svg-inside(30px)
         centered-flex-container()
         font-spaced()
@@ -124,31 +124,33 @@ bg = colorBgDark
 
       &.active ~ *:not(:hover)
       &.not-active:not(:hover):not(.active)
+        .status
+          color colorTextInvert4
         &.red
           .status
-            background mix(colorError, bg)
+            background mix(colorError, bg, 30%)
           .arrow-colored
-            border-left-color mix(colorError, bg)
+            border-left-color mix(colorError, bg, 30%)
         &.green
           .status
-            background mix(colorSuccess, bg)
+            background mix(colorSuccess, bg, 30%)
           .arrow-colored
-            border-left-color mix(colorSuccess, bg)
+            border-left-color mix(colorSuccess, bg, 30%)
         &.yellow
           .status
-            background mix(colorEmp1, bg)
+            background mix(colorEmp1, bg, 30%)
           .arrow-colored
-            border-left-color mix(colorEmp1, bg)
+            border-left-color mix(colorEmp1, bg, 30%)
         &.blue
           .status
-            background mix(colorEmp2, bg)
+            background mix(colorEmp2, bg, 30%)
           .arrow-colored
-            border-left-color mix(colorEmp2, bg)
+            border-left-color mix(colorEmp2, bg, 30%)
         &.gray
           .status
-            background mix(colorTextInvert4, bg)
+            background mix(colorTextInvert4, bg, 30%)
           .arrow-colored
-            border-left-color mix(colorTextInvert4, bg)
+            border-left-color mix(colorTextInvert4, bg, 30%)
 
     @media ({mobile})
       flex-wrap wrap

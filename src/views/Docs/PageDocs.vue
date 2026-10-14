@@ -17,7 +17,6 @@
     page-root-disable()
 
     cursor pointer
-    width 100vw
     padding-block 40px
     color colorTextInvert1
     background colorBgDark

@@ -10,33 +10,79 @@
 
 .root-transactions-history
   list-no-styles()
-  .date-container
-    padding-block 5px
-    .date
-      font-small-extra()
 
-      color colorText5
+  position relative
+  .date-container
+    block()
+
+    margin-top 5px
+    padding-bottom 5px
+    background colorBgLight
+    .date
+      display flex
+      gap 12px
+      align-items center
+      margin-bottom 5px
+      color colorEmp2
+      font-small-extra()
+      font-semibold()
+      .day-total
+        font-small-extra()
+        font-normal()
+
+        color colorEmp2
     .users-transactions-container
       list-no-styles()
       .transaction
         display flex
-        gap 10px
+        gap 12px
         align-items center
-        justify-content space-between
-        padding-block 5px
+        min-height 40px
+        padding-block 6px
+        border-bottom 1px solid colorBorder
+        &:last-child
+          border-bottom 0
+        .transaction-icon
+          position relative
+          flex 0 0 22px
+          width 22px
+          height 22px
+          color colorEmp2
         .name
           flex 1
+          font-small()
+
+          color colorText2
+        .cost
+          font-small()
+          font-semibold()
+
+          color colorEmp2
+          text-align right
+          &.is-negative
+            color colorError
+          span
+            font-normal()
+
+            color colorText4
 </style>
 
 <template>
   <ul class="root-transactions-history">
     <li v-if="!compressedHistory.length && !loading">Нет ни одного начисления бонусов</li>
     <li class="date-container" v-for="historyRecord in compressedHistory">
-      <span class="date">
-        {{ dateFormatter(historyRecord.date) }} - {{ bonusesFormatter(historyRecord.totalValue) }}
-      </span>
+      <div class="date">
+        <span>{{ dateFormatter(historyRecord.date) }}</span>
+        <span class="day-total" v-if="historyRecord.totalPersonalValue">{{ historyRecord.totalPersonalValue > 0 ? '+ ' : '' }}{{ bonusesFormatter(historyRecord.totalPersonalValue) }} ЛО</span>
+        <span class="day-total" v-if="historyRecord.totalGroupValue">{{ historyRecord.totalGroupValue > 0 ? '+ ' : '' }}{{ bonusesFormatter(historyRecord.totalGroupValue) }} ГО</span>
+      </div>
       <ul class="users-transactions-container">
         <li class="transaction" v-for="transaction in historyRecord.transactions">
+          <img v-if="transaction.type === HistoryRecordTypes.group" class="transaction-icon" src="/static/icons/percent-cirle.svg" alt="group"> 
+          <img v-else-if="transaction.type === HistoryRecordTypes.personal" class="transaction-icon" src="/static/icons/sell.svg" alt="personal"> 
+          <img v-else-if="transaction.type === HistoryRecordTypes.total && transaction.value >= 0" class="transaction-icon" src="/static/icons/plus-circle.svg" alt="total"> 
+          <img v-else-if="transaction.type === HistoryRecordTypes.total && transaction.value < 0" class="transaction-icon" src="/static/icons/minus-circle.svg" alt="total"> 
+
           <UserAvatar v-if="transaction.fromUserId" :user="transaction" size="30px" size-mobile="30px" />
           <div class="name" v-if="transaction.fromUserId">{{ transaction.givenName }} {{ transaction.familyName }}</div>
           <div class="name" v-else>
@@ -44,18 +90,27 @@
             <span v-else-if="transaction.value >= 0">Начисление</span>
             <span v-else>Списание</span>
           </div>
-          <div class="cost">{{ bonusesFormatter(transaction.value) }} <span v-if="transaction.isGroup">групповое</span></div>
+          <div class="cost" :class="{ 'is-negative': transaction.value < 0 }">
+            {{ transaction.value > 0 ? '+ ' : '' }}{{ bonusesFormatter(transaction.value) }} 
+            <span v-if="transaction.type === HistoryRecordTypes.personal">ЛО</span>
+            <span v-else-if="transaction.type === HistoryRecordTypes.group">ГО</span>
+            <span v-else-if="transaction.type === HistoryRecordTypes.total">на баланс</span>
+            <span v-else>? НЕИЗВЕСТНО ?</span>
+          </div>
         </li>
       </ul>
     </li>
+
+    <CircleLoading v-if="loading" centered />
   </ul>
 </template>
 
 <script lang="ts">
 import { bonusesFormatter, dateFormatter } from '~/utils/utils';
 import UserAvatar from '~/components/UserAvatar.vue';
-import { PropType } from 'vue';
-import { PartnerHistoryTransaction } from '~/utils/models';
+import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import { HistoryRecordType, PartnerHistoryTransaction, User } from '~/utils/models';
+import { HistoryRecordTypes } from '~/constants';
 
 function isDatesInSameDay(d1: Date, d2: Date) {
   return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
@@ -64,29 +119,36 @@ function isDatesInSameDay(d1: Date, d2: Date) {
 export default {
   emits: ['historyGotten', 'headUserGotten', 'partnersGotten'],
 
-  components: { UserAvatar },
+  components: { UserAvatar, CircleLoading },
 
   props: {
-    history: {
-      type: Array as PropType<PartnerHistoryTransaction[]>,
+    userId: {
+      type: String,
       required: true,
     },
   },
 
   data() {
-    return {};
+    return {
+      history: [] as PartnerHistoryTransaction[],
+
+      loading: false,
+
+      HistoryRecordTypes,
+    };
   },
 
   computed: {
     compressedHistory() {
       const res = [] as {
         date: Date;
-        totalValue: number;
+        totalPersonalValue: number;
+        totalGroupValue: number;
         transactions: {
           avatarUrl?: string;
           givenName?: string;
           familyName?: string;
-          isGroup: boolean;
+          type: HistoryRecordType;
           value: number;
           fromUserId?: string;
           comment?: string;
@@ -97,37 +159,52 @@ export default {
         if (!foundHistory) {
           foundHistory = {
             date: new Date(h.date),
-            totalValue: 0,
+            totalPersonalValue: 0,
+            totalGroupValue: 0,
             transactions: [],
           };
           res.push(foundHistory);
         }
-        foundHistory.totalValue += h.value;
+        if (h.type === HistoryRecordTypes.personal) 
+          foundHistory.totalPersonalValue += h.value;
+        else if (h.type === HistoryRecordTypes.group) 
+          foundHistory.totalGroupValue += h.value;
         foundHistory.transactions.push({
           avatarUrl: h.avatarurl,
           givenName: h.givenname,
           familyName: h.familyname,
-          isGroup: h.isgroup,
+          type: h.type,
           value: h.value,
           fromUserId: h.fromuserid,
           comment: h.comment,
         });
       });
-      return res.sort((a, b) => b.date - a.date);
+      return res.sort((a, b) => Number(b.date) - Number(a.date));
     },
   },
 
   mounted() {
-    if (this.user?.id) {
-      this.updatePartnershipInfo();
-      this.updatePartnershipHistory();
-      this.updateHeadUser();
-    }
+    this.updatePartnershipHistory();
   },
 
   methods: {
     dateFormatter,
     bonusesFormatter,
+
+    async updatePartnershipHistory() {
+      this.history = (
+        (await this.$request(
+          this,
+          this.$api.getHistoryBonusesRecords,
+          [this.userId],
+          `Не удалось получить информацию по истории партнерства`,
+        )) as {
+          history: User[];
+        }
+      ).history;
+
+      this.$emit('historyGotten', this.history);
+    },
   },
 
   watch: {},

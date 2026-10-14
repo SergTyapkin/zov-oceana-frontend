@@ -13,7 +13,7 @@
   <div class="root-page-admin-categories">
     <TableComponent
       :content="$globals.categories"
-      title="Категории"
+      title="Категории товаров"
       :clickable="true"
       :fields="[
         { name: '#', from: 'id', addable: false },

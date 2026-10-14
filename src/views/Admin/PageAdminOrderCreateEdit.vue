@@ -17,8 +17,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
-
   section.page-title
     cursor pointer
     padding-block 40px
@@ -32,6 +30,20 @@
       img
         margin-right 15px
         margin-left 5px
+
+  section.payment-buttons
+    page-root-disable()
+
+    display flex
+    background colorBgDark
+    .button-confirm
+      flex 1
+      button-success()
+      font-small-extra()
+    .button-cancel
+      flex 1
+      button-error()
+      font-small-extra()
 
   section.orders
     display flex
@@ -48,8 +60,8 @@
       > *
         padding 20px
         border-bottom 1px solid colorBorder
-        background colorBgDark
         color colorTextInvert1
+        background colorBgDark
     .left-column
       display flex
       flex-direction column
@@ -74,6 +86,7 @@
             font-bold()
 
             text-align center
+        .payment-info
           .buttons-container
             display flex
             .button-confirm
@@ -104,6 +117,24 @@
       class="order-status-bar"
       @change="changeOrderStatus"
     />
+
+    <OrderPaymentStatusBar 
+      :status="order.paymentStatus ?? 'none'"
+      :total-value="order?.goods?.reduce?.((acc, g) => acc + g.cost * g.amount, 0)"
+      class="order-payment-status-bar"
+    />
+
+    <section v-if="order.paymentStatus === 'authorized'" class="payment-buttons">
+      <button class="button-confirm" @click="confirmPayment">Подтвердить списание</button>
+      <button class="button-cancel" @click="cancelPayment">Вернуть оплату</button>
+    </section>
+    <section v-else-if="order.paymentStatus === 'new'" class="payment-buttons">
+      <button class="button-cancel" @click="cancelPayment">Прервать оплату</button>
+    </section>
+    <section v-else-if="order.paymentStatus === 'confirmed'" class="payment-buttons">
+      <button class="button-cancel" @click="refundPayment">Вернуть оплату</button>
+    </section>
+
 
     <section class="orders" @input="onInput">
       <div class="left-column">
@@ -150,6 +181,11 @@
       </div>
 
       <div class="right-column">
+        <div class="info" v-if="orderId">
+          Создан: {{ dateTimeFormatter(order.createdDate) }}
+        </div>
+
+
         <TableComponent
           :content="order.goods ?? []"
           title="Товары в заказе"
@@ -194,12 +230,13 @@
 
           <br>
           
-          <div v-if="order.paymentCreatedDate">
+          <div v-if="order.paymentCreatedDate" class="payment-info">
             <SelectList
               v-model="order.paymentStatus"
               :selected-id="order.paymentStatus"
               title="Статус оплаты"
               title-always-shown
+              invert-color
               :list="
                 Object.entries(PaymentStatuses).map(([key, status]) => ({
                   id: key,
@@ -210,10 +247,11 @@
               ref="statusSelect"
               disabled
             />
-            <InputComponent v-model="order.paymentId" title="ID оплаты банка" placeholder="Идентификатор оплаты" disabled />
-            <InputComponent v-model="order.paymentUrl" title="Ссылка для оплаты банка" placeholder="https://..." disabled />
-            <InputComponent v-model="order.paymentQrData" title="Ссылка внутри QR-кода СБП" placeholder="https://..." disabled />
-            <div>Оплата начата: {{ dateTimeFormatter(order.paymentCreatedDate) }}</div>
+            <InputComponent v-model="order.paymentId" title="ID оплаты банка" invert-color placeholder="Идентификатор оплаты" disabled />
+            <InputComponent v-model="order.paymentUrl" title="Ссылка для оплаты банка" invert-color placeholder="https://..." disabled />
+            <InputComponent v-model="order.paymentQrData" title="Ссылка внутри QR-кода СБП" invert-color placeholder="https://..." disabled />
+            <div v-if="order.paymentCreatedDate">Оплата начата: {{ dateTimeFormatter(order.paymentCreatedDate) }}</div>
+            <div v-else>Оплата ещё не начата</div>
 
             <section v-if="order.paymentStatus === 'authorized'" class="buttons">
               <div class="info">Сейчас деньги у клиента заморожены, но не списаны. Через неделю после оплаты они вернутся обратно</div>
@@ -237,11 +275,6 @@
           </div>
           <div v-else>Оплата в банке пользователем ещё не производилась</div>
         </section>
-
-        <div class="info" v-if="orderId">
-          Создан: {{ dateTimeFormatter(order.createdDate) }} <br>
-          #ID: {{ order.id }} <br>
-        </div>
       </div>
     </section>
 
@@ -261,9 +294,10 @@ import { costFormatter, dateTimeFormatter, deepClone } from '~/utils/utils';
 import { OrderStatuses, PaymentStatuses } from '~/constants';
 import { nextTick } from 'vue';
 import OrderStatusBar from '~/components/OrderStatusBar.vue';
+import OrderPaymentStatusBar from '~/components/OrderPaymentStatusBar.vue';
 
 export default {
-  components: { SelectList, InputComponent, CircleLinesLoading, TableComponent, OrderStatusBar },
+  components: { SelectList, InputComponent, CircleLinesLoading, TableComponent, OrderStatusBar, OrderPaymentStatusBar },
 
   data() {
     return {
@@ -272,10 +306,6 @@ export default {
       order: {} as Order,
       users: [] as UserOther[],
       goods: [] as Goods[],
-
-      newGoods: undefined as undefined | Goods,
-      newGoodsAmount: undefined as undefined | number,
-      newGoodsCost: undefined as undefined | number,
 
       loading: false,
 

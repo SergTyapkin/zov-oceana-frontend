@@ -17,8 +17,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
-
   section.page-title
     cursor pointer
     padding-block 40px
@@ -121,12 +119,11 @@
           align-items center
           justify-content space-between
           gap 10px 20px
-          dr
-            display grid
-            grid-column 1/-1
-            grid-template-columns subgrid
+          dt
+          dd
+            margin 0
         .transactions-history
-          padding-inline 20px
+          padding 20px
           color colorText1
           font-small-extra()
 
@@ -137,7 +134,7 @@
     width fit-content
 
   .partnership-request
-    block-shadow()
+    block()
     margin-top 20px
     display flex
     flex-wrap wrap
@@ -146,6 +143,8 @@
     gap 20px
     header
       font-bold()
+      width 100%
+    p
       width 100%
     .button-confirm
       button-emp2()
@@ -166,16 +165,14 @@
       </section>
     </router-link>
 
+    <div class="partnership-request" v-if="user.isPartner">
+      <header>Пользователь является партнёром</header>
+    </div>
     <div class="partnership-request" v-if="user.isPartnershipRequested !== false && !user.isPartner">
       <header>Пользователь отправил запрос на статус партнёра</header>
       <p v-if="!user.isPartnershipRequested && user.isPartnershipRequested !== false">Запрос пользователя отклонён</p>
-      <template v-else>
-        <button class="button-confirm" @click="setPartnershipRequestStatus(true)">Подтвердить запрос</button>
-        <button class="button-decline" @click="setPartnershipRequestStatus(false)">Отклонить запрос</button>
-      </template>
-    </div>
-    <div class="partnership-request" v-else-if="user.isPartner">
-      <header>Пользователь является партнёром</header>
+      <button v-if="!user.isPartnershipRequested && !user.isPartner" class="button-confirm" @click="acceptPartnershipRequest()">Подтвердить запрос</button>
+      <button v-if="user.isPartnershipRequested" class="button-decline" @click="declinePartnershipRequest()">Отклонить запрос</button>
     </div>
 
     <section class="users" @input="onInput">
@@ -292,60 +289,57 @@
         <article class="partners">
           <header class="header">
             <img src="/static/icons/graph.svg" alt="">
-            Продажи партнеров за месяц
+            О партнёре
           </header>
-          <div class="info">Баланс бонусов: {{ costFormatter(user.partnerBonuses) }}</div>
-          <PartnersGraph
-            ref="partnersGraph"
-            :user="user"
-            class="partners-graph"
-            @history-gotten="gottenHistory => (partnerHistory = gottenHistory)"
-          />
+          <dl class="partners-info">
+            <dt>Активен</dt>
+            <dd><InputSwitch v-model="partner.isActive" /></dd>
+            <dt>Активирован</dt>
+            <dd>{{ partner.isActive ? dateFormatter(partner.activatedDate) : '-' }}</dd>
+            <dt>Баланс бонусов</dt>
+            <dd>{{ bonusesFormatter(partner.totalBonuses) }}</dd>
+            <dt />
+            <dd />
+            <dt />
+            <dd />
+            <dt>Личный объём (ЛО)</dt>
+            <dd>{{ bonusesFormatter(partner.personalBonuses) }}</dd>
+            <dt>Групповой объём (ГО)</dt>
+            <dd>{{ bonusesFormatter(partner.groupBonuses) }}</dd>
+            <dt>Оборот всех рефералов</dt>
+            <dd>{{ bonusesFormatter(partner.branchTotalBonuses ?? 0) }}</dd>
+            <dt>Квалификация</dt>
+            <dd>
+              <SelectList
+                v-model="partner.qualityId"
+                :list="
+                  qualities?.map?.(u => ({
+                    id: u.id,
+                    name: u.title,
+                    value: u.id,
+                  }))
+                "
+                can-be-null
+              />
+            </dd>
+            <dt>Стал партнёром</dt>
+            <dd>{{ dateFormatter(partner.joinedDate) }}</dd>
+          </dl>
         </article>
 
         <article class="partners">
           <header class="header">
             <img src="/static/icons/graph.svg" alt="">
-            Партнёрская информация
+            Партнерская структура
           </header>
-          <dl class="partners-info">
-            <dr>
-              <dt>Активен</dt>
-              <dd><InputSwitch v-model="partner.isActive" /></dd>
-            </dr>
-            <dr>
-              <dt>Личный объём (ЛО)</dt>
-              <dd>{{ bonusesFormatter(partner.personalBonuses) }}</dd>
-            </dr>
-            <dr>
-              <dt>Групповой объём (ГО)</dt>
-              <dd>{{ bonusesFormatter(partner.groupBonuses) }}</dd>
-            </dr>
-            <dr>
-              <dt>Оборот всех рефералов</dt>
-              <dd>{{ bonusesFormatter(partner.branchTotalBonuses) }}</dd>
-            </dr>
-            <dr>
-              <dt>Квалификация</dt>
-              <dd>
-                <SelectList
-                  v-model="partner.qualityId"
-                  :list="
-                    qualities?.map?.(u => ({
-                      id: u.id,
-                      name: u.title,
-                      value: u.id,
-                    }))
-                  "
-                  can-be-null
-                />
-              </dd>
-            </dr>
-            <dr>
-              <dt>Стал партнёром</dt>
-              <dd>{{ dateFormatter(partner.joinedDate) }}</dd>
-            </dr>
-          </dl>
+          <div class="info">ЛО: {{ bonusesFormatter(partner.personalBonuses) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ГО: {{ bonusesFormatter(partner.groupBonuses) }}</div>
+          <PartnersGraph
+            clickable
+            ref="partnersGraph"
+            :user="user"
+            class="partners-graph"
+            @history-gotten="gottenHistory => (partnerHistory = gottenHistory)"
+          />
         </article>
         
         <article class="partners">
@@ -354,18 +348,12 @@
             Бонусы
           </header>
           <dl class="partners-info">
-            <dr>
-              <dt>Осталось периодов "Бонуса Новичка"</dt>
-              <dd><InputComponent v-model="partner.newbieBonusPeriodsLeft" placeholder="0" /></dd>
-            </dr>
-            <dr>
-              <dt>Баллов "Бонуса Чёрной Икры"</dt>
-              <dd><InputComponent v-model="partner.blackPearlBonuses" placeholder="0" /></dd>
-            </dr>
-            <dr>
-              <dt>Периодов "Бонуса Большой Команды"</dt>
-              <dd><InputComponent v-model="partner.bonusBigTeamPeriods" placeholder="1" /></dd>
-            </dr>
+            <dt>Осталось периодов "Бонуса Новичка"</dt>
+            <dd><InputComponent v-model="partner.newbieBonusPeriodsLeft" placeholder="0" /></dd>
+            <dt>Баллов "Бонуса Чёрной Икры"</dt>
+            <dd><InputComponent v-model="partner.blackPearlBonuses" placeholder="0" /></dd>
+            <dt>Периодов "Бонуса Большой Команды"</dt>
+            <dd><InputComponent v-model="partner.bonusBigTeamPeriods" placeholder="1" /></dd>
           </dl>
         </article>
 
@@ -396,7 +384,7 @@
             </div>
             <button class="button-submit" @click="createBonusesTransaction">Начислить</button>
           </div>
-          <PartnerTransactionsHistory class="transactions-history" :history="partnerHistory" />
+          <PartnerTransactionsHistory class="transactions-history" :user-id="user.id" />
         </article>
       </div>
     </section>
@@ -429,8 +417,6 @@ export default {
       users: [] as UserOther[],
       orders: [] as Order[],
       addresses: [] as Address[],
-      partners: [],
-
       newTransactionValue: 0,
       newTransactionComment: '',
 
@@ -441,20 +427,7 @@ export default {
   },
 
   async mounted() {
-    if (this.userId === undefined) {
-      this.$router.push({ name: 'adminUsers' });
-      this.$popups.error('ID пользователя не найдено в url');
-      return;
-    }
-    this.updateOrders();
-    this.updateAddresses();
-    this.updateUsers();
-    await this.updateUser();
-    if (this.user.isPartner) {
-      this.updatePartner();
-      this.updatePartnershipInfo();
-      this.updateQualities();
-    }
+    this.init();
   },
 
   methods: {
@@ -464,6 +437,22 @@ export default {
     costFormatter,
     bonusesFormatter,
     deepClone,
+
+    async init() {
+      if (this.userId === undefined) {
+        this.$router.push({ name: 'adminUsers' });
+        this.$popups.error('ID пользователя не найдено в url');
+        return;
+      }
+      this.updateOrders();
+      this.updateAddresses();
+      this.updateUsers();
+      await this.updateUser();
+      if (this.user.isPartner) {
+        this.updatePartner();
+        this.updateQualities();
+      }
+    },
 
     async updateUsers() {
       this.users = (
@@ -523,18 +512,6 @@ export default {
           addresses: Address[];
         }
       ).addresses;
-    },
-    async updatePartnershipInfo() {
-      this.partners = (
-        (await this.$request(
-          this,
-          this.$api.getAllPartnerUsers,
-          [this.userId],
-          `Не удалось получить информацию по партнерству`,
-        )) as {
-          partners: User[];
-        }
-      ).partners;
     },
 
     async updateUserData() {
@@ -633,18 +610,44 @@ export default {
       );
     },
     async acceptPartnershipRequest() {
-      await this.$request(
-        this,
-        this.$api.createUserPartner,
-        [this.user.id],
-        `Не удалось принять заявку в партнеры`,
-        () => {
-          this.$popups.success('Заявка принята', 'Теперь пользователь является партнером');
-          this.updateUser();
-          this.updatePartner();
-        },
-      );
+      await Promise.all([
+        this.$request(
+          this,
+          this.$api.createUserPartner,
+          [this.user.id],
+          `Не удалось создать партнера`,
+          () => {
+            this.$popups.success('Заявка принята', 'Теперь пользователь является партнером');
+            this.updateUser();
+            this.updatePartner();
+          },
+          undefined,
+          {
+            409: () => {
+              this.$popups.success('Заявка принята', 'Теперь пользователь является партнером');
+              this.updateUser();
+              this.updatePartner();
+            },
+          },
+        ),
+        await this.$request(
+          this,
+          this.$api.acceptPartnershipRequest,
+          [this.user.id],
+          `Не удалось принять заявку в партнеры`,
+          () => {},
+        ),
+      ]);
     },
   },
+
+  watch: {
+    '$route.params.id': {
+      handler(newVal: string) {
+        this.userId = newVal;
+        this.init();
+      }
+    }
+  }
 };
 </script>

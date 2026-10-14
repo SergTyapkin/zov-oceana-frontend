@@ -20,6 +20,11 @@
     font-style italic
     color colorText4
     trans()
+  &.invert
+    .title
+      color colorTextInvert1
+    .description
+      color colorTextInvert4
 
   .input-container
     position relative
@@ -27,6 +32,7 @@
     input
     textarea
       input-no-styles()
+      input()
       font-small-extra()
       font-spaced()
       font-normal()
@@ -36,7 +42,6 @@
       margin-bottom 3px
       padding 10px
       color colorText1
-      background colorBlockBg
 
       &::placeholder
         font-spaced()
@@ -50,7 +55,7 @@
 
       &[readonly]
       &[disabled]
-        opacity 0.6
+        opacity 0.8
 
     textarea
       resize none
@@ -124,7 +129,7 @@
 </style>
 
 <template>
-  <section class="input-root" :class="{ error, success }">
+  <section class="input-root" :class="{ error, success, invert: invertColor }">
     <header class="title" v-if="title">{{ title }}</header>
     <p v-if="description" class="description">{{ description }}</p>
 
@@ -243,7 +248,10 @@ export default {
       type: Number,
       default: 4,
     },
-    error: String as boolean | string,
+    error: {
+      type: [Boolean, String],
+      default: false,
+    },
     success: Boolean,
     hideable: Boolean,
     textarea: Boolean,
@@ -255,6 +263,7 @@ export default {
     readonly: Boolean,
     disabled: Boolean,
     copyable: Boolean,
+    invertColor: Boolean,
   },
 
   data() {

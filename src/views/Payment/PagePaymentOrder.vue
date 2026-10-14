@@ -16,7 +16,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
     padding-block 70px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
@@ -87,6 +86,8 @@
       background mix(colorEmp1, transparent, 90%)
 
     section.payment
+      page-root-disable()
+
       display flex
       gap 10%
       justify-content space-between
@@ -111,7 +112,7 @@
           padding-right 15px
           border-radius 0 radiusM radiusM 0
           color colorText1
-          background colorBlockBg
+          background colorBlockBgLow
           > *
             font-large()
             font-bold()
@@ -141,7 +142,8 @@
 
           text-align center
           .img-qr-code
-            width 100%
+            img-size(100%)
+
             min-width 100px
             max-width 180px
             border-radius radiusM
@@ -162,7 +164,6 @@
 
       section.left
         animation-float(0.5s, -20px, 0, left)
-        page-root()
 
         display flex
         flex 1
@@ -191,8 +192,6 @@
           &:hover
             padding-left 12px
         &.unrolled
-          page-root()
-
           width unset
           padding-top 7px
           padding-bottom 25px
@@ -210,7 +209,6 @@
             max-width 90%
           > section.right
             align-self flex-end
-      page-root-disable()
 
 
   section.cart
@@ -232,7 +230,7 @@
         gap 20px
         justify-content space-between
         padding 20px
-        background colorBlockBg
+        background colorBlockBgLow
         .preview
           min-width 200px
           max-width 250px
@@ -392,7 +390,9 @@
           </div>
 
           <div class="qr-img-container">
-            <QRGenerator v-show="!isPaymentTimeOver" class="img-qr-code" :text="order.paymentQrData" />
+            <div>
+              <QRGenerator v-show="!isPaymentTimeOver" class="img-qr-code" :text="order.paymentQrData" />
+            </div>
           </div>
         </section>
 
@@ -475,7 +475,7 @@ import QRGenerator from '~/components/QRGenerator.vue';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter, dateFormatter, dateTimeFormatter, initPaymentWidget, timeMinutesFormatter } from '~/utils/utils';
-import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS, PaymentStatuses } from '~/constants';
+import { PAYMENT_TIME_TO_BE_PAYED_MS, PaymentStatuses } from '~/constants';
 import { Order } from '~/utils/models';
 
 export default {
@@ -495,9 +495,7 @@ export default {
       isWidgetLoadingError: false,
       isShowPaymentWidget: false,
 
-      OrderStatuses,
       PaymentStatuses,
-      PAYMENT_TIME_TO_BE_PAYED_MS,
     };
   },
 

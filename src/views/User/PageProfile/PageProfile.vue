@@ -16,14 +16,9 @@
   nav.navigation
     page-root-disable()
 
-    width 100vw
-
   section.title
-    page-root()
-
     display flex
     gap 20px
-    width 100vw
     padding-block 70px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
@@ -43,6 +38,10 @@
       animation-float()
 
       color colorTextInvert3
+
+    @media ({mobile})
+      padding-block 20px
+    page-root()
 
   nav.navigation
     overflow-x auto

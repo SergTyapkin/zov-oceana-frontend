@@ -21,7 +21,7 @@
     page-root()
 
     min-width 0
-    background colorBlockBg
+    background colorBlockBgLow
 
   .button-submit-1
     button-emp1()
@@ -51,7 +51,10 @@
         :removable="removable"
         :on-add-callback="onAddCallback"
         with-paginator
+        :sorted-by-column-idx="sortedByColumnIdx"
+        :sorted-desc="sortedDesc"
         :model-value="modelValue"
+        :rows-per-page="rowsPerPage"
         @change="setValue(modelValue)"
         @select="(d: any) => $emit('select', d)"
         @add="(d: any) => $emit('add', d)"
@@ -113,12 +116,20 @@ export default {
       type: Array as PropType<{[key: string]: any}[] | undefined>,
       default: undefined,
     },
-    clickable: Boolean,
     addable: Boolean,
     removable: Boolean,
     onAddCallback: {
       type: Function as PropType<(row: {[key: string]: any}) => boolean> | null,
       default: null,
+    },
+    sortedByColumnIdx: {
+      type: Number,
+      default: undefined,
+    },
+    sortedDesc: Boolean,
+    rowsPerPage: {
+      type: Number,
+      default: 10,
     },
   },
 

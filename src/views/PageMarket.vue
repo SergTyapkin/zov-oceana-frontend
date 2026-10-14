@@ -17,8 +17,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
-
   section.title
     gap 50px
     color colorTextInvert1

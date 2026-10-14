@@ -9,15 +9,16 @@ export default {
   '/password/restore': false,
   '/password/change': false,
   '/email/confirm': false,
-
+  
   // Market
   '/market': true,
   '/goods/:id': true,
   '/cart': true,
   '/order/:id': true,
   '/partnership': true,
+  '/partnership/qualities': false,
   '/admin': false,
-
+  
   // Payment
   '/payment/order/:id': false,
   '/payment/success': false,
@@ -33,7 +34,7 @@ export default {
   '/documents/contacts': true,
   '/documents/delivery': true,
   '/documents/refund': true,
-
+  
   // Page 404
   '/:pathMatch(.*)*': false,
 };

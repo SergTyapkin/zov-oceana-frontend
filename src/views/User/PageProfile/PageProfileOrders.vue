@@ -8,6 +8,8 @@
 @import '../../../styles/scrollbars.styl'
 
 .root-profile-info
+  animation-float()
+
   box-shadow 0 0 10px colorShadow
   .header
     padding 30px
@@ -37,6 +39,8 @@
 
         color colorText5
         text-align center
+      .order
+        animation-float(0.5s, -20px, 0, left)
 </style>
 
 <template>
@@ -49,7 +53,13 @@
     <main class="main">
       <ul class="orders-list">
         <li class="desc" v-if="!orders.length && !loading">Заказов пока нет</li>
-        <OrderCard v-for="order in orders" :order="order" :key="order.id" />
+        <OrderCard 
+          v-for="(order, idx) in orders"
+          :order="order"
+          :key="order.id"
+          class="order"
+          :style="{'--animation-index': idx}"
+        />
       </ul>
     </main>
 

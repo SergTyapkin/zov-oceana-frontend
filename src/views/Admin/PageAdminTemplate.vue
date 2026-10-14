@@ -12,7 +12,7 @@
   max-width 100%
 
   .block
-    block-bg-shadow()
+    block-bg()
 
     display flex
     gap 10px

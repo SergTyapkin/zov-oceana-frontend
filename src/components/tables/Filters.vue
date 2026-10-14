@@ -84,6 +84,13 @@
             @change="onChange"
             @input="onInput"
           />
+          <InputSwitch
+            unique-name="key"
+            :key="fieldsUpdatingKey"
+            v-else-if="field.type === FieldTypes.switch"
+            v-model="field._value"
+            @input="onInput"
+          />
         </div>
       </div>
     </section>
@@ -95,11 +102,13 @@ import { PropType } from 'vue';
 import SelectList from '~/components/SelectList.vue';
 import InputComponent from '~/components/InputComponent.vue';
 import InputSearch from '~/components/InputSearch.vue';
+import InputSwitch from '~/components/InputSwitch.vue';
 
 const FieldTypes = {
   select: 'select',
   search: 'search',
   text: 'text',
+  switch: 'switch',
 };
 export type Filter = {
   name?: string;
@@ -116,7 +125,7 @@ export type Filter = {
 };
 
 export default {
-  components: { InputSearch, InputComponent, SelectList },
+  components: { InputSearch, InputComponent, SelectList, InputSwitch },
   emits: ['update:modelValue', 'change', 'input'],
 
   props: {

@@ -17,8 +17,6 @@
     page-root()
     page-root-disable()
 
-    width 100vw
-
   section.page-title
     cursor pointer
     padding-block 40px
@@ -71,6 +69,8 @@
         font-spaced()
 
         color colorTextInvert2
+      .button-delete
+        button-error()
 
       .images-container
         .images-list
@@ -313,6 +313,8 @@
           Создан: {{ dateTimeFormatter(goods.createdDate) }} <br>
           #ID: {{ goods.id }} <br>
         </div>
+
+        <button class="button-delete" v-if="!isCreate" @click="deleteGoods">Удалить товар</button>
       </div>
     </section>
 
@@ -347,12 +349,6 @@ export default {
         isOnSale: false,
         isDelicates: false,
       } as Goods,
-      newCategoryId: undefined as undefined | string,
-      newCharacter: {
-        title: '',
-        value: '',
-      },
-
       loading: false,
 
       DEFAULT_GOODS_IMAGE,
@@ -454,6 +450,23 @@ export default {
         `Не удалось загрузить картинку`,
         () => {
           this.updateGoods();
+        }
+      );
+    },
+
+    async deleteGoods() {
+      if (!(await this.$modals.confirm('Точно удаляем товар?', 'Восстановить не получится'))) {
+        return;
+      }
+      await this.$request(
+        this,
+        this.$api.deleteGoods,
+        [this.goods.id],
+        `Не удалось удалить товар`,
+        () => {
+          window.onbeforeunload = null;
+          this.$popups.success('Товар удалён');
+          this.$router.push({name: 'adminGoods'});
         }
       );
     },

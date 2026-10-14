@@ -11,7 +11,7 @@
   page-root()
 
   padding-block 0
-  section
+  > section
     display flex
     flex-direction column
     gap 30px
@@ -45,7 +45,6 @@
     page-root-disable()
 
     gap 20px
-    width 100vw
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
     .logo
@@ -82,7 +81,7 @@
       display flex
       flex-wrap wrap
       gap 20px
-      justify-content space-between
+      justify-content space-around
       .number-container
         text-align center
         .number
@@ -102,27 +101,28 @@
   section.premium
     page-root-disable()
 
-    width 100vw
     color colorTextInvert1
     background colorBgDark
     .section-header
       color colorText1
-    .carousel
-      list-no-styles()
-      scrollable()
-
-      scroll-snap-type x mandatory
-      scroll-snap-align start
-      scroll-snap-stop normal
-      z-index 0
-      overflow-x auto
+    .auto-scroller
       display flex
-      gap 20px
-      align-items center
-      justify-content space-evenly
-      width 100vw
-      .goods
-        flex 1
+      max-width 100%
+      .carousel
+        list-no-styles()
+        scrollable()
+
+        scroll-snap-type x mandatory
+        scroll-snap-align start
+        scroll-snap-stop normal
+        z-index 0
+        overflow-x auto
+        display flex
+        gap 20px
+        align-items center
+        justify-content space-evenly
+        .goods
+          flex 1
 
   section.categories
     page-root-disable()
@@ -152,7 +152,6 @@
   section.map
     page-root-disable()
 
-    width 100vw
     color colorTextInvert1
     background colorBgDark
     .section-header
@@ -164,7 +163,6 @@
   section.contacts
     page-root-disable()
 
-    width 100vw
     color colorTextInvert1
     background colorEmp2
     .links-container
@@ -230,7 +228,7 @@
       <div class="section-header">Премиум</div>
       <header class="header">Популярные товары</header>
       <div class="section-desc">Откройте для себя нашу отборную коллекцию премиальных морепродуктов со всего мира</div>
-      <AutoScroller>
+      <AutoScroller class="auto-scroller">
         <ul class="carousel">
           <GoodsCard
             v-for="goods in $globals?.goodsOnLanding"

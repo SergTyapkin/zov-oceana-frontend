@@ -25,7 +25,7 @@ paginator-button()
 
     padding 5px 10px
     color colorTextInvert1
-    background colorEmp1
+    background colorEmp2
     trans()
     &:hover
       color colorText1
@@ -42,7 +42,7 @@ paginator-button()
 
     > *
       width 30px
-      color colorEmp1
+      color colorEmp2
       background colorBlockBg
       paginator-button()
       centered-flex-container()
@@ -53,13 +53,13 @@ paginator-button()
           background colorBlockBgSelected
         &.selected
           color colorTextInvert1
-          background colorEmp1
+          background colorEmp2
 
 </style>
 
 <template>
   <section class="root-paginator" v-if="maxPagesCount > 1">
-    <button v-if="canShowMore" class="button-show-more">Показать ещё</button>
+    <button v-if="canShowMore" class="button-show-more" @click="$emit('showMore')">Показать ещё</button>
 
     <ul class="pages-list" v-if="maxPagesCount <= pagesCountShown + 1">
       <li class="page" v-for="i in maxPagesCount" @click="select(i)" :class="{ selected: i === modelValue }">
@@ -104,7 +104,7 @@ paginator-button()
 
 <script lang="ts">
 export default {
-  emits: ['update:modelValue', 'change'],
+  emits: ['update:modelValue', 'change', 'showMore'],
 
   props: {
     canShowMore: Boolean,

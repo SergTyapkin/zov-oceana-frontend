@@ -8,7 +8,7 @@
 @import '../styles/scrollbars.styl'
 
 .root-admin-block
-  block-bg-shadow()
+  block-bg()
 
   margin-top 50px
 

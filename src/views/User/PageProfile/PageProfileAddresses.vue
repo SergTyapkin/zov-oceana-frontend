@@ -9,6 +9,8 @@
 
 .root-profile-addresses
   .header
+    animation-float(0.5s, -20px, 0, left)
+
     color colorText1
     .header-title
       font-large()
@@ -40,6 +42,7 @@
       > *
         flex 1
         min-width 250px
+        animation-float()
       .add-address-button
         button-no-styles()
         centered-flex-container()
@@ -48,8 +51,9 @@
 
         padding 20px
         color colorText1
-        background colorBlockBg
+        background colorBlockBgLow
         trans()
+        animation-float()
         &:hover
           color colorEmp2
           box-shadow 0 0 10px colorShadow
@@ -113,14 +117,15 @@
       <p v-if="!addresses.length && !loading" class="desc">Добавьте ваш адрес доставки</p>
       <ul class="addresses-list">
         <AddressCard
-          v-for="address in addresses"
+          v-for="(address, idx) in addresses"
           :address="address"
           :key="address.id"
+          :style="{'--animation-index': idx}"
           @edit="startEditAddress(address)"
           @delete="deleteAddress(address)"
         />
 
-        <button @click="clickCreateAddress" class="add-address-button">
+        <button @click="clickCreateAddress" class="add-address-button" :style="{'--animation-index': addresses.length}">
           <img src="/static/icons/plus-thin.svg" alt="plus">
           Добавить адрес
         </button>

@@ -51,12 +51,11 @@
 
 <script lang="ts">
 import { PropType } from 'vue';
-import { User } from '~/utils/models';
 
 export default {
   props: {
     user: {
-      type: Object as PropType<User>,
+      type: Object as PropType<{avatarUrl?: string, givenName: string, familyName: string}>,
       required: true,
     },
     size: {
