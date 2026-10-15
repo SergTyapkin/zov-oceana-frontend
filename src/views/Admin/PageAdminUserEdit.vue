@@ -89,9 +89,9 @@
           background colorBgDark
           svg-inside(25px)
         .info
-          color colorText2
           padding 20px
           padding-bottom 0
+          color colorText2
 
       .partners
         background colorBgLight
@@ -110,15 +110,16 @@
 
             flex 0
             padding-inline 5px
-            // height min-content
+        // height min-content
         dl.partners-info
           font-small()
-          padding 20px
+
           display grid
           grid-template-columns auto auto
+          gap 10px 20px
           align-items center
           justify-content space-between
-          gap 10px 20px
+          padding 20px
           dt
           dd
             margin 0
@@ -135,24 +136,28 @@
 
   .partnership-request
     block()
-    margin-top 20px
+
     display flex
     flex-wrap wrap
-    justify-content space-between
-    align-content center
     gap 20px
+    align-content center
+    justify-content space-between
+    margin-top 20px
     header
       font-bold()
+
       width 100%
     p
       width 100%
     .button-confirm
       button-emp2()
       centered-margin()
+
       flex 1 0.5
     .button-decline
       button-error()
       centered-margin()
+
       flex 1 0.5
 </style>
 

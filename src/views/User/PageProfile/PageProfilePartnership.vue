@@ -18,6 +18,7 @@
 
   .your-balance
     block-emp()
+
     display grid
     grid-template auto 1fr / 1fr 1fr
     gap 10px
@@ -237,8 +238,9 @@
         grid-column 1/-1
       .info
         font-small-extra()
-        color colorText4
+
         grid-column 1/-1
+        color colorText4
         text-wrap balance
       img.qr
         grid-column 3
