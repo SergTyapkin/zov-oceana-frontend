@@ -455,8 +455,8 @@
       <div class="modal-inside">
         <header class="header">Вход</header>
         <main class="main">
-          <div>
-            <TGAuth @login="onTGSignIn" class="tg-auth" />
+          <div v-if="!isTgAuthError">
+            <TGAuth @login="onTGSignIn" @error="isTgAuthError = true" class="tg-auth" />
 
             <div class="desc">или</div>
           </div>
@@ -524,6 +524,7 @@ export default {
   data() {
     return {
       isOverlayMenuShown: false,
+      isTgAuthError: false,
 
       IconProfile,
       IconEmail,

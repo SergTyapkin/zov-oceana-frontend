@@ -35,7 +35,7 @@ export type TGUser = {
 };
 
 export default {
-  emits: ['login'],
+  emits: ['login', 'error'],
 
   data() {
     return {
@@ -53,7 +53,10 @@ export default {
     script.setAttribute('data-onauth', 'TelegramOnAuthCb(user)');
     script.setAttribute('data-lang', 'ru');
 
-    script.onerror = () => {this.isError = true}
+    script.onerror = () => {
+      this.isError = true;
+      this.$emit('error');
+    };
 
     (this.$refs.target as HTMLElement).appendChild(script);
 
