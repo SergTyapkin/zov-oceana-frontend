@@ -176,7 +176,7 @@
     <div class="partnership-request" v-if="user.isPartnershipRequested !== false && !user.isPartner">
       <header>Пользователь отправил запрос на статус партнёра</header>
       <p v-if="!user.isPartnershipRequested && user.isPartnershipRequested !== false">Запрос пользователя отклонён</p>
-      <button v-if="!user.isPartnershipRequested && !user.isPartner" class="button-confirm" @click="acceptPartnershipRequest()">Подтвердить запрос</button>
+      <button class="button-confirm" @click="acceptPartnershipRequest()">Подтвердить запрос</button>
       <button v-if="user.isPartnershipRequested" class="button-decline" @click="declinePartnershipRequest()">Отклонить запрос</button>
     </div>
 
