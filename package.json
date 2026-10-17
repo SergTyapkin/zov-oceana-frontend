@@ -46,6 +46,7 @@
     "@sergtyapkin/modals-popups": "^1.1.1",
     "@sergtyapkin/models-validator": "^1.1.6",
     "@sergtyapkin/rest-api": "^1.0.7",
+    "@sergtyapkin/scroll-restore": "^1.1.0",
     "qrcode": "^1.5.4",
     "vue": "^3.5.18",
     "vue-router": "^4.1.3",

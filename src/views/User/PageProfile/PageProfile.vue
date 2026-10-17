@@ -21,7 +21,9 @@
     gap 20px
     padding-block 70px
     color colorTextInvert1
-    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
+    background linear-gradient(#00000077, #00000077), url("/static/images/crab-bg.jpg")
+    background-position 100% 100%
+    background-size cover
     .avatar
       centered-flex-container()
       animation-float()
@@ -51,29 +53,33 @@
     text-align center
     background colorBgDark
     box-shadow 0 0 10px colorShadow
-    scrollable()
-    @media ({mobile})
-      display flex
-      flex-wrap wrap
     > *
       display block
       flex 1
       padding 15px 20px
       background colorBgDark
+      &.router-link-exact-active
+        background colorEmp2
+
+      @media ({mobile})
+        font-small()
+
+        padding 10px 10px
       trans()
       hover-effect()
       animation-float()
-      @media ({mobile})
-        font-small()
-        padding 10px 10px
-      &.router-link-exact-active
-        background colorEmp2
+
+    @media ({mobile})
+      display flex
+      flex-wrap wrap
+    scrollable()
 
   section.profile-main
     animation-float()
 
     margin-top 60px
-    @media({mobile})
+
+    @media ({mobile})
       margin-top 20px
 </style>
 

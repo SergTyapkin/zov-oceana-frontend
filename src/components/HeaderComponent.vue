@@ -9,21 +9,8 @@
 
 
 .root-header
-  @media({mobile})
-    position fixed
-    bottom 0
-    z-index 9999
-    width 100%
-    border-radius radiusM radiusM 0 0
-    overflow hidden
-    background colorBgLight
-    box-shadow 0 0 5px colorShadow
-  
-  .row-inner
-    scrollbars-hidden()
-    page-root()
-    font-small()
 
+  .row-inner
     overflow-x auto
     display flex
     gap 5%
@@ -31,22 +18,20 @@
     justify-content space-between
     margin-inline auto
     padding-block 15px
-    @media({mobile})
-      justify-content space-around
 
     .left-group
+      white-space nowrap
+      .text
+        mobile-hidden()
+
+      @media ({mobile})
+        display none
       hover-effect()
       animation-float()
-
-      white-space nowrap
       font-upper()
       svg-inside(45px)
       font-medium()
       font-bold-extra()
-      @media({mobile})
-        display none
-      .text
-        mobile-hidden()
 
     .center-group
       display flex
@@ -54,11 +39,6 @@
       gap 30px
       align-items center
       justify-content center
-      font-upper()
-      font-medium()
-      animation-float()
-      @media({mobile})
-        display none
       .button-home
         mobile-hidden()
 
@@ -71,14 +51,17 @@
         &.router-link-active
           color colorEmp2
 
+      @media ({mobile})
+        display none
+      font-upper()
+      font-medium()
+      animation-float()
+
     .right-group
       display flex
       flex 0
       gap 20px
       align-items center
-      animation-float()
-      @media({mobile})
-        display contents
       .search
         flex 1
 
@@ -89,11 +72,25 @@
       .menu
         button-no-styles()
         hover-effect()
+        &.router-link-active
+          img
+            transform translateY(-3px)
+            filter invert(33%) sepia(100%) saturate(3231%) hue-rotate(199deg) brightness(95%) contrast(87%)
         img
           img-size(16px)
+          trans(0.1s)
+          &.mobile
+            img-size(25px)
+
+            @media ({desktop})
+              display none
+          &.desktop
+            @media ({mobile})
+              display none !important
+
 
       .market
-        @media({desktop})
+        @media ({desktop})
           display none
 
       .cart
@@ -118,6 +115,20 @@
         desktop-hidden()
         img
           img-size(20px)
+
+          @media ({mobile})
+            img-size(25px)
+
+      @media ({mobile})
+        display contents
+      animation-float()
+
+    @media ({mobile})
+      justify-content space-around
+      padding-top 20px
+    scrollbars-hidden()
+    page-root()
+    font-small()
 
   .overlay-menu
     position fixed
@@ -225,6 +236,16 @@
     @media ({mobile})
       width calc(100vw - 40px)
       min-width unset
+
+  @media ({mobile})
+    position fixed
+    z-index 9999
+    bottom 0
+    overflow hidden
+    width 100%
+    border-radius radiusM radiusM 0 0
+    background colorBgLight
+    box-shadow 0 0 5px colorShadow
 </style>
 
 <template>
@@ -244,15 +265,18 @@
 
       <div class="right-group" style="--animation-index: 3">
         <router-link v-if="$store.state.user.hasSomeAdminRights" :to="{ name: 'admin' }" class="admin">
-          <img src="/static/icons/admin.svg" alt="admin">
+          <img src="/static/icons/shield-person-thin.svg" alt="admin" class="mobile">
+          <img src="/static/icons/shield-person-thin.svg" alt="admin" class="desktop">
         </router-link>
 
         <router-link :to="{ name: 'market' }" class="market">
-          <img src="/static/icons/market.svg" alt="market">
+          <img src="/static/icons/market-thin.svg" alt="market" class="mobile">
+          <img src="/static/icons/market.svg" alt="market" class="desktop">
         </router-link>
 
         <router-link :to="{ name: 'cart' }" class="cart" @click="isOverlayMenuShown = false">
-          <img src="/static/icons/cart-dark.svg" alt="cart">
+          <img src="/static/icons/cart-thin.svg" alt="cart" class="mobile">
+          <img src="/static/icons/cart-dark.svg" alt="cart" class="desktop">
           <div class="goods-number" v-if="$store.state.cart.length">{{ $store.state.cart.length }}</div>
         </router-link>
 
@@ -262,10 +286,12 @@
           class="profile"
           @click="isOverlayMenuShown = false"
         >
-          <img src="/static/icons/profile.svg" alt="profile">
+          <img src="/static/icons/profile-thin.svg" alt="profile" class="mobile">
+          <img src="/static/icons/profile.svg" alt="profile" class="desktop">
         </router-link>
         <button v-else @click="showSignInModal()" class="profile">
-          <img src="/static/icons/profile.svg" alt="profile">
+          <img src="/static/icons/profile-thin.svg" alt="profile" class="mobile">
+          <img src="/static/icons/profile.svg" alt="profile" class="desktop">
         </button>
 
         <button class="menu" @click="isOverlayMenuShown = true" style="--animation-index: 4">

@@ -8,7 +8,8 @@ button(marginLeft=0px, marginRight=10px)
   user-select none
   box-sizing border-box
   padding 12px 30px
-  border none
+  border 1px solid
+  border-radius radiusS
   color colorText1
   text-shadow none
   background colorBlockBg
@@ -19,7 +20,7 @@ button(marginLeft=0px, marginRight=10px)
 
   &[disabled]:not([disabled="false"])
     pointer-events none
-    opacity 0.9
+    opacity 0.6
     // color mix(white, colorText1, 70%)
     // background mix(white, colorBlockBg, 50%)
     // box-shadow none
@@ -57,6 +58,10 @@ button-emp1(marginLeft=0px, marginRight=10px)
     border-color transparent
     color colorTextInvert1
     background colorEmp1Hover
+  &[disabled]:not([disabled="false"])
+    border-color colorText4
+    color colorText4
+    background none
 
 button-emp2(marginLeft=0px, marginRight=10px)
   button-emp1(marginLeft, marginRight)

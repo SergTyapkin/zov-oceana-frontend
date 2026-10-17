@@ -170,6 +170,10 @@
         width 100%
         color colorTextInvert1
         background colorBgDark
+      .button-remove-from-cart
+        button-emp2()
+
+        width 100%
 </style>
 
 <template>
@@ -247,7 +251,7 @@
             <img src="/static/icons/cart.svg" alt="cart">
             Добавить в корзину
           </button>
-          <button @click="removeFromCart" v-else class="button-add-to-cart">
+          <button @click="removeFromCart" v-else class="button-remove-from-cart">
             <img src="/static/icons/remove.svg" alt="remove">
             Убрать из корзины
           </button>

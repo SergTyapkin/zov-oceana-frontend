@@ -7,155 +7,214 @@
 @import '../../styles/animations.styl'
 @import '../../styles/scrollbars.styl'
 
-.root-page-admin-categories
-  // page-root()
+.root-page-return
+  max-width 900px
+  margin 0 auto
+  padding 40px 20px
+  line-height 1.8
+  color #333
 
-  section.filters
-    margin-inline 0
+  h1
+    font-h2()
 
-    .top-row
-      display flex
-      flex-wrap wrap
-      gap 10px
-      justify-content space-between
-      .input-group
-        display flex
-        flex 1
-        .search
-          flex 1
-          min-width 150px
-        .category-selector
-          min-width 150px
+    margin-bottom 30px
+    color colorText1
+    text-align center
+
+  h2
+    font-h3()
+
+    margin-top 30px
+    margin-bottom 15px
+    color colorText2
+
+  h3
+    font-h4()
+
+    margin-top 20px
+    margin-bottom 10px
+    color colorText3
+
+  p
+  li
+    font-body()
+
+    margin-bottom 10px
+
+  ul
+  ol
+    margin-bottom 15px
+    padding-left 25px
+
+  a
+    color #0066cc
+    text-decoration none
+
+    &:hover
+      text-decoration underline
+
+  .return-header
+    margin-bottom 30px
+    padding 20px
+    border-left 4px solid #ff6b00
+    background #f8f9fa
+
+  .return-grid
+    display grid
+    grid-template-columns 1fr 1fr
+    gap 30px
+    margin 20px 0
+
+    .return-item
+      padding 15px 0
+      border-bottom 1px solid #eee
+
+      .label
+        font-small()
+
+        color colorText5
+        text-transform uppercase
+        letter-spacing 0.5px
+
+      .value
+        font-body()
+
+        margin-top 5px
 
     @media ({mobile})
-      margin-inline 0
-    page-root-disable()
-    animation-float()
+      grid-template-columns 1fr
 
-  section.goods
-    overflow auto
-    display grid
-    grid-row-gap 10px
-    grid-template-columns auto auto 1fr auto auto
-    align-items center
-    width 100%
-    padding 40px 10px 0 10px
-    scrollable()
-    .row
-      display contents
-      > *
-        padding-inline 10px
-        &.button
-          button-no-fill()
+  .info-box
+    margin 20px 0
+    padding 20px
+    border-left 4px solid #17a2b8
+    background #f8f9fa
 
-          width min-content
-          padding-inline 10px
-          img
-            margin 0
+  .warning
+    margin 20px 0
+    padding 15px 20px
+    border-left 4px solid #dc3545
+    color #721c24
+    background #f8d7da
 
-        @media ({mobile})
-          padding-inline 3px
-        trans()
-      &.header
-        font-bold()
-        > *
-          margin-bottom 10px
-    .info
-      font-small()
+  .return-footer
+    margin-top 40px
+    padding-top 20px
+    border-top 2px solid #eee
+    font-small()
 
-      color colorText5
-
-  .button-plus
-    centered-margin()
-    button-emp2()
-
-    width fit-content
-    margin-top 30px
+    color colorText5
+    text-align center
 </style>
 
 <template>
-  <div class="root-page-admin-categories">
-    <section class="goods">
-      <div class="row header">
-        <div>#</div>
-        <div>Категория</div>
-        <div>Описание</div>
-        <div />
-        <div />
+  <div class="root-page-return">
+    <h1>Возврат товара и денежных средств</h1>
+
+    <div class="return-header">
+      <p><strong>Интернет-магазин "{{ companyTitle }}"</strong></p>
+      <p>Мы внимательно относимся к качеству нашей продукции. Если по какой-то причине вы остались недовольны заказом, вы можете вернуть его в соответствии с законодательством РФ и нашими условиями.</p>
+    </div>
+
+    <!-- Основные условия возврата -->
+    <h2>1. Условия возврата</h2>
+    <div class="return-grid">
+      <div class="return-item">
+        <div class="label">Срок подачи заявления</div>
+        <div class="value">{{ returnDays }}</div>
       </div>
-
-      <div class="row" v-for="category in $globals.categories" :key="category.id">
-        <div>{{ category.id }}</div>
-        <div>{{ category.title }}</div>
-        <div>{{ category.description }}</div>
-        <button class="button" @click="renameCategory(category)"><img src="/static/icons/edit.svg" alt="edit"></button>
-        <button class="button" @click="deleteCategory(category)"><img src="/static/icons/trashbox.svg" alt="delete"></button>
+      <div class="return-item">
+        <div class="label">Состояние товара</div>
+        <div class="value">{{ returnCondition }}</div>
       </div>
+      <div class="return-item">
+        <div class="label">Что нужно приложить</div>
+        <div class="value">{{ requiredDocuments }}</div>
+      </div>
+      <div class="return-item">
+        <div class="label">Способ возврата денег</div>
+        <div class="value">{{ refundMethod }}</div>
+      </div>
+    </div>
 
-      <div v-if="!$globals.categories.length" class="info">Категорий нет</div>
-    </section>
-    <button class="button-plus" @click="createCategory()"><img src="/static/icons/plus-thin.svg" alt="plus">Добавить</button>
+    <!-- Категории товаров -->
+    <h2>2. Возврат товара надлежащего и ненадлежащего качества</h2>
+    <h3>Товар ненадлежащего качества (с браком)</h3>
+    <p>Если вы обнаружили брак, нарушение температурного режима или иные недостатки, вы вправе вернуть товар и потребовать:</p>
+    <ul>
+      <li>замены на аналогичный товар надлежащего качества;</li>
+      <li>соразмерного уменьшения покупной цены;</li>
+      <li>возврата уплаченной суммы за товар.</li>
+    </ul>
 
-    <CircleLinesLoading v-if="loading" centered />
+    <h3>Товар надлежащего качества</h3>
+    <p>Согласно Постановлению Правительства РФ № 2463, продовольственные товары и морепродукты <strong>надлежащего качества возврату и обмену не подлежат</strong>. Исключение составляют случаи, когда товар был поврежден при доставке или его характеристики не соответствуют заявленным на сайте.</p>
+
+    <!-- Порядок оформления -->
+    <h2>3. Порядок оформления возврата</h2>
+    <ol>
+      <li>Свяжитесь с нами по телефону или электронной почте (см. ниже) в течение {{ returnDays }} с момента получения заказа;</li>
+      <li>Опишите проблему и приложите фотографии товара, упаковки и чека, если есть брак или нарушение температурного режима;</li>
+      <li>Менеджер рассмотрит заявку и согласует с вами удобный способ возврата (самовывоз или вызов курьера);</li>
+      <li>После возврата товара мы проведем проверку и примем решение о возврате средств или замене.</li>
+    </ol>
+
+    <div class="warning">
+      <p><strong>⚠️ ВАЖНО:</strong> Пожалуйста, не выбрасывайте товар до момента решения вопроса. В случае спора нам необходимо будет провести проверку качества. Возврат товара надлежащего качества возможен только при сохранении его потребительских свойств и упаковки (если это применимо).</p>
+    </div>
+
+    <!-- Возврат денег -->
+    <h2>4. Сроки и способы возврата денежных средств</h2>
+    <div class="info-box">
+      <p><strong>✔ {{ refundTimeText }}</strong></p>
+    </div>
+    <p>Возврат денежных средств осуществляется тем же способом, которым была произведена оплата:</p>
+    <ul>
+      <li>при оплате банковской картой — на ту же карту;</li>
+      <li>при оплате наличными — наличными или переводом на карту по реквизитам;</li>
+      <li>при оплате через СБП — по номеру телефона.</li>
+    </ul>
+
+    <!-- Контакты -->
+    <h2>5. Контакты для вопросов по возврату</h2>
+    <p>По всем вопросам, связанным с возвратом, вы можете обратиться к нам:</p>
+    <ul>
+      <li><strong>Телефон:</strong> <a :href="'tel:' + phone">{{ phone }}</a></li>
+      <li><strong>Электронная почта:</strong> <a :href="'mailto:' + email">{{ email }}</a></li>
+    </ul>
+
+    <!-- Подвал -->
+    <div class="return-footer">
+      <p>© {{ currentYear }} {{ companyShortName }}. Все права защищены.</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
-import { Category } from '~/utils/models';
+import {
+  COMPANY_SHORT_NAME,
+  COMPANY_PHONE,
+  COMPANY_EMAIL,
+  COMPANY_DATA_UPDATED_YEAR,
+  COMPANY_TITLE,
+} from '~/constants';
 
 export default {
-  components: { CircleLinesLoading },
-
   data() {
     return {
-      loading: false,
+      companyTitle: COMPANY_TITLE,
+      companyShortName: COMPANY_SHORT_NAME,
+      phone: COMPANY_PHONE,
+      email: COMPANY_EMAIL,
+      currentYear: COMPANY_DATA_UPDATED_YEAR,
+
+      // Возврат
+      returnDays: '1-3 рабочих дня', // Уточните по закону о защите прав потребителей (обычно 7-14 дней для заявки)
+      returnCondition: 'сохранение упаковки и температурного режима (для брака)',
+      requiredDocuments: 'фото брака, чек или подтверждение оплаты',
+      refundMethod: 'на карту или счет покупателя',
+      refundTimeText: 'Возврат денег осуществляется в течение 10 рабочих дней с момента получения нами возвращенного товара и подписания заявления.',
     };
-  },
-
-  mounted() {
-    this.updateCategories();
-  },
-
-  methods: {
-    async updateCategories() {
-      await this.$store.dispatch('GET_GLOBALS');
-      this.$forceUpdate();
-    },
-
-    async createCategory() {
-      const title = await this.$modals.prompt('Создание категории', 'Введите название категории');
-      if (!title) {
-        return;
-      }
-      const description = await this.$modals.prompt('Создание категории', 'Введите описание категории');
-
-      await this.$request(this, this.$api.createCategory, [title, description], `Не удалось создать категорию`);
-
-      await this.updateCategories();
-    },
-
-    async renameCategory(category: Category) {
-      const title = await this.$modals.prompt('Изменение категории', 'Введите название категории', category.title);
-      if (!title) {
-        return;
-      }
-      const description = await this.$modals.prompt('Изменение категории', 'Введите описание категории', category.description);
-
-      await this.$request(this, this.$api.updateCategory, [category.id, title, description], `Не удалось изменить категорию`);
-
-      await this.updateCategories();
-    },
-
-    async deleteCategory(category: Category) {
-      if (!(await this.$modals.confirm('Удаление категории', 'Вы точно уверены? Она пропадёт из всех товаров, восстановить не получится'))) {
-        return;
-      }
-
-      await this.$request(this, this.$api.deleteCategory, [category.id], `Не удалось удалить категорию`);
-
-      await this.updateCategories();
-    },
   },
 };
 </script>

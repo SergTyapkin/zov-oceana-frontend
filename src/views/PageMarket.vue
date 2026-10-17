@@ -20,10 +20,9 @@
   section.title
     gap 50px
     color colorTextInvert1
-    background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
-    @media ({mobile})
-      padding-top 30px
-      padding-bottom 20px
+    background linear-gradient(#00000077, #00000077), url("/static/images/crab-bg.jpg")
+    background-position 100% 100%
+    background-size cover
     .header
       font-large-extra-extra()
       font-semibold()
@@ -39,6 +38,10 @@
       font-small()
       font-thin()
       animation-float(0.5s, -20px, 0, left)
+
+    @media ({mobile})
+      padding-top 30px
+      padding-bottom 20px
 
   section.filters
     padding-block 30px
