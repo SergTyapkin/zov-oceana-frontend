@@ -9,6 +9,16 @@
 
 
 .root-header
+  @media({mobile})
+    position fixed
+    bottom 0
+    z-index 9999
+    width 100%
+    border-radius radiusM radiusM 0 0
+    overflow hidden
+    background colorBgLight
+    box-shadow 0 0 5px colorShadow
+  
   .row-inner
     scrollbars-hidden()
     page-root()
@@ -21,7 +31,8 @@
     justify-content space-between
     margin-inline auto
     padding-block 15px
-    background colorBgLight
+    @media({mobile})
+      justify-content space-around
 
     .left-group
       hover-effect()
@@ -32,6 +43,8 @@
       svg-inside(45px)
       font-medium()
       font-bold-extra()
+      @media({mobile})
+        display none
       .text
         mobile-hidden()
 
@@ -44,6 +57,8 @@
       font-upper()
       font-medium()
       animation-float()
+      @media({mobile})
+        display none
       .button-home
         mobile-hidden()
 
@@ -62,17 +77,24 @@
       gap 20px
       align-items center
       animation-float()
+      @media({mobile})
+        display contents
       .search
         flex 1
 
       .cart
       .admin
       .profile
+      .market
       .menu
         button-no-styles()
         hover-effect()
         img
           img-size(16px)
+
+      .market
+        @media({desktop})
+          display none
 
       .cart
         position relative
@@ -223,6 +245,10 @@
       <div class="right-group" style="--animation-index: 3">
         <router-link v-if="$store.state.user.hasSomeAdminRights" :to="{ name: 'admin' }" class="admin">
           <img src="/static/icons/admin.svg" alt="admin">
+        </router-link>
+
+        <router-link :to="{ name: 'market' }" class="market">
+          <img src="/static/icons/market.svg" alt="market">
         </router-link>
 
         <router-link :to="{ name: 'cart' }" class="cart" @click="isOverlayMenuShown = false">

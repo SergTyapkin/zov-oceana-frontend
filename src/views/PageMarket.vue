@@ -21,6 +21,9 @@
     gap 50px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
+    @media ({mobile})
+      padding-top 30px
+      padding-bottom 20px
     .header
       font-large-extra-extra()
       font-semibold()

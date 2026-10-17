@@ -19,6 +19,9 @@
     padding-block 70px
     color colorTextInvert1
     background linear-gradient(#00000077, #00000077), url("/static/images/ocean-bg.jpg")
+    @media ({mobile})
+      padding-top 30px
+      padding-bottom 20px
     .title-button-back
       svg-inside(1lh)
       font-small()

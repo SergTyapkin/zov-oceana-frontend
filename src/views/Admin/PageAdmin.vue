@@ -9,6 +9,8 @@
 
 .root-page
   page-root()
+  @media ({mobile})
+    padding-top 0
 
   nav.navigation
     page-root-disable()
@@ -21,6 +23,9 @@
     background colorBgDark
     box-shadow 0 0 10px colorShadow
     scrollable()
+    @media ({mobile})
+      display flex
+      flex-wrap wrap
     > *
       display block
       flex 1
@@ -29,6 +34,9 @@
       trans()
       hover-effect()
       animation-float()
+      @media ({mobile})
+        font-small()
+        padding 10px 10px
       &.router-link-exact-active
         background colorEmp2
 

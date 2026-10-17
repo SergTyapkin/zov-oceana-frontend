@@ -40,7 +40,8 @@
       color colorTextInvert3
 
     @media ({mobile})
-      padding-block 20px
+      padding-top 30px
+      padding-bottom 20px
     page-root()
 
   nav.navigation
@@ -51,6 +52,9 @@
     background colorBgDark
     box-shadow 0 0 10px colorShadow
     scrollable()
+    @media ({mobile})
+      display flex
+      flex-wrap wrap
     > *
       display block
       flex 1
@@ -59,6 +63,9 @@
       trans()
       hover-effect()
       animation-float()
+      @media ({mobile})
+        font-small()
+        padding 10px 10px
       &.router-link-exact-active
         background colorEmp2
 
@@ -66,6 +73,8 @@
     animation-float()
 
     margin-top 60px
+    @media({mobile})
+      margin-top 20px
 </style>
 
 <template>
