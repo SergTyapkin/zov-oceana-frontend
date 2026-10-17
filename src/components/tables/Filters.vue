@@ -28,7 +28,7 @@
       display flex
       flex-wrap wrap
       gap 16px
-      align-items center
+      align-items start
       margin-bottom 10px
       .field
         flex var(--size)
@@ -80,6 +80,7 @@
             :key="fieldsUpdatingKey"
             v-else-if="field.type === FieldTypes.text"
             :placeholder="field.placeholder || ''"
+            :type="field.inputType || 'text'"
             v-model="field._value"
             @change="onChange"
             @input="onInput"
@@ -112,6 +113,7 @@ const FieldTypes = {
 };
 export type Filter = {
   name?: string;
+  inputType?: string;
   showName: boolean;
   key: string;
   type: keyof typeof FieldTypes;

@@ -67,6 +67,7 @@ export default new Vuex.Store({
       state.user.canEditPartners = userData.canEditPartners;
       state.user.canEditGlobals = userData.canEditGlobals;
       state.user.canExecuteSQL = userData.canExecuteSQL;
+      state.user.canEditHistory = userData.canEditHistory;
 
       state.user.hasSomeAdminRights =
         state.user.canEditUsers ||

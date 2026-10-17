@@ -28,6 +28,7 @@ import PageOrder from '~/views/PageOrder.vue';
 import PagePartnership from '~/views/PagePartnership.vue';
 import PageProfilePartnership from '~/views/User/PageProfile/PageProfilePartnership.vue';
 import { QUERY_PARAM_REFERRER_ID } from '~/constants';
+import PageAdminHistory from '~/views/Admin/PageAdminHistory.vue';
 import PageAdmin from '~/views/Admin/PageAdmin.vue';
 import PageAdminGoods from '~/views/Admin/PageAdminGoods.vue';
 import PageAdminUsers from '~/views/Admin/PageAdminUsers.vue';
@@ -93,6 +94,7 @@ export default function createVueRouter(Store: Store): Router {
         { path: '/admin/orders', name: 'adminOrders', component: PageAdminOrders, meta: { adminRequired: true } },
         { path: '/admin/users', name: 'adminUsers', component: PageAdminUsers, meta: { adminRequired: true } },
         { path: '/admin/globals', name: 'adminGlobals', component: PageAdminGlobals, meta: { adminRequired: true } },
+        { path: '/admin/history', name: 'adminHistory', component: PageAdminHistory, meta: { adminRequired: true } },
         { path: '/admin/sql', name: 'adminSQL', component: PageAdminExecuteSQL, meta: { adminRequired: true } },
 
         { path: '/admin/goods/create', name: 'adminGoodsCreate', component: PageAdminGoodsCreateEdit, meta: { adminRequired: true } },

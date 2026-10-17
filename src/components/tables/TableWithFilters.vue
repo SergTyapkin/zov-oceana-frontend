@@ -32,7 +32,7 @@
 <template>
   <div class="root-table-with-filters">
     <section class="filters">
-      <Filters :title="filtersTitle" :fields="filters" :data="data" v-model="filteredData">
+      <Filters :title="filtersTitle" :fields="filters" :data="data" v-model="filteredData" @input="(values: any) => $emit('filterInput', values)">
         <slot name="filters" />
       </Filters>
     </section>
@@ -43,7 +43,11 @@
         class="table"
         :info-block-fields="tableInfoBlockFields"
         :fields="tableFields"
-        :content="filteredData"
+        :content="serverPagination ? data : filteredData"
+        :server-pagination="serverPagination"
+        :total-rows="totalRows"
+        :page="page"
+        @page-change="(page: number) => $emit('pageChange', page)"
         :row-click-redirect-name="rowClickRedirectName"
         :redirect-query-params="redirectQueryParams"
         :on-row-clicked-callback="tableOnRowClickedCallback"
@@ -75,11 +79,14 @@ import { PropType } from 'vue';
 type ExtFilter = Filter | {compareFoo: (tableRow: object, filterValue: any, allFilters: any[]) => boolean};
 
 export default {
-  emits: ['change', 'update:modelValue', 'select', 'add', 'remove'],
+  emits: ['change', 'update:modelValue', 'select', 'add', 'remove', 'filter-input', 'page-change'],
 
   components: { Filters, TableComponent },
 
   props: {
+    serverPagination: Boolean,
+    totalRows: { type: Number, default: 0 },
+    page: { type: Number, default: 1 },
     filters: {
       type: Array as PropType<ExtFilter[][]>,
       required: true,

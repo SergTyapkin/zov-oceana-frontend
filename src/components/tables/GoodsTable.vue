@@ -10,14 +10,6 @@
     :sorted-by-column-idx="1"
     @change="updateModelValue"
     @select="(d: any) => $emit('select', d)"
-    :table-info-block-fields="withInfoBlock ? [
-      { name: '#', from: 'id' },
-      { name: 'Название', from: 'title' },
-      { name: 'Происхождение', from: 'fromLocation' },
-      { name: 'Цена', from: 'cost', changer: costFormatter },
-      { name: 'На складе', from: 'amountLeft' },
-      { name: 'В продаже', from: 'isOnSale' },
-    ] : undefined"
     :table-fields="[
       { name: '#', from: 'id' },
       { name: 'Название', from: 'title' },

@@ -24,6 +24,7 @@ export interface User {
   canEditGoods: boolean;
   canExecuteSQL: boolean;
   canEditGlobals: boolean;
+  canEditHistory: boolean;
 
   hasSomeAdminRights: boolean;
 
@@ -174,3 +175,21 @@ export interface SBPBank {
   titleRus: string;
 }
 
+
+export interface HistoryRecord {
+  id: number;
+  userId?: string;
+  type: string;
+  text: string;
+  date: Date;
+}
+
+export interface HistoryFilters {
+  search?: string;
+  type?: string;
+  userId?: string;
+  dateStart?: string;
+  dateEnd?: string;
+  limit?: number;
+  offset?: number;
+}

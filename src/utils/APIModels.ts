@@ -85,6 +85,10 @@ export const UserModel = {
     type: Boolean,
     from: 'caneditglobals',
   },
+  canEditHistory: {
+    type: Boolean,
+    from: 'canedithistory',
+  },
   ordersCount: {
     type: Number,
     from: 'orderscount',
@@ -168,6 +172,7 @@ export const UserModelMockData = validateModel(UserModel, {
   caneditpartners: true,
   canexecutesql: true,
   caneditglobals: true,
+  canedithistory: true,
   joineddate: new Date('2023-04-04'),
 });
 
@@ -783,4 +788,27 @@ export const SbpBankListModelMockData = {
     Object.assign({}, SbpBankModelMockData, {id: '10000025'}),
     Object.assign({}, SbpBankModelMockData, {id: '10000027', title: 'Any Other Bank', titleRus: 'БАНК РУС'}),
   ],
+};
+export const HistoryRecordModel = {
+  id: Number,
+  userId: { type: String, from: 'userid', optional: true },
+  type: String,
+  text: String,
+  date: Date,
+};
+export const HistoryListModel = { history: ArrayType(HistoryRecordModel), total: Number };
+export const HistoryRecordModelMockData = validateModel(HistoryRecordModel, {
+  id: 1, userid: 1, type: 'user', text: 'Изменены данные пользователя',
+  date: '2026-10-17T10:00:00Z',
+});
+export const HistoryListModelMockData = {
+  history: Array.from({ length: 125 }, (_, index) => ({
+    ...HistoryRecordModelMockData,
+    id: 125 - index,
+    userId: index % 3 === 0 ? undefined : String(index % 5 + 1),
+    type: index % 2 === 0 ? 'user' : 'order',
+    text: index % 2 === 0 ? 'Изменены данные пользователя' : 'Обновлён статус заказа',
+    date: new Date(Date.UTC(2026, 9, 17, 10, 0, -index)),
+  })),
+  total: 125,
 };

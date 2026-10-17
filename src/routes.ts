@@ -18,6 +18,7 @@ export default {
   '/partnership': true,
   '/partnership/qualities': false,
   '/admin': false,
+  '/admin/history': false,
   
   // Payment
   '/payment/order/:id': false,

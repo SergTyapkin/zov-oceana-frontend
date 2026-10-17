@@ -49,6 +49,7 @@
       <router-link v-if="$user.canEditUsers" :to="{name: 'adminUsers'}" style="--animation-index: 2">Пользователи</router-link>
       <router-link v-if="$user.canEditGlobals" :to="{name: 'adminGlobals'}" style="--animation-index: 4">Глобальное</router-link>
       <router-link v-if="$user.canExecuteSQL" :to="{name: 'adminSQL'}" style="--animation-index: 5">SQL</router-link>
+      <router-link v-if="$user.canEditHistory" :to="{name: 'adminHistory'}" style="--animation-index: 6">История</router-link>
       <!--      <router-link v-if="$user.canEditPartners" :to="{name: 'adminGlobals'}" style="&#45;&#45;animation-index: 4">Партнерство</router-link>-->
     </nav>
 

@@ -11,21 +11,6 @@
   page-root()
 
   padding-top 0
-
-  > .status
-    font-bold()
-
-    color mix(colorEmp1, transparent, 90%)
-  &.red > .status
-    color mix(colorError, transparent, 90%)
-  &.green > .status
-    color mix(colorSuccess, transparent, 90%)
-  &.yellow > .status
-    color mix(colorEmp1, transparent, 90%)
-  &.blue > .status
-    color mix(colorEmp2, transparent, 90%)
-  &.gray > .status
-    color mix(colorTextInvert4, transparent, 90%)
 </style>
 
 <template>

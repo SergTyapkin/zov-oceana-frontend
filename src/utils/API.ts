@@ -1,3 +1,5 @@
+import { HistoryListModel, HistoryListModelMockData } from '~/utils/APIModels';
+import { HistoryRecord, HistoryFilters } from '~/utils/models';
 import REST_API from '@sergtyapkin/rest-api';
 import { validateModel, type Model } from '@sergtyapkin/models-validator';
 import {
@@ -258,6 +260,10 @@ export default class API extends REST_API {
     this.#POST(`/image`, {goodsId, dataUrl}) as MyResponse<unknown>;
   deleteImage = (id: string) =>
     this.#DELETE(`/image`, {id}) as MyResponse<unknown>;
+
+  // History
+  getHistory = (filters: HistoryFilters) =>
+    this.#GET(`/history`, filters, HistoryListModel, Response200(HistoryListModelMockData)) as MyResponse<{history: HistoryRecord[]; total: number}>;
 
   // Admin
   executeAdminSQL = (sql: string) =>

@@ -279,9 +279,10 @@
     <Paginator
       v-if="withPaginator"
       class="paginator"
-      :max-pages-count="Math.ceil(content.length / rowsPerPageVal)"
-      v-model="selectedPageNum"
-      can-show-more
+      :max-pages-count="Math.ceil((serverPagination ? totalRows : content.length) / rowsPerPageVal)"
+      :model-value="serverPagination ? page : selectedPageNum"
+      @update:model-value="selectPage"
+      :can-show-more="!serverPagination"
       @show-more="rowsPerPageVal += 8"
     />
   </section>
@@ -318,11 +319,14 @@ type RowWithValues = {
 };
 
 export default {
-  emits: ['change', 'update:modelValue', 'select', 'add', 'remove'],
+  emits: ['change', 'update:modelValue', 'select', 'add', 'remove', 'page-change'],
 
   components: { Checkbox, Paginator, InputSwitch, InputComponent, SelectList },
 
   props: {
+    serverPagination: Boolean,
+    totalRows: { type: Number, default: 0 },
+    page: { type: Number, default: 1 },
     title: {
       type: String,
       default: '',
@@ -430,6 +434,7 @@ export default {
       });
     },
     paginatedContent(): RowWithValues[] {
+      if (this.serverPagination) return this.sortedContent;
       const pageIdx = this.selectedPageNum - 1;
       return this.sortedContent.slice(this.rowsPerPageVal * pageIdx, this.rowsPerPageVal * (pageIdx + 1));
     },
@@ -439,6 +444,10 @@ export default {
   },
 
   methods: {
+    selectPage(page: number) {
+      if (this.serverPagination) this.$emit('pageChange', page);
+      else this.selectedPageNum = page;
+    },
     async onDeleteRow(row: RowWithValues, idx: number) {
       const data = deepClone(row);
       this.$emit('remove', data);
