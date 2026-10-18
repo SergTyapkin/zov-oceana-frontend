@@ -87,8 +87,7 @@ export default defineConfig(({ mode }: { command: 'build' | 'serve'; mode: 'deve
           image: `${env.VITE_HTTPS === 'true' ? 'https' : 'http'}://${env.VITE_DEPLOY_HOSTNAME}/static/open-graph-preview.png`,
           determiner: 'auto',
           locale: 'ru_RU',
-          localeAlternate: ['en_EN', 'es_ES'],
-          alt: 'Zov Oceana - интернет-магазин морепродуктов',
+          localeAlternate: [],
         }
       }),
       pluginAssetsInserter({

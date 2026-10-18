@@ -9,8 +9,11 @@
 
 
 .root-header
-
   .row-inner
+    scrollbars-hidden()
+    page-root()
+    font-small()
+
     overflow-x auto
     display flex
     gap 5%
@@ -62,6 +65,7 @@
       flex 0
       gap 20px
       align-items center
+      padding-top 2px
       .search
         flex 1
 
@@ -77,7 +81,7 @@
             transform translateY(-3px)
             filter invert(33%) sepia(100%) saturate(3231%) hue-rotate(199deg) brightness(95%) contrast(87%)
         img
-          img-size(16px)
+          img-size(19px)
           trans(0.1s)
           &.mobile
             img-size(25px)
@@ -126,9 +130,6 @@
     @media ({mobile})
       justify-content space-around
       padding-top 20px
-    scrollbars-hidden()
-    page-root()
-    font-small()
 
   .overlay-menu
     position fixed

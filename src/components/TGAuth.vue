@@ -22,6 +22,7 @@
 </template>
 
 <script lang="ts">
+let nextCallbackId = 0;
 const TG_AUTH_WIDGET_SCRIPT_URL = 'https://telegram.org/js/telegram-widget.js?22';
 
 export type TGUser = {
@@ -40,6 +41,7 @@ export default {
   data() {
     return {
       isError: false,
+      callbackName: `TelegramOnAuthCb${++nextCallbackId}`,
     }
   },
 
@@ -50,7 +52,7 @@ export default {
 
     script.setAttribute('data-telegram-login', import.meta.env.VITE_TG_BOT_USERNAME);
     script.setAttribute('data-request-access', 'write');
-    script.setAttribute('data-onauth', 'TelegramOnAuthCb(user)');
+    script.setAttribute('data-onauth', `${this.callbackName}(user)`);
     script.setAttribute('data-lang', 'ru');
 
     script.onerror = () => {
@@ -58,10 +60,12 @@ export default {
       this.$emit('error');
     };
 
+    (window as unknown as Record<string, unknown>)[this.callbackName] = (user: TGUser) => this.onLogin(user);
     (this.$refs.target as HTMLElement).appendChild(script);
+  },
 
-    // @ts-expect-error TG es5 widget lib
-    window.TelegramOnAuthCb = (user: TGUser) => {this.onLogin(user)};
+  beforeUnmount() {
+    delete (window as unknown as Record<string, unknown>)[this.callbackName];
   },
 
   methods: {

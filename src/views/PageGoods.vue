@@ -251,10 +251,16 @@
             <img src="/static/icons/cart.svg" alt="cart">
             Добавить в корзину
           </button>
-          <button @click="removeFromCart" v-else class="button-remove-from-cart">
-            <img src="/static/icons/remove.svg" alt="remove">
-            Убрать из корзины
-          </button>
+          <template v-else>
+            <router-link :to="{name: 'cart'}" class="button-add-to-cart">
+              <img src="/static/icons/cart.svg" alt="cart">
+              Моя корзина
+            </router-link>
+            <button @click="removeFromCart" class="button-remove-from-cart">
+              <img src="/static/icons/remove.svg" alt="remove">
+              Убрать из корзины
+            </button>
+          </template>
         </section>
       </div>
     </section>

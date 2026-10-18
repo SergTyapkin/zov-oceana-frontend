@@ -125,6 +125,10 @@ export default class API extends REST_API {
     this.#POST(`/user/auth/tg`, {
       tgId, tgUsername, tgHash, tgAuthDate, tgPhotoUrl, tgFirstName, tgLastName, clientBrowser: detectBrowser(), clientOS: detectOS(),
     }, UserModel) as MyResponse<User>;
+  linkTelegram = (tgId: string, tgUsername?: string, tgHash?: string, tgAuthDate?: number, tgPhotoUrl?: string, tgFirstName?: string, tgLastName?: string) =>
+    this.#POST(`/user/telegram`, {
+      tgId, tgUsername, tgHash, tgAuthDate, tgPhotoUrl, tgFirstName, tgLastName,
+    }) as MyResponse<unknown>;
   logout = () =>
     this.#DELETE(`/user/session`) as MyResponse<unknown>;
   sendPasswordRestorationLetter = () =>

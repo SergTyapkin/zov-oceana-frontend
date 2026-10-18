@@ -8,7 +8,9 @@
 @import '../../styles/scrollbars.styl'
 
 .root-page
+  page-root()
 
+  padding-top 0
   nav.navigation
     overflow-x auto
     display flex
@@ -46,10 +48,6 @@
 
   button
     button-emp2()
-
-  @media ({mobile})
-    padding-top 0
-  page-root()
 </style>
 
 <template>

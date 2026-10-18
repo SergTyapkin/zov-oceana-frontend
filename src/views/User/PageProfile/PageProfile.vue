@@ -17,6 +17,8 @@
     page-root-disable()
 
   section.title
+    page-root()
+
     display flex
     gap 20px
     padding-block 70px
@@ -34,6 +36,19 @@
       animation-float(0.5s, -20px, 0, left)
 
       margin-bottom 20px
+    .telegram-link
+      animation-float()
+
+      width fit-content
+      margin-top 20px
+      .root-tg-auth
+        align-items flex-start
+      p
+        font-small()
+        font-thin()
+
+        margin-bottom 10px
+        color colorTextInvert3
     .info-date
       font-small()
       font-thin()
@@ -44,7 +59,6 @@
     @media ({mobile})
       padding-top 30px
       padding-bottom 20px
-    page-root()
 
   nav.navigation
     overflow-x auto
@@ -85,7 +99,7 @@
 
 <template>
   <div class="root-profile">
-    <section class="title">
+    <section class="title page-title">
       <UserAvatar class="avatar" :user="$user" size="100px" size-mobile="80px" />
 
       <div>
@@ -93,6 +107,11 @@
         <div class="info-date" style="--animation-index: 2">Участник с {{ dateFormatter($user.joinedDate) }}</div>
         <div v-if="$user.tgId" class="info-date" style="--animation-index: 3">
           Telegram: {{ $user.tgUsername ? `@${$user.tgUsername}` : `id: ${$user.tgId}` }}
+        </div>
+        <div v-else class="telegram-link" :aria-busy="loading" style="--animation-index: 3">
+          <p v-show="!loading" v-if="!isTgAuthError">Привяжите Telegram, чтобы получать уведомления о заказах</p>
+          <TGAuth @login="linkTelegram" @error="isTgAuthError = true" />
+          <CircleLinesLoading v-if="loading" />
         </div>
       </div>
     </section>
@@ -117,13 +136,18 @@
 
 <script lang="ts">
 import { dateFormatter } from '~/utils/utils';
+import TGAuth, { type TGUser } from '~/components/TGAuth.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import UserAvatar from '~/components/UserAvatar.vue';
 
 export default {
-  components: { UserAvatar },
+  components: { UserAvatar, TGAuth, CircleLinesLoading },
 
   data() {
     return {
+      loading: false,
+
+      isTgAuthError: false,
     };
   },
 
@@ -132,6 +156,19 @@ export default {
 
   methods: {
     dateFormatter,
+    async linkTelegram(user: TGUser) {
+      if (this.loading || this.$user.tgId) return;
+      await this.$request(
+        this, 
+        this.$api.linkTelegram,
+        [String(user.id), user.username, user.hash, user.auth_date, user.photo_url, user.first_name, user.last_name],
+        'Не удалось привязать Telegram', 
+        async () => {
+          await this.$store.dispatch('GET_USER');
+          this.$popups.success('Telegram успешно привязан');
+        },
+      );
+    },
   },
 };
 </script>
