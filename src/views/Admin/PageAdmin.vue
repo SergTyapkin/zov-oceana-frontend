@@ -8,13 +8,8 @@
 @import '../../styles/scrollbars.styl'
 
 .root-page
-  page-root()
-  @media ({mobile})
-    padding-top 0
 
   nav.navigation
-    page-root-disable()
-
     overflow-x auto
     display flex
     align-items center
@@ -22,23 +17,27 @@
     text-align center
     background colorBgDark
     box-shadow 0 0 10px colorShadow
-    scrollable()
-    @media ({mobile})
-      display flex
-      flex-wrap wrap
     > *
       display block
       flex 1
       padding 15px 20px
       background colorBgDark
+      &.router-link-exact-active
+        background colorEmp2
+
+      @media ({mobile})
+        font-small()
+
+        padding 10px 10px
       trans()
       hover-effect()
       animation-float()
-      @media ({mobile})
-        font-small()
-        padding 10px 10px
-      &.router-link-exact-active
-        background colorEmp2
+
+    @media ({mobile})
+      display flex
+      flex-wrap wrap
+    page-root-disable()
+    scrollable()
 
   section.admin-main
     page-root-disable()
@@ -47,6 +46,10 @@
 
   button
     button-emp2()
+
+  @media ({mobile})
+    padding-top 0
+  page-root()
 </style>
 
 <template>

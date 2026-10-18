@@ -79,15 +79,16 @@ export default defineConfig(({ mode }: { command: 'build' | 'serve'; mode: 'deve
       }),
       pluginOpenGraph({
         basic: {
-          title: 'Frontend title',
-          siteName: 'ShortSiteName',
-          description: 'Long site description',
+          title: 'Zov Oceana',
+          siteName: 'Zov Oceana',
+          description: 'Zov Oceana - интернет-магазин морепродуктов',
           type: 'image/png',
           url: `${env.VITE_HTTPS === 'true' ? 'https' : 'http'}://${env.VITE_DEPLOY_HOSTNAME}`,
           image: `${env.VITE_HTTPS === 'true' ? 'https' : 'http'}://${env.VITE_DEPLOY_HOSTNAME}/static/open-graph-preview.png`,
           determiner: 'auto',
           locale: 'ru_RU',
           localeAlternate: ['en_EN', 'es_ES'],
+          alt: 'Zov Oceana - интернет-магазин морепродуктов',
         }
       }),
       pluginAssetsInserter({
