@@ -109,7 +109,7 @@
           Telegram: {{ $user.tgUsername ? `@${$user.tgUsername}` : `id: ${$user.tgId}` }}
         </div>
         <div v-else class="telegram-link" :aria-busy="loading" style="--animation-index: 3">
-          <p v-show="!loading" v-if="!isTgAuthError">Привяжите Telegram, чтобы получать уведомления о заказах</p>
+          <!-- <p v-show="!loading" v-if="!isTgAuthError">Привяжите Telegram, чтобы получать уведомления о заказах</p> -->
           <TGAuth @login="linkTelegram" @error="isTgAuthError = true" />
           <CircleLinesLoading v-if="loading" />
         </div>

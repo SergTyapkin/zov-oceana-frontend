@@ -210,12 +210,18 @@
       background colorBgLight
       .tg-auth
         centered-margin()
-      .desc
-        font-small()
-        font-spaced()
+      .divider
+        width 100%
+        height 1px
+        background linear-gradient(colorText1, colorText1) 50% 50% / 80px 1px no-repeat
+        margin-top 10px
+        opacity 0.5
+      // .desc
+      //   font-small()
+      //   font-spaced()
 
-        margin-block 10px
-        text-align center
+      //   margin-block 10px
+      //   text-align center
       .field
         margin-block 10px
       .submit
@@ -510,8 +516,7 @@
         <main class="main">
           <div v-if="!isTgAuthError">
             <TGAuth @login="onTGSignIn" @error="isTgAuthError = true" class="tg-auth" />
-
-            <div class="desc">или</div>
+            <div class="divider" />
           </div>
 
           <InputComponent
