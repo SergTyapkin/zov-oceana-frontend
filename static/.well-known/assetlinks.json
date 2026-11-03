@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ru.zovoceana.app",
+      "sha256_cert_fingerprints": [
+        "ED:85:E6:EE:00:0C:D0:D1:CC:C9:76:FD:F7:40:BD:FE:57:8E:81:91:0F:61:4F:E5:B3:45:40:70:03:98:D5:9D"
+      ]
+    }
+  }
+]

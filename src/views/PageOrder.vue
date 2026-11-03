@@ -256,6 +256,7 @@
         <button 
           v-if="['new', 'expired', 'rejected'].includes(order.paymentStatus) && !['cancelled'].includes(order.status)"
           class="payment-button"
+          :disabled="loading || paymentStarting"
           @click="startPayment"
         >
           Оплатить заказ
@@ -263,6 +264,7 @@
         <button 
           v-if="['created'].includes(order.status)"
           class="cancel-button"
+          :disabled="loading || paymentStarting"
           @click="cancelOrder"
         >
           Отменить заказ
@@ -321,6 +323,7 @@ import { Order } from '~/utils/models';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
 import { costFormatter, dateFormatter, dateTimeFormatter } from '~/utils/utils';
 import { OrderStatuses, PAYMENT_TIME_TO_BE_PAYED_MS, PaymentStatuses } from '~/constants';
+import { consumeOrderPaymentIntent } from '~/utils/orderPaymentIntent';
 
 export default {
   components: { GoodsInfoCard, CircleLinesLoading },
@@ -332,19 +335,24 @@ export default {
       order: {} as Order,
 
       loading: false,
+      paymentStarting: false,
 
       OrderStatuses,
       PaymentStatuses,
     };
   },
 
-  mounted() {
+  async mounted() {
+    const autoStartPayment = consumeOrderPaymentIntent(window.history, this.orderId);
     if (!this.orderId) {
       this.$popups.error('id заказа не задан', 'В url нет id заказа');
       this.$router.push({ name: 'profileOrders' });
       return;
     }
-    this.updateOrder();
+    const loaded = await this.updateOrder();
+    if (loaded && autoStartPayment && this.$route.name === 'order' && String(this.$route.params.id) === this.orderId) {
+      await this.startPayment();
+    }
   },
 
   methods: {
@@ -352,7 +360,7 @@ export default {
     dateFormatter,
     costFormatter,
     async updateOrder() {
-      this.order = (await this.$request(
+      const order = (await this.$request(
         this,
         this.$api.getOrder,
         [this.orderId],
@@ -363,6 +371,9 @@ export default {
           404: () => this.$router.push({name: 'profileOrders'}),
         },
       )) as Order;
+      if (!order) return false;
+      this.order = order;
+      return true;
     },
 
     async cancelOrder() {
@@ -381,29 +392,35 @@ export default {
     },
 
     async startPayment() {
+      if (this.paymentStarting || this.order.status === 'cancelled') return;
       // Если не один из этих статусов - выходим сразу
       if (!['new', 'cancelled', 'rejected', 'expired'].includes(this.order.paymentStatus)) return;
 
-      if (
-        this.order.paymentId && 
-        this.order.paymentStatus === 'new' && 
-        (this.order.paymentCreatedDate && ((Date.now() - this.order.paymentCreatedDate.getTime()) < PAYMENT_TIME_TO_BE_PAYED_MS))
-      ) {
-        // Оплата уже создана и ещё не истекла
-        this.$router.push({ name: 'paymentOrder', params: {id: this.orderId}});
-        return;
-      }
+      this.paymentStarting = true;
+      try {
+        if (
+          this.order.paymentId &&
+          this.order.paymentStatus === 'new' &&
+          (this.order.paymentCreatedDate && ((Date.now() - this.order.paymentCreatedDate.getTime()) < PAYMENT_TIME_TO_BE_PAYED_MS))
+        ) {
+          // Оплата уже создана и ещё не истекла
+          await this.$router.push({ name: 'paymentOrder', params: {id: this.orderId}});
+          return;
+        }
       
-      // Нужно создать оплату на бэке
-      await this.$request(
-        this,
-        this.$api.createPayment,
-        [this.orderId],
-        'Не удалось создать платеж на сервере',
-        () => {
-          this.$router.push({ name: 'paymentOrder', params: {id: this.orderId}});
-        },
-      );
+        // Нужно создать оплату на бэке
+        await this.$request(
+          this,
+          this.$api.createPayment,
+          [this.orderId],
+          'Не удалось создать платеж на сервере',
+          () => {
+            this.$router.push({ name: 'paymentOrder', params: {id: this.orderId}});
+          },
+        );
+      } finally {
+        this.paymentStarting = false;
+      }
     }
   },
 };

@@ -1,6 +1,22 @@
 root /frontend-dist;
 index index.html;
 
+location = /manifest.webmanifest {
+    try_files $uri =404;
+    default_type application/manifest+json;
+    add_header Cache-Control "no-cache" always;
+}
+
+# APK is a real downloadable file; missing downloads must not return the SPA.
+location ^~ /downloads/ {
+    try_files $uri =404;
+    types { application/vnd.android.package-archive apk; }
+    default_type application/octet-stream;
+    add_header Content-Disposition 'attachment; filename="zov-oceana.apk"' always;
+    add_header Cache-Control "no-cache" always;
+    add_header X-Content-Type-Options "nosniff" always;
+}
+
 location / {  # try files for SPA
     try_files $uri $uri/ $uri.html /index.html;
 }

@@ -4,6 +4,13 @@
 
 Словом, всё необходимое, чтобы раскатить фронтенд за 10 минут на чистой машине с Ubuntu.
 
+### Страница приложения и APK
+
+Страница установки — `/app`, файл скачивания — `public/downloads/zov-oceana.apk`.
+Release-сборка `./android-app/scripts/build.ps1 -Variant Release` автоматически
+обновляет APK для сайта. Обычный `npm run build` включает его в `dist`, а Dockerfile
+копирует готовый `dist` в Nginx. Подробнее: [сборка и распространение APK](android-app/WEBSITE_DOWNLOAD.md).
+
 ### Все сконфигурированные пакеты и инструменты сборки:
 
 1. **Vite** - сборщик

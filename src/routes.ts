@@ -1,6 +1,7 @@
 export default {
   // Other pages
   '/': false, // root is always false
+  '/app': true,
 
   // User pages
   '/profile': true,

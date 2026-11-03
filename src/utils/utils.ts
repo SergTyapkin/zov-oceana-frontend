@@ -97,6 +97,13 @@ export function toDebounced(callee: (...args: unknown[]) => unknown, timeoutMs: 
   };
 }
 
+export type MobilePlatform = 'android' | 'ios';
+export function detectMobilePlatform(userAgent: string, platform = '', maxTouchPoints = 0): MobilePlatform | null {
+  if (/android/i.test(userAgent)) return 'android';
+  if (/iPad|iPhone|iPod/i.test(userAgent) || (platform === 'MacIntel' && maxTouchPoints > 1)) return 'ios';
+  return null;
+}
+
 export function detectBrowser() {
   let result = 'Other';
   if (navigator.userAgent.indexOf('YaBrowser') !== -1) {

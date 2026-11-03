@@ -11,6 +11,9 @@ export default {
   plugins: ['stylelint-order'],
   extends: ['stylelint-stylus/standard', 'stylelint-config-clean-order'],
   rules: {
+    // Selector-list autofixes corrupt Stylus pseudo/attribute selectors in Vue SFCs.
+    'stylus/selector-list-comma': null,
+    'stylus/selector-list-comma-newline-after': null,
     'order/properties-order': [
       propertiesOrder,
       {

@@ -224,6 +224,7 @@ import { Address, Goods } from '~/utils/models';
 import { addressFormatter, costFormatter, toDebounced } from '~/utils/utils';
 import SelectList from '~/components/SelectList.vue';
 import GoodsInfoCard from '~/components/GoodsInfoCard.vue';
+import { AUTO_PAYMENT_ORDER_STATE_KEY } from '~/utils/orderPaymentIntent';
 
 const CREATE_NEW_ADDRESS_SYMBOL = Symbol('Create new address item');
 
@@ -341,7 +342,11 @@ export default {
           this.$store.dispatch('CLEAR_CART');
 
           // Переводим на страницу заказа
-          this.$router.push({ name: 'order', params: {id: orderData.id} });
+          this.$router.push({
+            name: 'order',
+            params: {id: orderData.id},
+            state: { [AUTO_PAYMENT_ORDER_STATE_KEY]: String(orderData.id) },
+          });
         },
       );
     },

@@ -101,6 +101,7 @@
         <router-link :to="{ name: 'default' }">Главная</router-link>
         <router-link :to="{ name: 'market' }">Магазин</router-link>
         <router-link :to="{ name: 'profile' }">Профиль</router-link>
+        <router-link :to="{ name: 'application' }">Мобильное приложение</router-link>
         <br>
         <router-link :to="{ name: 'delivery' }">Доставка</router-link>
         <router-link :to="{ name: 'refund' }">Возврат</router-link>

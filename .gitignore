@@ -1,4 +1,11 @@
 # Logs
+.android-tools/
+android-app/.gradle/
+android-app/**/build/
+android-app/local.properties
+android-app/signing.properties
+android-app/*.jks
+
 logs
 *.log
 npm-debug.log*

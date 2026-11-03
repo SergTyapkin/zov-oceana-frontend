@@ -49,6 +49,7 @@ import PagePaymentSuccess from './views/Payment/PagePaymentSuccess.vue';
 import PagePaymentFail from './views/Payment/PagePaymentFail.vue';
 import PagePayout from './views/PagePayout.vue';
 import PageQualitiesInfo from './views/PageQualitiesInfo.vue';
+import PageApplication from './views/PageApplication.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -61,6 +62,7 @@ type MyRoute = RouteRecordRaw & {
 export default function createVueRouter(Store: Store): Router {
   const routesList: MyRoute[] = [
     { path: '/', name: 'default', component: PageLanding },
+    { path: '/app', name: 'application', component: PageApplication },
     { path: '/market', name: 'market', component: PageMarket },
     { path: '/goods/:id', name: 'goods', component: PageGoods },
     { path: '/cart', name: 'cart', component: PageCart },

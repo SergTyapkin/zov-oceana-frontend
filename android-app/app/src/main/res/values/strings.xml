@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Зов Океана</string>
+    <string name="site_url">https://zovoceana.ru/</string>
+    <string name="load_error">Не удалось открыть приложение. Проверьте интернет и попробуйте ещё раз.</string>
+    <string name="retry">Повторить</string>
+    <string name="no_application">Не найдено приложение для открытия ссылки</string>
+</resources>

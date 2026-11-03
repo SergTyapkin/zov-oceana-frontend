@@ -213,9 +213,9 @@
       .divider
         width 100%
         height 1px
-        background linear-gradient(colorText1, colorText1) 50% 50% / 80px 1px no-repeat
         margin-top 10px
         opacity 0.5
+        background linear-gradient(colorText1, colorText1) 50% 50% / 80px 1px no-repeat
       // .desc
       //   font-small()
       //   font-spaced()
