@@ -8,6 +8,8 @@
 @import '../../../styles/scrollbars.styl'
 
 .root-profile-addresses
+  position relative
+  min-height 180px
   .header
     animation-float(0.5s, -20px, 0, left)
 

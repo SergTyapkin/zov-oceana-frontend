@@ -31,6 +31,7 @@ export default {
 
   data() {
     return {
+      animationFrameId: 0,
     };
   },
 
@@ -50,9 +51,12 @@ export default {
       }
       element.setAttribute('data-scroll-dir', String(scrollDir));
       element.scrollLeft = element.scrollLeft + scrollDir;
-      requestAnimationFrame(() => scrollScroller(element));
+      this.animationFrameId = requestAnimationFrame(() => scrollScroller(element));
     }
     scrollScroller(element);
+  },
+  unmounted() {
+    cancelAnimationFrame(this.animationFrameId);
   },
 
   methods: {

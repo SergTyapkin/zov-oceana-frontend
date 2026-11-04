@@ -228,7 +228,8 @@
       <div class="section-header">Премиум</div>
       <header class="header">Популярные товары</header>
       <div class="section-desc">Откройте для себя нашу отборную коллекцию премиальных морепродуктов со всего мира</div>
-      <AutoScroller class="auto-scroller">
+      <CircleLinesLoading v-if="$store.state.globalsLoading" />
+      <AutoScroller v-else class="auto-scroller">
         <ul class="carousel">
           <GoodsCard
             v-for="goods in $globals?.goodsOnLanding"
@@ -244,6 +245,7 @@
       <div class="section-header">Категории</div>
       <header class="header">Выбор по категориям</header>
       <div class="section-desc">Найдите именно то, что ищете</div>
+      <CircleLinesLoading v-if="$store.state.globalsLoading" />
       <ul class="categories-container">
         <li v-for="category in $globals?.categories" class="category-card">
           <CategoryCard :category="category" />
@@ -283,9 +285,10 @@ import CategoryCard from '~/components/CategoryCard.vue';
 import { setSmoothScrollOnThisPage } from '~/utils/utils';
 import AutoScroller from '~/components/AutoScroller.vue';
 import MapRussia from '~/components/MapRussia.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 export default {
-  components: { AutoScroller, CategoryCard, GoodsCard, MapRussia },
+  components: { AutoScroller, CategoryCard, GoodsCard, MapRussia, CircleLinesLoading },
 
   data() {
     return {

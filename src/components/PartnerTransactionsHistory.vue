@@ -9,6 +9,7 @@
 
 
 .root-transactions-history
+  min-height 80px
   list-no-styles()
 
   position relative
@@ -201,7 +202,7 @@ export default {
         )) as {
           history: User[];
         }
-      ).history;
+      )?.history ?? [];
 
       this.$emit('historyGotten', this.history);
     },

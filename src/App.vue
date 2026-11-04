@@ -10,6 +10,13 @@
 .wrapper
   flex 1
   width 100%
+
+.initial-page-loading
+  display flex
+  flex-direction column
+  align-items center
+  gap 20px
+  padding 60px 20px
   // height 100%
   // min-height 100vh
 
@@ -73,6 +80,10 @@
 
   <div class="wrapper">
     <router-view #default="{ Component }">
+      <div v-if="!Component && !$store.state.userReady" role="status" class="initial-page-loading">
+        <CircleLinesLoading />
+        <p>Загружаем данные профиля…</p>
+      </div>
       <transition name="opacity" mode="out-in">
         <component :is="Component" />
       </transition>
@@ -93,6 +104,8 @@ import { getRequestFoo, saveAllAssetsByServiceWorker, setDisableCachingUrlsBySer
 import HeaderComponent from '~/components/HeaderComponent.vue';
 import FooterComponent from '~/components/FooterComponent.vue';
 import { DISABLED_CACHING_URLS } from '~/constants';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
+import swAPI from '~/serviceWorker/swAPI';
 
 function removeAllHoverStyles() {
   // try {
@@ -115,7 +128,7 @@ function removeAllHoverStyles() {
 }
 
 export default {
-  components: { HeaderComponent, FooterComponent, Modals, Popups },
+  components: { HeaderComponent, FooterComponent, Modals, Popups, CircleLinesLoading },
 
   data(): {
     transitionName: string;
@@ -127,27 +140,30 @@ export default {
     };
   },
 
-  mounted() {
-    this.global = getCurrentInstance()!.appContext.config.globalProperties;
-
-    this.global.$user = this.$store.state.user;
-    this.global.$globals = this.$store.state.globals;
-    this.global.$cart = this.$store.state.cart;
-    this.global.$referrerId = this.$store.state.referrerId;
+  async mounted() {
+    const globals = getCurrentInstance()!.appContext.config.globalProperties;
+    this.global = globals;
     this.global.$modals = this.$refs.modals;
     this.global.$popups = this.$refs.popups;
     this.global.$app = this;
     this.global.$api = new API(`/api`);
     this.global.$log = (...data: any[]) => console.log(...data);
     this.global.$request = getRequestFoo(this.$popups.error);
+    this.$store.$app = this;
 
     this.checkMobileScreen();
     window.addEventListener('resize', this.checkMobileScreen);
 
+    void this.$store.dispatch('LOAD_REFERRER_ID');
+    void this.$store.dispatch('LOAD_CART');
+    void this.$store.dispatch('GET_GLOBALS');
+    void this.$store.dispatch('GET_USER').then(() => this.$store.dispatch('LOAD_CART'));
+
+    await swAPI.register();
+    setDisableCachingUrlsByServiceWorker(DISABLED_CACHING_URLS);
     saveAllAssetsByServiceWorker(({ current, total, progress }) => {
       console.log(`Saved resource by SW: ${current}. Progress: ${progress}/${total}`);
     });
-    setDisableCachingUrlsByServiceWorker(DISABLED_CACHING_URLS);
   },
 
   unmounted() {

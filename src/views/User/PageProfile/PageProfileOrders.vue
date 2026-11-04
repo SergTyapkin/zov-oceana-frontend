@@ -9,6 +9,8 @@
 
 .root-profile-info
   animation-float()
+  position relative
+  min-height 180px
 
   box-shadow 0 0 10px colorShadow
   .header
@@ -91,7 +93,7 @@ export default {
     async updateOrders() {
       this.orders = (
         (await this.$request(this, this.$api.getUserOrders, [this.$user.id], `Не удалось получить список заказов`)) as {orders: Order[]}
-      ).orders;
+      )?.orders ?? [];
     },
   },
 };

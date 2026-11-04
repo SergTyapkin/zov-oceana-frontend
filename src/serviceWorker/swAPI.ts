@@ -1,5 +1,5 @@
-const DEFAULT_SW_FILE_PATH = 'sw.js';
-const DEFAULT_SCOPE = '.';
+const DEFAULT_SW_FILE_PATH = '/sw.js';
+const DEFAULT_SCOPE = '/';
 const DEFAULT_REGISTER_SW_OVERWRITING = true; // Регистрировать ли новую версию Service Worker'а если ещё активна старая
 
 export type SWCallbackEach = (data: { current: string; total: number; progress: number }) => void;

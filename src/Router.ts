@@ -126,15 +126,14 @@ export default function createVueRouter(Store: Store): Router {
     routes: routesList,
   });
 
-  let router_got_initials = false;
   Router.beforeEach(async (to: RouteLocationNormalized, _, next: NavigationGuardNext) => {
-    if (!router_got_initials) {
-      await Store.dispatch('GET_USER');
-      await Store.dispatch('LOAD_CART');
-      await Store.dispatch('GET_GLOBALS');
-      await Store.dispatch('LOAD_REFERRER_ID');
-      Store.$app.updateElements();
-      router_got_initials = true;
+    const requiresUser = to.matched.some(record => record.meta.loginRequired === true || record.meta.adminRequired === true);
+    if (requiresUser && !Store.state.userReady) {
+      await new Promise<void>(resolve => {
+        const stop = Store.watch(state => state.userReady, ready => {
+          if (ready) { stop(); resolve(); }
+        });
+      });
     }
     const referrerIdQueryParam = to.query[QUERY_PARAM_REFERRER_ID];
     if (referrerIdQueryParam) {
@@ -148,31 +147,25 @@ export default function createVueRouter(Store: Store): Router {
       name: 'default',
     };
 
-    // Login required redirects
-    if (to.matched.some(record => record.meta.loginRequired === true || record.meta.adminRequired === true)) {
-      if (Store.state.user.isSignedIn) {
-        next();
-        return;
-      }
+    if (requiresUser && !Store.state.user.isSignedIn) {
       next(notLoginedRedirect);
       return;
-    } else if (to.matched.some(record => record.meta.noLoginRequired === true)) {
-      if (!Store.state.user.isSignedIn) {
-        next();
-        return;
-      }
+    }
+    if (to.matched.some(record => record.meta.adminRequired === true) && !Store.state.user.hasSomeAdminRights) {
       next(loginedRedirect);
       return;
     }
-    if (to.matched.some(record => record.meta.adminRequired === true)) {
-      if (Store.state.user.hasSomeAdminRights) {
-        next();
-        return;
-      }
+    if (to.matched.some(record => record.meta.noLoginRequired === true) && Store.state.user.isSignedIn) {
       next(loginedRedirect);
       return;
     }
     next();
+  });
+
+  Store.watch(state => state.userReady, ready => {
+    if (ready && Store.state.user.isSignedIn && Router.currentRoute.value.matched.some(record => record.meta.noLoginRequired)) {
+      void Router.replace({ name: 'profile' });
+    }
   });
 
   Router.beforeResolve(async () => {

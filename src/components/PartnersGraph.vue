@@ -9,6 +9,7 @@
 
 
 .root-graph
+  min-height 100px
   centered-flex-container()
 
   position relative
@@ -173,17 +174,17 @@ export default {
   methods: {
     bonusesFormatter,
 
-    update() {
-      this.updatePartners();
-      this.updateHeadUser();
-      if (!this.partner) {
-        this.updatePartner();
-      }
+    async update() {
+      this.loading = true;
+      try {
+        await Promise.all([this.updatePartners(), this.updateHeadUser(),
+          ...(!this.partner ? [this.updatePartner()] : [])]);
+      } finally { this.loading = false; }
     },
 
     async updatePartner() {
       this.partner = (await this.$request(
-        this,
+        { loading: false },
         this.$api.getUserPartnerInfo,
         [this.$user.id],
         `Не удалось получить данные партнера`,
@@ -193,14 +194,14 @@ export default {
     async updatePartners() {
       this.partners = (
         (await this.$request(
-          this,
+          { loading: false },
           this.$api.getUserReferals,
           [this.user.id],
           `Не удалось получить список партнеров`,
         )) as {
           partners: UserPartner[];
         }
-      ).partners ?? [];
+      )?.partners ?? [];
 
       this.$emit('partnersGotten', this.partners);
     },
@@ -211,7 +212,7 @@ export default {
         return;
       }
       this.headUser = await this.$request(
-        this,
+        { loading: false },
         this.$api.getOtherUser,
         [this.user.referrerId],
         `Не удалось получить информацию про вышестоящего партнера`,

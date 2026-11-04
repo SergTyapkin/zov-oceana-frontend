@@ -8,6 +8,7 @@
 @import '../../styles/scrollbars.styl'
 
 .root-table
+  scroll-margin-top 24px
   .table-big-container
     display flex
     gap 15px
@@ -444,9 +445,15 @@ export default {
   },
 
   methods: {
-    selectPage(page: number) {
+    async selectPage(page: number) {
+      if (page === (this.serverPagination ? this.page : this.selectedPageNum)) return;
       if (this.serverPagination) this.$emit('pageChange', page);
       else this.selectedPageNum = page;
+      await this.$nextTick();
+      (this.$el as HTMLElement).scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start', inline: 'nearest',
+      });
     },
     async onDeleteRow(row: RowWithValues, idx: number) {
       const data = deepClone(row);

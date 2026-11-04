@@ -7,12 +7,16 @@ import ScrollRestore from "@sergtyapkin/scroll-restore";
 
 import '~/styles/fontsLoader.styl';
 import '~/styles/global.styl';
-import swAPI from '~/serviceWorker/swAPI';
-
-await swAPI.register();
-
 const Router = createVueRouter(Store);
-const app = createApp(App)
+const application = createApp(App);
+// Expose reactive store proxies before the first header/footer/page render.
+Object.defineProperties(application.config.globalProperties, {
+  $user: { configurable: true, get: () => Store.state.user },
+  $globals: { configurable: true, get: () => Store.state.globals },
+  $cart: { configurable: true, get: () => Store.state.cart },
+  $referrerId: { configurable: true, get: () => Store.state.referrerId },
+});
+const app = application
   .use(Router)
   .use(ScrollRestore, Router, [], document.body)
   .use(Store)

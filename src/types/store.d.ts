@@ -1,7 +1,7 @@
 import { type Store as VuexStore } from 'vuex';
 import App from '~/App.vue';
 import { type Commit, type Dispatch } from 'vuex';
-import { Goods, User } from '~/utils/models';
+import { Goods, User, Globals } from '~/utils/models';
 
 interface Store extends VuexStore<any> {
   $app: App;
@@ -12,6 +12,8 @@ interface Store extends VuexStore<any> {
 
 // declare my own store state
 interface State {
+  userReady: boolean;
+  globalsLoading: boolean;
   user: User;
   cart: Goods[];
   referrerId: string | null;

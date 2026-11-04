@@ -37,12 +37,16 @@ function removeReferrerIdFromLocalStorage() {
 
 export default new Vuex.Store({
   state: {
+    userReady: false,
+    globalsLoading: true,
     user: {} as User,
     cart: [] as Goods[],
-    globals: {} as Globals,
+    globals: { categories: [], goodsOnLanding: [], isOnMaintenance: false, blackPearlCost: 0, moneyForBonuses: 0 } as Globals,
     referrerId: null as string | null,
   },
   mutations: {
+    SET_USER_READY(state: State) { state.userReady = true; },
+    SET_GLOBALS_LOADING(state: State, loading: boolean) { state.globalsLoading = loading; },
     SET_USER(state: State, userData: User) {
       state.user.id = String(userData.id);
       state.user.familyName = userData.familyName;
@@ -134,14 +138,16 @@ export default new Vuex.Store({
   },
   actions: {
     async GET_USER(this: Store, state: State) {
-      await this.$app.$request(
-        this.$app,
-        this.$app.$api.getUser,
-        [],
-        undefined,
-        (data: User) => {state.commit('SET_USER', data)},
-        () => {state.commit('DELETE_USER')},
-      );
+      try {
+        await this.$app.$request(
+          this.$app,
+          this.$app.$api.getUser,
+          [],
+          undefined,
+          (data: User) => {state.commit('SET_USER', data)},
+          () => {state.commit('DELETE_USER')},
+        );
+      } finally { state.commit('SET_USER_READY'); }
     },
 
     DELETE_USER(this: Store, state: State) {
@@ -149,14 +155,17 @@ export default new Vuex.Store({
     },
 
     async GET_GLOBALS(this: Store, state: State) {
-      await this.$app.$request(
-        this.$app,
-        this.$app.$api.getGlobals,
-        [],
-        undefined,
-        (data: Globals) => {state.commit('SET_GLOBALS', data)},
-        () => {},
-      );
+      state.commit('SET_GLOBALS_LOADING', true);
+      try {
+        await this.$app.$request(
+          this.$app,
+          this.$app.$api.getGlobals,
+          [],
+          undefined,
+          (data: Globals) => {state.commit('SET_GLOBALS', data)},
+          () => {},
+        );
+      } finally { state.commit('SET_GLOBALS_LOADING', false); }
     },
 
     async LOAD_CART(this: Store, state: State) {

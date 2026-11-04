@@ -361,5 +361,9 @@ export default {
       }
     }
   },
+
+  watch: {
+    '$user.id'() { this.updateAddresses(); },
+  },
 };
 </script>

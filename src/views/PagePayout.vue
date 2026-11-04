@@ -89,7 +89,7 @@
           <img src="/static/icons/graph.svg" alt="">
           <div>
             Вам доступно {{ bonusesFormatter(partner.totalBonuses) }}
-            <div class="info">Это {{ costFormatter(partner.totalBonuses * $globals.moneyForBonuses) }}</div>
+            <div v-if="!$store.state.globalsLoading" class="info">Это {{ costFormatter(partner.totalBonuses * $globals.moneyForBonuses) }}</div>
           </div>
         </header>
 
@@ -127,12 +127,13 @@
           @input="amount = Math.min(amount, partner.totalBonuses)"
         />
 
-        <div>Будет выведено {{ costFormatter(amount * $globals.moneyForBonuses) }}</div>
+        <div v-if="$store.state.globalsLoading" role="status">Загружаем курс бонусов…</div>
+        <div v-else>Будет выведено {{ costFormatter(amount * $globals.moneyForBonuses) }}</div>
 
         <button
           class="button-submit"
           @click="submit"
-          :disabled="loading"
+          :disabled="loading || $store.state.globalsLoading"
         >
           Вывести средства
         </button>

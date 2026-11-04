@@ -14,7 +14,25 @@
   > *
     flex 1
     min-width 320px
+    position relative
     animation-float()
+
+  .section-loader
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%)
+    z-index 1
+
+  .activation, .quality
+    position relative
+
+  &.partner-pending
+    .value, .balance, .activation > p, .activation > .time, .bonuses-container
+      visibility hidden
+    .button-withdraw
+      pointer-events none
+      opacity .5
 
   .your-balance
     block-emp()
@@ -340,8 +358,9 @@
 </style>
 
 <template>
-  <div class="root-profile-partnership">
+  <div class="root-profile-partnership" :class="{ 'partner-pending': partnerRequest.loading }">
     <section class="your-balance" :style="{'--animation-index': 0}">
+      <div v-if="partnerRequest.loading" class="section-loader" role="status" aria-label="Загрузка данных"><CircleLinesLoading /></div>
       <header>Ваш баланс</header>
 
       <p class="balance">{{ bonusesFormatter(partner.totalBonuses) }}</p>
@@ -358,7 +377,7 @@
         </div>
       </div>
 
-      <p class="info">
+      <p v-if="!$store.state.globalsLoading" class="info">
         Текущий курс рублей к баллам {{ $globals.moneyForBonuses }}:1. То есть за каждые {{ costFormatter($globals.moneyForBonuses) }} рублей покупки начисляется {{ bonusesFormatter(1) }} ЛО
       </p>
 
@@ -369,6 +388,7 @@
 
     <div :style="{'--animation-index': 1}">
       <section class="activation">
+        <div v-if="partnerRequest.loading" class="section-loader" role="status" aria-label="Загрузка данных"><CircleLinesLoading /></div>
         <img src="/static/icons/shield-done.svg" alt="place">
         <header>Активация</header>
         <div class="value success" v-if="partner.isActive">Активирован</div>
@@ -388,15 +408,17 @@
 
       <router-link :to="{name: 'qualities'}">
         <section class="quality">
+          <div v-if="partnerRequest.loading || qualitiesRequest.loading" class="section-loader" role="status" aria-label="Загрузка данных"><CircleLinesLoading /></div>
           <img src="/static/icons/place.svg" alt="place">
           <header>Ваша квалификация</header>
-          <div class="value">{{ qualities.find(q => q.id === partner.qualityId)?.title || 'нет' }}</div>
+          <div class="value">{{ qualitiesRequest.loading ? '…' : (qualities.find(q => q.id === partner.qualityId)?.title || 'нет') }}</div>
           <img class="chevron" src="/static/icons/chevron-right.svg" alt="details">
         </section>
       </router-link>
     </div>
 
     <section class="stats" :style="{'--animation-index': 2}">
+      <div v-if="partnerRequest.loading" class="section-loader" role="status" aria-label="Загрузка данных"><CircleLinesLoading /></div>
       <div class="header">
         <img src="/static/icons/stats.svg" alt="place">
         <header>Статистика продаж</header>
@@ -419,7 +441,7 @@
       </div>
       <div class="card">
         <header>Квалификация</header>
-        <div class="value">{{ qualities.find(q => q.id === partner.qualityId)?.title || 'нет' }}</div>
+        <div class="value">{{ qualitiesRequest.loading ? '…' : (qualities.find(q => q.id === partner.qualityId)?.title || 'нет') }}</div>
         <!-- <div class="stat" /> -->
       </div>
       <!-- <div class="graph">
@@ -442,7 +464,10 @@
         <QRGenerator class="qr" :text="referrerLink" />
       </div>
       <div class="partners">
+        <CircleLinesLoading v-if="partnerRequest.loading" />
         <PartnersGraph
+          v-if="!partnerRequest.loading"
+          :partner-default="partner"
           :user="$user"
           show-as-me
           @history-gotten="(gottenHistory) => history = gottenHistory"
@@ -460,13 +485,14 @@
     </section>
 
     <section class="bonuses" :style="{'--animation-index': 5}">
+      <div v-if="partnerRequest.loading || $store.state.globalsLoading" class="section-loader" role="status" aria-label="Загрузка данных"><CircleLinesLoading /></div>
       <div class="header">
         <img src="/static/icons/gift.svg" alt="place">
         <header>Бонусы</header>
         <p>Приятные бонусы и предложения</p>
       </div>
       
-      <div class="bonuses-container">
+      <div v-if="!partnerRequest.loading && !$store.state.globalsLoading" class="bonuses-container">
         <div class="bonus">
           <div class="top-row">
             <img src="/static/icons/star.svg" alt="place">
@@ -521,8 +547,6 @@
         </div>
       </div>
     </section>
-
-    <CircleLinesLoading v-if="loading" centered />
   </div>
 </template>
 
@@ -545,7 +569,8 @@ export default {
       partner: {} as Partner,
       qualities: [] as Quality[],
 
-      loading: false,
+      partnerRequest: { loading: true },
+      qualitiesRequest: { loading: true },
     };
   },
 
@@ -566,20 +591,23 @@ export default {
     costFormatter,
 
     async updatePartner() {
-      this.partner = (await this.$request(
-        this,
+      const partner = (await this.$request(
+        this.partnerRequest,
         this.$api.getUserPartnerInfo,
         [this.$user.id],
         `Не удалось получить данные партнера`,
-      )) as Partner;
+      )) as Partner | undefined;
+      if (partner) this.partner = partner;
     },
     async updateQualities() {
-      this.qualities = (await this.$request(
-        this,
+      const response = await this.$request(
+        this.qualitiesRequest,
         this.$api.getAllQualities,
         [],
-        `Не удалось получить список всех квалификаций`,
-      ) as {qualities: Quality[]}).qualities;
+        'Не удалось получить список всех квалификаций',
+      ) as { qualities: Quality[] } | undefined;
+      this.qualities = response?.qualities ?? [];
+
     },
   },
 };
