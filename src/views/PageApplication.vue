@@ -11,6 +11,7 @@
   --ink mix(colorEmp2, colorBgDark, 8%)
 
   color var(--ink)
+  overflow-x hidden
   a:focus-visible, button:focus-visible, [role='tabpanel']:focus-visible
     outline 3px solid colorEmp2
     outline-offset 5px

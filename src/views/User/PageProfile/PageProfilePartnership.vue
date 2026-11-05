@@ -501,7 +501,7 @@
             <p class="info">+3% бонусов от продаж первых 3-х уровнях партнерской структуры</p>
           </div>
           <div class="bottom-row">
-            <div class="progressbar" :style="{'--value': 2 / 4}" />
+            <div class="progressbar" :style="{'--value': partner.newbieBonusPeriodsLeft / 4}" />
             <p>{{ partner.newbieBonusPeriodsLeft }} / 4</p>
           </div>
         </div>
